@@ -675,7 +675,6 @@ namespace LLin.Game.Screens.Mvis
 
         private void setupKeyBindings()
         {
-            /*
             keyBindings[GlobalAction.MvisMusicPrev] = prevButton.Active;
             keyBindings[GlobalAction.MvisMusicNext] = nextButton.Active;
             keyBindings[GlobalAction.MvisOpenInSongSelect] = soloButton.Active;
@@ -701,7 +700,7 @@ namespace LLin.Game.Screens.Mvis
                 }
                 else
                     this.Exit();
-            };*/
+            };
         }
 
         private void onPluginUnLoad(MvisPlugin pl)

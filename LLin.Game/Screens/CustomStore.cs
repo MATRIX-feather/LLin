@@ -93,17 +93,17 @@ namespace LLin.Game.Screens
 
             try
             {
-                Logger.Log($"加载{assembly}...");
+                //Logger.Log($"加载{assembly}...");
 
                 foreach (var type in assembly.GetTypes())
                 {
-                    Logger.Log($"尝试加载 {type}");
+                    //Logger.Log($"尝试加载 {type}");
 
                     if (type.IsSubclassOf(typeof(MvisPluginProvider)))
                     {
                         loadedMvisPluginAssemblies[assembly] = type;
                         loadedAssemblies[assembly] = type;
-                        Logger.Log($"{type}是插件Provider");
+                        //Logger.Log($"{type}是插件Provider");
                         addMvisPlugin(type, assembly.FullName);
                     }
 

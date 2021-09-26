@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LLin.Game.KeyBind;
 using LLin.Game.Online;
 using LLin.Game.Screens;
 using osu.Framework.Allocation;
@@ -19,6 +20,7 @@ using osu.Game.Collections;
 using osu.Game.Configuration;
 using osu.Game.Database;
 using osu.Game.Graphics;
+using osu.Game.Input;
 using osu.Game.IO;
 using osu.Game.Online.API;
 using osu.Game.Overlays;
@@ -72,6 +74,8 @@ namespace LLin.Game
         [Cached(typeof(IBindable<IReadOnlyList<Mod>>))]
         protected readonly Bindable<IReadOnlyList<Mod>> SelectedMods = new Bindable<IReadOnlyList<Mod>>(Array.Empty<Mod>());
 
+        private RealmContextFactory realmFactory;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -99,6 +103,7 @@ namespace LLin.Game
             dependencies.CacheAs(APIAccess ??= new APIAccess(OsuConfig, new VoidApiEndpointConfiguration(), string.Empty));
 
             dependencies.Cache(contextFactory = new DatabaseContextFactory(Storage));
+            dependencies.Cache(realmFactory = new RealmContextFactory(Storage));
 
             dependencies.Cache(OsuRulesetStore = new RulesetStore(contextFactory, Storage)); //OsuScreen
             dependencies.Cache(new FileStore(contextFactory, Storage)); //由Storyboard使用
@@ -142,6 +147,15 @@ namespace LLin.Game
             PreviewTrackManager osuPreviewTrackManager;
             dependencies.Cache(osuPreviewTrackManager = new PreviewTrackManager());
             Add(osuPreviewTrackManager);
+
+            //global actions
+            OsuGlobalActionContainer osuGlobalActionContainer;
+            dependencies.Cache(osuGlobalActionContainer = new OsuGlobalActionContainer(this));
+
+            var keyBindingStore = new RealmKeyBindingStore(realmFactory);
+            keyBindingStore.Register(osuGlobalActionContainer, OsuRulesetStore.AvailableRulesets);
+
+            base.Content.Add(osuGlobalActionContainer);
 
             //自定义字体
             dependencies.Cache(new CustomFontHelper());
