@@ -1,0 +1,13 @@
+﻿{
+  "solution": {
+    "path": "LLin.sln",
+    "projects": [
+      "LLin.Desktop\\LLin.Desktop.csproj",
+      "LLin.Game\\LLin.Game.csproj",
+      "LLin.Game.Tests\\LLin.Game.Tests.csproj",
+      "LLin.Resources\\LLin.Resources.csproj",
+      "M.DBus\\M.DBus.csproj",
+      "M.Resources\\M.Resources.csproj"
+    ]
+  }
+}
