@@ -2,6 +2,7 @@
 using LLin.Game.Screens.Mvis.Plugins;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Screens;
 using osu.Game.Collections;
 using osu.Game.Input;
 using osu.Game.Overlays;
@@ -33,6 +34,15 @@ namespace LLin.Game
             {
                 RelativeSizeAxes = Axes.Both
             };
+
+            screenStack.ScreenPushed += onScreenChanged;
+            screenStack.ScreenExited += onScreenChanged;
+        }
+
+        private void onScreenChanged(IScreen lastscreen, IScreen newscreen)
+        {
+            if (newscreen == null)
+                Exit();
         }
 
         protected override void LoadComplete()
