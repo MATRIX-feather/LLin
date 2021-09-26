@@ -1,4 +1,6 @@
 # LLin
+*项目处于早期开发中，一些功能可能缺失或不完整*
+
 从 [mfosu](https://github.com/MATRIX-feather/osu) 中分离出来的osu!lazer播放器
 
 ## 构建
