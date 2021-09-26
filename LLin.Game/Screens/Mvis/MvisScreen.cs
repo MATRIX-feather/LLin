@@ -403,13 +403,6 @@ namespace LLin.Game.Screens.Mvis
                     Description = MvisBaseStrings.Exit,
                     Type = FunctionType.Base
                 },
-                new FakeButton
-                {
-                    Icon = FontAwesome.Regular.QuestionCircle,
-                    Action = () => game?.OpenUrlExternally("https://matrix-feather.github.io/mfosu/mfosu_mp_manual/"),
-                    Description = MvisBaseStrings.Manual,
-                    Type = FunctionType.Base
-                },
                 prevButton = new FakeButton
                 {
                     Size = new Vector2(50, 30),
