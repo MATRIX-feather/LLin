@@ -11,9 +11,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LLin.Game\LLin.Game.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="osu.Game, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null, ProcessorArchitecture=MSIL">
-    </Reference>
+    <ProjectReference Include="..\..\mfosu\osu.Game\osu.Game.csproj" />
   </ItemGroup>
 </Project>

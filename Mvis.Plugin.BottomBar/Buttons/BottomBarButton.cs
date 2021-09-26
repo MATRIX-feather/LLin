@@ -10,7 +10,6 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
-using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using LLin.Game.Screens.Mvis;
@@ -51,8 +50,7 @@ namespace Mvis.Plugin.BottomBar.Buttons
         protected readonly OsuSpriteText SpriteText = new OsuSpriteText
         {
             Anchor = Anchor.Centre,
-            Origin = Anchor.Centre,
-            Font = OsuFont.GetFont(Typeface.Custom)
+            Origin = Anchor.Centre
         };
 
         protected SpriteIcon SpriteIcon = new SpriteIcon

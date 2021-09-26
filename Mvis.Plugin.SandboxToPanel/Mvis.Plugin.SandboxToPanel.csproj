@@ -15,7 +15,7 @@
 
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\LLin.Game\LLin.Game.csproj" />
-    <ProjectReference Include="..\osu.Game\osu.Game.csproj" />
+    <ProjectReference Include="..\..\mfosu\osu.Game\osu.Game.csproj" />
   </ItemGroup>
 
   <ItemGroup>
