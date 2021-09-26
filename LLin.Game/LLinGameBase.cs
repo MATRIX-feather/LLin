@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LLin.Game.Online;
 using LLin.Game.Screens;
 using osu.Framework.Allocation;
@@ -11,8 +12,10 @@ using LLin.Resources;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
+using osu.Game;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
+using osu.Game.Collections;
 using osu.Game.Configuration;
 using osu.Game.Database;
 using osu.Game.Graphics;
@@ -22,6 +25,7 @@ using osu.Game.Overlays;
 using osu.Game.Resources;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Scoring;
 using osu.Game.Utils;
 using MConfigManager = LLin.Game.Configuration.MConfigManager;
 
@@ -53,10 +57,12 @@ namespace LLin.Game
         private WorkingBeatmap defaultBeatmap;
         private DatabaseContextFactory contextFactory;
 
-        protected APIAccess APIAccess { get; set; }
+        protected IAPIProvider APIAccess { get; set; }
         protected OsuConfigManager OsuConfig { get; set; }
         protected RulesetStore OsuRulesetStore { get; set; }
         protected MusicController OsuMusicController { get; set; }
+        protected Storage Storage { get; set; }
+        protected BeatmapManager BeatmapManager { get; set; }
 
         [Cached]
         [Cached(typeof(IBindable<RulesetInfo>))]
@@ -69,12 +75,15 @@ namespace LLin.Game
         [BackgroundDependencyLoader]
         private void load()
         {
+            Resources.AddStore(new DllResourceStore(LLinResources.ResourceAssembly));
             Resources.AddStore(new DllResourceStore(OsuResources.ResourceAssembly));
 
             dependencies.CacheAs(new MConfigManager(Storage));
             dependencies.CacheAs(Storage);
 
-            dependencies.CacheAs(new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures"))));
+            LargeTextureStore largeTextureStore;
+            dependencies.CacheAs(largeTextureStore = new LargeTextureStore());
+            largeTextureStore.AddStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures")));
 
             //osu.Game兼容
             defaultBeatmap = new DummyWorkingBeatmap(Audio, null);
@@ -103,6 +112,24 @@ namespace LLin.Game
                 Host,
                 defaultBeatmap, true)); //osu.Game祖宗级依赖（
 
+            dependencies.Cache(new CollectionManager(Storage));
+
+            BeatmapDifficultyCache osuBeatmapDifficultyCache;
+            dependencies.Cache(osuBeatmapDifficultyCache = new BeatmapDifficultyCache());
+            Add(osuBeatmapDifficultyCache);
+
+            dependencies.Cache(new ScoreManager(OsuRulesetStore,
+                () => BeatmapManager,
+                Storage,
+                APIAccess,
+                contextFactory,
+                Scheduler,
+                Host,
+                () => osuBeatmapDifficultyCache,
+                OsuConfig));
+
+            dependencies.CacheAs(new OsuGameBase()); //SongSelect部分组件依赖
+
             var beatmap = new NonNullableBindable<WorkingBeatmap>(defaultBeatmap);
 
             dependencies.CacheAs<IBindable<WorkingBeatmap>>(beatmap);
@@ -121,7 +148,7 @@ namespace LLin.Game
 
             dependencies.Cache(new CustomStore(Storage, this));
 
-            //字体
+            //osu字体
             AddFont(Resources, @"Fonts/osuFont");
 
             AddFont(Resources, @"Fonts/Torus/Torus-Regular");
@@ -134,10 +161,9 @@ namespace LLin.Game
             AddFont(Resources, @"Fonts/Noto/Noto-CJK-Basic");
             AddFont(Resources, @"Fonts/Noto/Noto-CJK-Compatibility");
             AddFont(Resources, @"Fonts/Noto/Noto-Thai");
-        }
 
-        protected Storage Storage { get; set; }
-        protected BeatmapManager BeatmapManager { get; set; }
+            Ruleset.Value = OsuRulesetStore.AvailableRulesets.First();
+        }
 
         public override void SetHost(GameHost host)
         {

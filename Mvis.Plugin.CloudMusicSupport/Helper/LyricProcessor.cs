@@ -292,7 +292,9 @@ namespace Mvis.Plugin.CloudMusicSupport.Helper
                     RawTLyric = tLrc
                 });
 
-                File.WriteAllText(storage.GetFullPath(target), serializeObject);
+                var fullPath = storage.GetFullPath(target, true);
+
+                File.WriteAllText(fullPath, serializeObject);
             }
             catch (Exception e)
             {

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Project">
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>RulesetPanel</Description>
+    <AssemblyName>Mvis.Plugin.Sandbox</AssemblyName>
+    <RootNamespace>Mvis.Plugin.Sandbox</RootNamespace>
+    <Authors>MATRIX-夜翎</Authors>
+    <Copyright />
+    <PackageProjectUrl>https://github.com/MATRIX-feather/osu</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MATRIX-feather/osu</RepositoryUrl>
+    <Company />
+  </PropertyGroup>
+
+  <ItemGroup Label="Project References">
+    <ProjectReference Include="..\LLin.Game\LLin.Game.csproj" />
+    <ProjectReference Include="..\osu.Game\osu.Game.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Textures\**\*" />
+  </ItemGroup>
+</Project>
