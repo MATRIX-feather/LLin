@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LLin.Game.Online;
+using LLin.Game.Screens;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -8,7 +9,9 @@ using osu.Framework.IO.Stores;
 using osuTK;
 using LLin.Resources;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
+using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Database;
@@ -71,6 +74,8 @@ namespace LLin.Game
             dependencies.CacheAs(new MConfigManager(Storage));
             dependencies.CacheAs(Storage);
 
+            dependencies.CacheAs(new LargeTextureStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures"))));
+
             //osu.Game兼容
             defaultBeatmap = new DummyWorkingBeatmap(Audio, null);
 
@@ -107,8 +112,14 @@ namespace LLin.Game
             AddInternal(OsuMusicController = new MusicController());
             dependencies.CacheAs(OsuMusicController);
 
+            PreviewTrackManager osuPreviewTrackManager;
+            dependencies.Cache(osuPreviewTrackManager = new PreviewTrackManager());
+            Add(osuPreviewTrackManager);
+
             //自定义字体
             dependencies.Cache(new CustomFontHelper());
+
+            dependencies.Cache(new CustomStore(Storage, this));
 
             //字体
             AddFont(Resources, @"Fonts/osuFont");

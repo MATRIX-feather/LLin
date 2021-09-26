@@ -1,3 +1,4 @@
+using System;
 using LLin.Game.Screens.Mvis.Plugins.Types;
 using LLin.Game.Screens.Mvis.SideBar.Settings.Items;
 using osu.Framework.Allocation;
@@ -20,7 +21,13 @@ namespace LLin.Game.Screens.Mvis.Plugins
 
         public void Seek(double position) => controller.SeekTo(position);
 
-        public DrawableTrack GetCurrentTrack() => controller.CurrentTrack;
+        public DrawableTrack GetCurrentTrack()
+        {
+            if (controller != null)
+                return controller.CurrentTrack;
+
+            throw new InvalidOperationException("controller是null");
+        }
 
         public bool IsCurrent { get; set; }
 

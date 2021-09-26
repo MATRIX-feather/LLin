@@ -105,9 +105,8 @@ namespace LLin.Game.Screens.Mvis.Plugins
             DependenciesContainer = new DependencyContainer(base.CreateChildDependencies(parent));
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(MvisPluginManager pluginManager)
         {
-            var pluginManager = DependenciesContainer.Get<MvisPluginManager>();
             this.PluginManager = pluginManager;
 
             var config = pluginManager.GetConfigManager(this);

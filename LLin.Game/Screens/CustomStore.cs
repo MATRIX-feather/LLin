@@ -11,20 +11,19 @@ using osu.Framework;
 using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
-using osu.Game;
 
 namespace LLin.Game.Screens
 {
     internal class CustomStore : NamespacedResourceStore<byte[]>
     {
-        private readonly OsuGameBase gameBase;
+        private readonly LLinGameBase gameBase;
         private readonly Storage customStorage;
         private readonly Dictionary<Assembly, Type> loadedAssemblies = new Dictionary<Assembly, Type>();
         private readonly Dictionary<Assembly, Type> loadedMvisPluginAssemblies = new Dictionary<Assembly, Type>();
 
         public List<MvisPluginProvider> LoadedPluginProviders = new List<MvisPluginProvider>();
 
-        public CustomStore(Storage storage, OsuGameBase gameBase)
+        public CustomStore(Storage storage, LLinGameBase gameBase)
             : base(new StorageBackedResourceStore(storage), "custom")
         {
             this.gameBase = gameBase;
@@ -94,15 +93,17 @@ namespace LLin.Game.Screens
 
             try
             {
+                Logger.Log($"加载{assembly}...");
+
                 foreach (var type in assembly.GetTypes())
                 {
-                    //Logger.Log($"case: 尝试加载 {type}");
+                    Logger.Log($"尝试加载 {type}");
 
                     if (type.IsSubclassOf(typeof(MvisPluginProvider)))
                     {
                         loadedMvisPluginAssemblies[assembly] = type;
                         loadedAssemblies[assembly] = type;
-                        //Logger.Log($"{type}是插件Provider");
+                        Logger.Log($"{type}是插件Provider");
                         addMvisPlugin(type, assembly.FullName);
                     }
 

@@ -7,7 +7,8 @@
       "LLin.Game.Tests\\LLin.Game.Tests.csproj",
       "LLin.Resources\\LLin.Resources.csproj",
       "M.DBus\\M.DBus.csproj",
-      "M.Resources\\M.Resources.csproj"
+      "M.Resources\\M.Resources.csproj",
+      "Mvis.Plugin.BottomBar\\Mvis.Plugin.BottomBar.csproj"
     ]
   }
 }

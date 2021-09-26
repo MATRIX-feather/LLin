@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Framework.NativeLibs", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game", "..\mfosu\osu.Game\osu.Game.csproj", "{A35C2E2A-3DFB-4B94-A5DE-9AF27CECDC3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvis.Plugin.BottomBar", "Mvis.Plugin.BottomBar\Mvis.Plugin.BottomBar.csproj", "{A0E653A1-8600-44AB-A170-169A96961ED3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +142,18 @@ Global
 		{A35C2E2A-3DFB-4B94-A5DE-9AF27CECDC3E}.Release|iPhone.Build.0 = Release|Any CPU
 		{A35C2E2A-3DFB-4B94-A5DE-9AF27CECDC3E}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{A35C2E2A-3DFB-4B94-A5DE-9AF27CECDC3E}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Release|iPhone.Build.0 = Release|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{A0E653A1-8600-44AB-A170-169A96961ED3}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,5 +161,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1EF969A2-3E51-42AD-B319-3C1556AFD4C2} = {9AF9C164-2A9E-4958-BB12-0FEDC40F58EC}
 		{38702162-D021-4A4A-B444-EBC95E800D1E} = {9AF9C164-2A9E-4958-BB12-0FEDC40F58EC}
+		{A0E653A1-8600-44AB-A170-169A96961ED3} = {9AF9C164-2A9E-4958-BB12-0FEDC40F58EC}
 	EndGlobalSection
 EndGlobal
