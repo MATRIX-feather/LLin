@@ -1,6 +1,9 @@
 ﻿using LLin.Game.Screens.Mvis;
+using LLin.Game.Screens.Mvis.Plugins;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Game.Input;
+using osu.Game.Overlays;
 using osu.Game.Screens;
 
 namespace LLin.Game
@@ -9,9 +12,20 @@ namespace LLin.Game
     {
         private OsuScreenStack screenStack;
 
+        private DependencyContainer dependencies;
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
+            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+
         [BackgroundDependencyLoader]
         private void load()
         {
+            dependencies.CacheAs(this);
+
+            dependencies.Cache(new MvisPluginManager());
+            dependencies.Cache(new DialogOverlay());
+            dependencies.Cache(new IdleTracker(3000));
+
             // Add your top-level game components here.
             // A screen stack and sample screen has been provided for convenience, but you can replace it if you don't want to use screens.
             Child = screenStack = new OsuScreenStack

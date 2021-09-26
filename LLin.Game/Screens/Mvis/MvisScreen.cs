@@ -1044,7 +1044,7 @@ namespace LLin.Game.Screens.Mvis
             applyTrackAdjustments();
             updateBackground(beatmap);
 
-            //activity.Value = new UserActivity.InMvis(beatmap.BeatmapInfo);
+            activity.Value = new UserActivity.InMvis(beatmap.BeatmapInfo);
             onBeatmapChangedAction?.Invoke(beatmap);
         }
     }
