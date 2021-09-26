@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using LLin.Game.KeyBind;
 using LLin.Game.Online;
@@ -181,9 +182,19 @@ namespace LLin.Game
 
         public override void SetHost(GameHost host)
         {
+            base.SetHost(host);
+
             Storage = host.Storage;
 
-            base.SetHost(host);
+            if (Window != null)
+            {
+                Window.Title = "LLin";
+            }
+
+            if (Window is SDL2DesktopWindow sdl2DesktopWindow)
+            {
+                sdl2DesktopWindow.MinimumSize = new Size(1366, 768);
+            }
         }
     }
 }
