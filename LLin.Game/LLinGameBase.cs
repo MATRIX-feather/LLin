@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using LLin.Game.Graphics.Cursor;
 using LLin.Game.KeyBind;
 using LLin.Game.Online;
 using LLin.Game.Screens;
@@ -12,6 +13,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.IO.Stores;
 using osuTK;
 using LLin.Resources;
+using M.Resources;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
@@ -41,16 +43,12 @@ namespace LLin.Game
         // It allows for caching global dependencies that should be accessible to tests, or changing
         // the screen scaling for all components including the test browser and framework overlays.
 
-        protected override Container<Drawable> Content { get; }
+        protected override Container<Drawable> Content => content;
+
+        private Container content;
 
         protected LLinGameBase()
         {
-            // Ensure game and tests scale with window size and screen DPI.
-            base.Content.Add(Content = new DrawSizePreservingFillContainer
-            {
-                // You may want to change TargetDrawSize to your "default" resolution, which will decide how things scale and position when using absolute coordinates.
-                TargetDrawSize = new Vector2(1366, 768)
-            });
         }
 
         private DependencyContainer dependencies;
@@ -82,6 +80,7 @@ namespace LLin.Game
         private void load()
         {
             Resources.AddStore(new DllResourceStore(LLinResources.ResourceAssembly));
+            Resources.AddStore(new DllResourceStore(MResources.ResourceAssembly));
             Resources.AddStore(new DllResourceStore(OsuResources.ResourceAssembly));
 
             dependencies.CacheAs(new MConfigManager(Storage));
@@ -94,6 +93,17 @@ namespace LLin.Game
             CustomColourProvider customColorProvider;
             dependencies.CacheAs(customColorProvider = new CustomColourProvider());
             AddInternal(customColorProvider);
+
+            var cursorContainer = new LLinCursorContainer { RelativeSizeAxes = Axes.Both };
+            cursorContainer.Add(content = new LLinTooltipContainer(cursorContainer.Cursor) { RelativeSizeAxes = Axes.Both });
+
+            // Ensure game and tests scale with window size and screen DPI.
+            base.Content.Add(new DrawSizePreservingFillContainer
+            {
+                // You may want to change TargetDrawSize to your "default" resolution, which will decide how things scale and position when using absolute coordinates.
+                TargetDrawSize = new Vector2(1366, 768),
+                Child = cursorContainer
+            });
 
             //osu.Game兼容
             defaultBeatmap = new DummyWorkingBeatmap(Audio, null);
@@ -121,7 +131,7 @@ namespace LLin.Game
                 Audio,
                 Resources,
                 Host,
-                defaultBeatmap, true)); //osu.Game祖宗级依赖（
+                defaultBeatmap, true));
 
             dependencies.Cache(new CollectionManager(Storage));
 

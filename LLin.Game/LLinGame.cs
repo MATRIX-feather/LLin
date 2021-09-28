@@ -1,6 +1,5 @@
 ﻿using Humanizer;
 using JetBrains.Annotations;
-using LLin.Game.Graphics.Cursor;
 using LLin.Game.Graphics.Notifications;
 using LLin.Game.Screens.Mvis;
 using LLin.Game.Screens.Mvis.Plugins;
@@ -70,7 +69,6 @@ namespace LLin.Game
 
             // Add your top-level game components here.
             // A screen stack and sample screen has been provided for convenience, but you can replace it if you don't want to use screens.
-            LLinCursorContainer cursorContainer;
             Children = new Drawable[]
             {
                 new Box
@@ -78,20 +76,11 @@ namespace LLin.Game
                     RelativeSizeAxes = Axes.Both,
                     Colour = Color4Extensions.FromHex("#333333")
                 },
-                cursorContainer = new LLinCursorContainer
+                screenStack = new OsuScreenStack
                 {
                     RelativeSizeAxes = Axes.Both
                 }
             };
-
-            cursorContainer.Add(new LLinTooltipContainer(cursorContainer.Cursor)
-            {
-                RelativeSizeAxes = Axes.Both,
-                Child = screenStack = new OsuScreenStack
-                {
-                    RelativeSizeAxes = Axes.Both
-                }
-            });
 
             screenStack.ScreenPushed += onScreenChanged;
             screenStack.ScreenExited += onScreenChanged;

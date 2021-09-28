@@ -144,6 +144,8 @@ namespace Mvis.Plugin.CloudMusicSupport.Helper
             Action<List<Lyric>> onFinish,
             Action<string> onFail)
         {
+            if (beatmap is DummyWorkingBeatmap) return;
+
             if (!noLocalFile)
             {
                 try
