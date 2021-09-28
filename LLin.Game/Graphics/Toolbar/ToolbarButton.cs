@@ -17,7 +17,7 @@ namespace LLin.Game.Graphics.Toolbar
         private readonly Box flashBox;
         public LocalisableString TooltipText { get; set; }
 
-        protected virtual IconUsage Icon { get; set; }
+        public virtual IconUsage Icon { get; set; }
 
         protected override Container<Drawable> Content => content;
 

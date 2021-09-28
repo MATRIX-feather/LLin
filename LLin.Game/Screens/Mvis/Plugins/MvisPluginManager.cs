@@ -38,8 +38,7 @@ namespace LLin.Game.Screens.Mvis.Plugins
         [Resolved]
         private CustomStore customStore { get; set; }
 
-        [Resolved(canBeNull: true)]
-        [CanBeNull]
+        [Resolved]
         private DBusManager dBusManager { get; set; }
 
         internal Action<MvisPlugin> OnPluginAdd;
@@ -108,31 +107,31 @@ namespace LLin.Game.Screens.Mvis.Plugins
         public void RegisterDBusObject(IDBusObject target)
         {
             if (platformSupportsDBus)
-                dBusManager?.RegisterNewObject(target);
+                dBusManager.RegisterNewObject(target);
         }
 
         public void UnRegisterDBusObject(IDBusObject target)
         {
             if (platformSupportsDBus)
-                dBusManager?.UnRegisterObject(target);
+                dBusManager.UnRegisterObject(target);
         }
 
         public void AddDBusMenuEntry(SimpleEntry entry)
         {
             if (platformSupportsDBus)
-                dBusManager?.TrayManager.AddEntry(entry);
+                dBusManager.TrayManager.AddEntry(entry);
         }
 
         public void RemoveDBusMenuEntry(SimpleEntry entry)
         {
             if (platformSupportsDBus)
-                dBusManager?.TrayManager.RemoveEntry(entry);
+                dBusManager.TrayManager.RemoveEntry(entry);
         }
 
         public void PostSystemNotification(SystemNotification notification)
         {
             if (platformSupportsDBus)
-                dBusManager?.Notifications.PostAsync(notification);
+                dBusManager.Notifications.PostAsync(notification);
         }
 
         private bool platformSupportsDBus => RuntimeInfo.OS == RuntimeInfo.Platform.Linux;

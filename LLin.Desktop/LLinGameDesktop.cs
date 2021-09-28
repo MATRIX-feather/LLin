@@ -14,7 +14,8 @@ namespace LLin.Desktop
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
             dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
 
-        protected override void LoadComplete()
+        [BackgroundDependencyLoader]
+        private void load()
         {
             dBusManagerContainer = new DBusManagerContainer(
                 true,
@@ -23,8 +24,6 @@ namespace LLin.Desktop
             dependencies.Cache(dBusManagerContainer.DBusManager);
             Add(dBusManagerContainer);
             dBusManagerContainer.NotificationAction += n => NotificationTray.Post(n);
-
-            base.LoadComplete();
         }
     }
 }

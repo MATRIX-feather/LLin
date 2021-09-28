@@ -65,9 +65,6 @@ namespace LLin.Game
             //依赖
             dependencies.CacheAs(this);
 
-            dependencies.CacheAs(plManager = new MvisPluginManager());
-            AddInternal(plManager);
-
             // Add your top-level game components here.
             // A screen stack and sample screen has been provided for convenience, but you can replace it if you don't want to use screens.
             Children = new Drawable[]
@@ -81,8 +78,6 @@ namespace LLin.Game
                     }
                 }
             };
-
-            dependencies.CacheAs(screenContainer);
 
             screenStack.ScreenPushed += onScreenChanged;
             screenStack.ScreenExited += onScreenChanged;
@@ -98,6 +93,7 @@ namespace LLin.Game
         {
             base.LoadComplete();
 
+            addAndCache(plManager = new MvisPluginManager());
             addAndCache(new DialogOverlay());
             addAndCache(new IdleTracker(3000));
             addAndCache(new ManageCollectionsDialog());
@@ -109,8 +105,8 @@ namespace LLin.Game
         private void addAndCache<T>(T target)
             where T : Drawable
         {
-            Add(target);
             dependencies.CacheAs(target);
+            Add(target);
         }
     }
 }

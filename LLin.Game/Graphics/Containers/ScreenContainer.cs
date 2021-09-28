@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using LLin.Game.Screens.Mvis.Misc;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -7,7 +8,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
@@ -34,15 +34,26 @@ namespace LLin.Game.Graphics.Containers
             Alpha = 0
         };
 
-        private readonly Container bgContent = new Container
+        internal readonly Container BackgroundContents = new Container
         {
+            Name = "背景容器",
             RelativeSizeAxes = Axes.Both
+        };
+
+        internal readonly Container BackgroundOverlays = new Container
+        {
+            Name = "其他背景",
+            RelativeSizeAxes = Axes.Both,
+            Width = 0.9f,
+            Height = 0.85f,
+            Anchor = Anchor.BottomCentre,
+            Origin = Anchor.BottomCentre
         };
 
         [Resolved]
         private IBindable<WorkingBeatmap> b { get; set; }
 
-        private readonly BeatmapCover bg;
+        private BeatmapCover bg;
 
         public Bindable<ScreenStatus> CurrentStatus = new Bindable<ScreenStatus>
         {
@@ -50,7 +61,13 @@ namespace LLin.Game.Graphics.Containers
             Value = ScreenStatus.Scaled
         };
 
-        public ScreenContainer()
+        private DependencyContainer dependencies;
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
+            dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+
+        [BackgroundDependencyLoader]
+        private void load()
         {
             bg = new BeatmapCover(null)
             {
@@ -62,16 +79,13 @@ namespace LLin.Game.Graphics.Containers
 
             InternalChildren = new Drawable[]
             {
-                bgContent,
-                content,
-                new BasicButton
-                {
-                    Text = "切换隐藏",
-                    Action = () => CurrentStatus.Value = (CurrentStatus.Value == ScreenStatus.Hidden ? ScreenStatus.Scaled : ScreenStatus.Hidden),
-                    Size = new Vector2(50, 50)
-                }
+                BackgroundContents,
+                content
             };
-            bgContent.AddRange(new Drawable[]
+
+            dependencies.Cache(this);
+
+            BackgroundContents.AddRange(new Drawable[]
             {
                 new Box
                 {
@@ -79,15 +93,11 @@ namespace LLin.Game.Graphics.Containers
                     Colour = Color4Extensions.FromHex("#333")
                 },
                 bg,
-                new Toolbar.Toolbar()
+                new Toolbar.Toolbar(),
+                BackgroundOverlays
             });
 
             ((ClickableScreenContentContainer)content).ClickEvent += () => CurrentStatus.Value = ScreenStatus.Display;
-        }
-
-        [BackgroundDependencyLoader]
-        private void load()
-        {
             CurrentStatus.BindValueChanged(onStatusChanged, true);
             b.BindValueChanged(v => bg.UpdateBackground(v.NewValue));
         }
@@ -113,7 +123,7 @@ namespace LLin.Game.Graphics.Containers
             }
             else
             {
-                bgContent.Show();
+                BackgroundContents.Show();
                 content.CornerRadius = 15;
                 content.TweenEdgeEffectTo(shadowEffect);
             }
@@ -121,11 +131,13 @@ namespace LLin.Game.Graphics.Containers
             switch (v.NewValue)
             {
                 case ScreenStatus.Display:
+                    ShowBackgroundOverlay(null);
                     content.ScaleTo(1, 500, Easing.OutQuint).MoveToY(0, 500, Easing.OutQuint)
-                           .OnComplete(_ => bgContent.Hide());
+                           .OnComplete(_ => BackgroundContents.Hide());
                     break;
 
                 case ScreenStatus.Scaled:
+                    ShowBackgroundOverlay(null);
                     content.ScaleTo(0.9f, 500, Easing.OutQuint).MoveToY(0.1f, 500, Easing.OutQuint);
                     break;
 
@@ -160,6 +172,52 @@ namespace LLin.Game.Graphics.Containers
         {
             CurrentStatus.Value = ScreenStatus.Hidden;
             this.FadeOut(300, Easing.OutQuint).OnComplete(_ => onComplete?.Invoke());
+        }
+
+        [CanBeNull]
+        private BackgroundOverlayContainer currentOverlay;
+
+        private bool overlaysHidden;
+
+        internal void ShowBackgroundOverlay(BackgroundOverlayContainer overlay)
+        {
+            currentOverlay?.MoveToY(1, 300, Easing.OutQuint)
+                          .FadeOut(300, Easing.OutQuint)
+                          .OnComplete(removeOrExpire);
+
+            currentOverlay?.OnPopOut();
+
+            if (overlay == null) return;
+
+            if (currentOverlay == overlay && !overlaysHidden)
+            {
+                overlaysHidden = true;
+                CurrentStatus.Value = ScreenStatus.Scaled;
+                return;
+            }
+
+            if (!BackgroundOverlays.Contains(overlay))
+            {
+                overlay.Y = 1;
+                overlay.Alpha = 0;
+
+                BackgroundOverlays.Add(overlay);
+            }
+
+            CurrentStatus.Value = ScreenStatus.Hidden;
+
+            overlaysHidden = false;
+            overlay.OnPopIn();
+            overlay.MoveToY(0, 300, Easing.OutQuint).FadeIn(300, Easing.OutQuint);
+            currentOverlay = overlay;
+        }
+
+        private void removeOrExpire(BackgroundOverlayContainer container)
+        {
+            if (container.ExpireAfterPopOut) container.Expire();
+            else BackgroundOverlays.Remove(container);
+
+            currentOverlay = null;
         }
 
         private class ClickableScreenContentContainer : ClickableContainer
