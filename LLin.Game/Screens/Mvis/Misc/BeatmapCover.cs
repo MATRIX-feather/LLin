@@ -8,6 +8,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Beatmaps;
+using osuTK;
 
 namespace LLin.Game.Screens.Mvis.Misc
 {
@@ -23,6 +24,7 @@ namespace LLin.Game.Screens.Mvis.Misc
 
         public bool UseBufferedBackground;
         public float TimeBeforeWrapperLoad = 500;
+        public Vector2 BlurSigma = new Vector2(50);
 
         public BeatmapCover(WorkingBeatmap beatmap)
         {
@@ -99,6 +101,7 @@ namespace LLin.Game.Screens.Mvis.Misc
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Alpha = 0,
+                    BlurSigma = BlurSigma
                 }, newCover =>
                 {
                     var oldCover = cover;

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using JetBrains.Annotations;
 using LLin.Game.Configuration;
+using LLin.Game.Graphics.Containers;
 using LLin.Game.Screens.Mvis.Misc;
 using LLin.Game.Screens.Mvis.Plugins;
 using LLin.Game.Screens.Mvis.Plugins.Internal.FallbackFunctionBar;
@@ -892,10 +893,14 @@ namespace LLin.Game.Screens.Mvis
             OnScreenResuming?.Invoke();
         }
 
+        [Resolved]
+        private ScreenContainer screenContainer { get; set; }
+
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> action)
         {
             //查找本体按键绑定
-            keyBindings.FirstOrDefault(b => b.Key == action.Action).Value?.Invoke();
+            if (screenContainer.CurrentStatus.Value == ScreenStatus.Display)
+                keyBindings.FirstOrDefault(b => b.Key == action.Action).Value?.Invoke();
 
             return false;
         }

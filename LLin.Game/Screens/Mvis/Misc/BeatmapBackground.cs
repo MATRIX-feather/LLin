@@ -24,7 +24,7 @@ namespace LLin.Game.Screens.Mvis.Misc
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 RelativeSizeAxes = Axes.Both,
-                FillMode = FillMode.Fill,
+                FillMode = FillMode.Fill
             };
         }
 

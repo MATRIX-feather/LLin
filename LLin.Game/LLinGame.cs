@@ -1,12 +1,11 @@
 ﻿using Humanizer;
 using JetBrains.Annotations;
+using LLin.Game.Graphics.Containers;
 using LLin.Game.Graphics.Notifications;
 using LLin.Game.Screens.Mvis;
 using LLin.Game.Screens.Mvis.Plugins;
 using osu.Framework.Allocation;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osu.Game.Collections;
@@ -28,6 +27,8 @@ namespace LLin.Game
 
         [NotNull]
         protected NotificationTray NotificationTray = new NotificationTray();
+
+        private ScreenContainer screenContainer;
 
         [BackgroundDependencyLoader]
         private void load()
@@ -71,16 +72,17 @@ namespace LLin.Game
             // A screen stack and sample screen has been provided for convenience, but you can replace it if you don't want to use screens.
             Children = new Drawable[]
             {
-                new Box
+                screenContainer = new ScreenContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Colour = Color4Extensions.FromHex("#333333")
-                },
-                screenStack = new OsuScreenStack
-                {
-                    RelativeSizeAxes = Axes.Both
+                    Child = screenStack = new OsuScreenStack
+                    {
+                        RelativeSizeAxes = Axes.Both
+                    }
                 }
             };
+
+            dependencies.CacheAs(screenContainer);
 
             screenStack.ScreenPushed += onScreenChanged;
             screenStack.ScreenExited += onScreenChanged;
@@ -89,7 +91,7 @@ namespace LLin.Game
         private void onScreenChanged(IScreen lastscreen, IScreen newscreen)
         {
             if (newscreen == null)
-                this.Delay(300).Schedule(Exit);
+                screenContainer.OnGameExit(Exit);
         }
 
         protected override void LoadComplete()
