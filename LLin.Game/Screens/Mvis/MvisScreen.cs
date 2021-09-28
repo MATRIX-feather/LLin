@@ -169,7 +169,9 @@ namespace LLin.Game.Screens.Mvis
         [Resolved]
         private MvisPluginManager pluginManager { get; set; }
 
-        private CustomColourProvider colourProvider;
+        [Resolved]
+        private CustomColourProvider colourProvider { get; set; }
+
         private DependencyContainer dependencies;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
@@ -327,7 +329,6 @@ namespace LLin.Game.Screens.Mvis
         [BackgroundDependencyLoader]
         private void load(MConfigManager config, IdleTracker idleTracker, GameHost host)
         {
-            dependencies.Cache(colourProvider = new CustomColourProvider());
             dependencies.Cache(this);
 
             //向侧边栏添加内容
@@ -358,7 +359,6 @@ namespace LLin.Game.Screens.Mvis
 
             InternalChildren = new Drawable[]
             {
-                colourProvider,
                 bgTriangles = new BgTrianglesContainer(),
                 background = new Container
                 {

@@ -41,7 +41,7 @@ namespace LLin.Game.Screens.Mvis.Plugins
 
         public OsuMusicControllerWrapper()
         {
-            Name = "osu!";
+            Name = "LLin";
             Description = "osu!音乐兼容插件";
             Author = "mf-osu";
         }

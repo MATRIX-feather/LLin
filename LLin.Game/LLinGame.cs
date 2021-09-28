@@ -1,10 +1,13 @@
 ﻿using Humanizer;
 using JetBrains.Annotations;
+using LLin.Game.Graphics.Cursor;
 using LLin.Game.Graphics.Notifications;
 using LLin.Game.Screens.Mvis;
 using LLin.Game.Screens.Mvis.Plugins;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osu.Game.Collections;
@@ -59,6 +62,7 @@ namespace LLin.Game
                 }));
             };
 
+            //依赖
             dependencies.CacheAs(this);
 
             dependencies.CacheAs(plManager = new MvisPluginManager());
@@ -66,10 +70,28 @@ namespace LLin.Game
 
             // Add your top-level game components here.
             // A screen stack and sample screen has been provided for convenience, but you can replace it if you don't want to use screens.
-            Child = screenStack = new OsuScreenStack
+            LLinCursorContainer cursorContainer;
+            Children = new Drawable[]
             {
-                RelativeSizeAxes = Axes.Both
+                new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = Color4Extensions.FromHex("#333333")
+                },
+                cursorContainer = new LLinCursorContainer
+                {
+                    RelativeSizeAxes = Axes.Both
+                }
             };
+
+            cursorContainer.Add(new LLinTooltipContainer(cursorContainer.Cursor)
+            {
+                RelativeSizeAxes = Axes.Both,
+                Child = screenStack = new OsuScreenStack
+                {
+                    RelativeSizeAxes = Axes.Both
+                }
+            });
 
             screenStack.ScreenPushed += onScreenChanged;
             screenStack.ScreenExited += onScreenChanged;
@@ -78,25 +100,25 @@ namespace LLin.Game
         private void onScreenChanged(IScreen lastscreen, IScreen newscreen)
         {
             if (newscreen == null)
-                Exit();
+                this.Delay(300).Schedule(Exit);
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            loadAndCache(new DialogOverlay());
-            loadAndCache(new IdleTracker(3000));
-            loadAndCache(new ManageCollectionsDialog());
-            loadAndCache(NotificationTray);
+            addAndCache(new DialogOverlay());
+            addAndCache(new IdleTracker(3000));
+            addAndCache(new ManageCollectionsDialog());
+            addAndCache(NotificationTray);
 
             screenStack.Push(new MvisScreen());
         }
 
-        private void loadAndCache<T>(T target)
+        private void addAndCache<T>(T target)
             where T : Drawable
         {
-            Content.Add(target);
+            Add(target);
             dependencies.CacheAs(target);
         }
     }

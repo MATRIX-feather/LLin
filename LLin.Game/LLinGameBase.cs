@@ -5,6 +5,7 @@ using System.Linq;
 using LLin.Game.KeyBind;
 using LLin.Game.Online;
 using LLin.Game.Screens;
+using LLin.Game.Screens.Mvis;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -90,6 +91,10 @@ namespace LLin.Game
             dependencies.CacheAs(largeTextureStore = new LargeTextureStore());
             largeTextureStore.AddStore(Host.CreateTextureLoaderStore(new NamespacedResourceStore<byte[]>(Resources, @"Textures")));
 
+            CustomColourProvider customColorProvider;
+            dependencies.CacheAs(customColorProvider = new CustomColourProvider());
+            AddInternal(customColorProvider);
+
             //osu.Game兼容
             defaultBeatmap = new DummyWorkingBeatmap(Audio, null);
 
@@ -153,10 +158,14 @@ namespace LLin.Game
             OsuGlobalActionContainer osuGlobalActionContainer;
             dependencies.Cache(osuGlobalActionContainer = new OsuGlobalActionContainer(this));
 
+            LLinGlobalActionContainer llinGlobalActionContainer;
+            dependencies.CacheAs(llinGlobalActionContainer = new LLinGlobalActionContainer());
+            llinGlobalActionContainer.Child = osuGlobalActionContainer;
+
             var keyBindingStore = new RealmKeyBindingStore(realmFactory);
             keyBindingStore.Register(osuGlobalActionContainer, OsuRulesetStore.AvailableRulesets);
 
-            base.Content.Add(osuGlobalActionContainer);
+            base.Content.Add(llinGlobalActionContainer);
 
             //自定义字体
             dependencies.Cache(new CustomFontHelper());
