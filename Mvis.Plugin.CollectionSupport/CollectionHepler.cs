@@ -132,6 +132,9 @@ namespace Mvis.Plugin.CollectionSupport
             if (!Disabled.Value)
                 PluginManager.RemoveDBusMenuEntry(trayEntry);
 
+            if (isCurrent)
+                MvisScreen.ReleaseAudioControlFrom(this);
+
             resetDBusMessage();
         }
 
@@ -314,7 +317,7 @@ namespace Mvis.Plugin.CollectionSupport
                     currentSubEntry.ToggleState = 0;
 
                 var targetEntry = trayEntry.Children.FirstOrDefault(s =>
-                    s.Label == b.Value.BeatmapSetInfo.Metadata.ToRomanisableString().GetPreferred(true));
+                    s.Label == (b.Value.BeatmapSetInfo.Metadata?.ToRomanisableString().GetPreferred(true) ?? string.Empty));
 
                 if (targetEntry != null)
                     targetEntry.ToggleState = 1;

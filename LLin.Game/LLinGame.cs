@@ -99,6 +99,8 @@ namespace LLin.Game
             addAndCache(new ManageCollectionsDialog());
             addAndCache(NotificationTray);
 
+            OsuMusicController.NextTrack();
+
             screenStack.Push(new MvisScreen());
         }
 

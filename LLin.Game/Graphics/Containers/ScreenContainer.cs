@@ -77,10 +77,28 @@ namespace LLin.Game.Graphics.Containers
                 Colour = Color4Extensions.FromHex("#666")
             };
 
+            HoverIndicator hoverIndicator;
             InternalChildren = new Drawable[]
             {
                 BackgroundContents,
-                content
+                content,
+                hoverIndicator = new HoverIndicator
+                {
+                    Height = 5,
+                    RelativeSizeAxes = Axes.X
+                }
+            };
+
+            hoverIndicator.Hover += () =>
+            {
+                if (CurrentStatus.Value == ScreenStatus.Display)
+                    CurrentStatus.Value = ScreenStatus.Peek;
+            };
+
+            hoverIndicator.HoverLost += () =>
+            {
+                if (CurrentStatus.Value == ScreenStatus.Peek)
+                    CurrentStatus.Value = ScreenStatus.Display;
             };
 
             dependencies.Cache(this);
@@ -138,7 +156,12 @@ namespace LLin.Game.Graphics.Containers
 
                 case ScreenStatus.Scaled:
                     ShowBackgroundOverlay(null);
-                    content.ScaleTo(0.9f, 500, Easing.OutQuint).MoveToY(0.1f, 500, Easing.OutQuint);
+                    content.ScaleTo(0.95f, 500, Easing.OutQuint).MoveToY(0.05f, 500, Easing.OutQuint);
+                    break;
+
+                case ScreenStatus.Peek:
+                    ShowBackgroundOverlay(null);
+                    content.ScaleTo(0.99f, 500, Easing.OutQuint).MoveToY(0.01f, 500, Easing.OutQuint);
                     break;
 
                 case ScreenStatus.Hidden:
@@ -152,8 +175,13 @@ namespace LLin.Game.Graphics.Containers
         {
             switch (e.Action)
             {
-                case GlobalAction.ToggleSettings:
-                    CurrentStatus.Value = (CurrentStatus.Value == ScreenStatus.Display ? ScreenStatus.Scaled : ScreenStatus.Display);
+                case GlobalAction.ToggleToolbar:
+                    CurrentStatus.Value =
+                    (
+                        (CurrentStatus.Value == ScreenStatus.Display || CurrentStatus.Value == ScreenStatus.Peek)
+                            ? ScreenStatus.Scaled
+                            : ScreenStatus.Display
+                    );
                     break;
 
                 case GlobalAction.Back:
@@ -166,6 +194,14 @@ namespace LLin.Game.Graphics.Containers
 
         public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
         {
+        }
+
+        protected override bool OnClick(ClickEvent e)
+        {
+            if (CurrentStatus.Value == ScreenStatus.Peek)
+                CurrentStatus.Value = ScreenStatus.Scaled;
+
+            return base.OnClick(e);
         }
 
         internal void OnGameExit(Action onComplete)
@@ -236,6 +272,7 @@ namespace LLin.Game.Graphics.Containers
     public enum ScreenStatus
     {
         Display,
+        Peek,
         Scaled,
         Hidden
     }

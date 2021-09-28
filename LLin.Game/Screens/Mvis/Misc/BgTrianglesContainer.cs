@@ -28,8 +28,8 @@ namespace LLin.Game.Screens.Mvis.Misc
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.Both,
                     TriangleScale = 5f,
-                    //EnableBeatSync = true,
-                    Colour = OsuColour.Gray(0.2f),
+                    EnableBeatSync = true,
+                    Colour = OsuColour.Gray(0.2f)
                 }
             };
             config.BindWith(MSetting.MvisEnableBgTriangles, enableBgTriangles);

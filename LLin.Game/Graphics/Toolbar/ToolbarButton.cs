@@ -1,3 +1,4 @@
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -7,14 +8,15 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Game.Graphics.UserInterface;
 using osuTK;
 using osuTK.Graphics;
 
 namespace LLin.Game.Graphics.Toolbar
 {
-    public abstract class ToolbarButton : Button, IHasTooltip
+    public class ToolbarButton : Button, IHasTooltip
     {
-        private readonly Box flashBox;
+        private Box flashBox;
         public LocalisableString TooltipText { get; set; }
 
         public virtual IconUsage Icon { get; set; }
@@ -30,7 +32,7 @@ namespace LLin.Game.Graphics.Toolbar
             CornerRadius = 7.5f
         };
 
-        protected ToolbarButton()
+        public ToolbarButton()
         {
             RelativeSizeAxes = Axes.Y;
             Width = 40;
@@ -40,9 +42,14 @@ namespace LLin.Game.Graphics.Toolbar
 
             InternalChildren = new Drawable[]
             {
-                content
+                content,
+                new HoverClickSounds()
             };
+        }
 
+        [BackgroundDependencyLoader]
+        private void load()
+        {
             content.AddRange(new Drawable[]
             {
                 new SpriteIcon

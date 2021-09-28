@@ -134,7 +134,9 @@ namespace LLin.Game
                 Host,
                 defaultBeatmap, true));
 
-            dependencies.Cache(new CollectionManager(Storage));
+            CollectionManager collection;
+            dependencies.Cache(collection = new CollectionManager(Storage));
+            AddInternal(collection);
 
             BeatmapDifficultyCache osuBeatmapDifficultyCache;
             dependencies.Cache(osuBeatmapDifficultyCache = new BeatmapDifficultyCache());

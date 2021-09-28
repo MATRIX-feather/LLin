@@ -629,12 +629,13 @@ namespace LLin.Game.Screens.Mvis
         {
             switch (v.NewValue)
             {
+                case ScreenStatus.Peek:
                 case ScreenStatus.Display:
-                    ApplyToBackground(b => b.FadeIn(300, Easing.OutQuint));
+                    ApplyToBackground(b => b.FadeIn(500, Easing.OutQuint));
                     break;
 
                 default:
-                    ApplyToBackground(b => b.FadeOut(300, Easing.OutQuint));
+                    ApplyToBackground(b => b.FadeOut(500, Easing.OutQuint));
                     break;
             }
         }
@@ -653,6 +654,8 @@ namespace LLin.Game.Screens.Mvis
 
             songSelectButton.Enabled.Value = audioControlProvider == pluginManager.DefaultAudioController;
             //Logger.Log($"更改控制插件到{audioControlProvider}");
+
+            currentAudioControlProviderSetting.Value = audioControlProvider.ToPluginPath();
         }
 
         private void onFunctionBarPluginDisable() => changeFunctionBarProvider(null);
@@ -916,7 +919,8 @@ namespace LLin.Game.Screens.Mvis
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> action)
         {
             //查找本体按键绑定
-            if (screenContainer.CurrentStatus.Value == ScreenStatus.Display)
+            if (screenContainer.CurrentStatus.Value == ScreenStatus.Display
+                || screenContainer.CurrentStatus.Value == ScreenStatus.Peek)
                 keyBindings.FirstOrDefault(b => b.Key == action.Action).Value?.Invoke();
 
             return false;

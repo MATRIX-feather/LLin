@@ -13,7 +13,7 @@ namespace LLin.Game.Graphics.Toolbar
         {
             RelativeSizeAxes = Axes.X;
             Height = 40;
-            Margin = new MarginPadding { Vertical = 40 };
+            Margin = new MarginPadding { Vertical = 20 };
             Padding = new MarginPadding { Horizontal = 50 };
 
             Direction = FillDirection.Horizontal;
@@ -28,11 +28,11 @@ namespace LLin.Game.Graphics.Toolbar
         {
             InternalChildren = new Drawable[]
             {
-                new TestToolbarButton(),
-                new TestToolbarButton
+                new ToolbarButton
                 {
-                    Icon = FontAwesome.Regular.Clone,
-                    Action = () => screenContainer.ShowBackgroundOverlay(settingsOverlay)
+                    Icon = FontAwesome.Solid.Info,
+                    Action = () => screenContainer.ShowBackgroundOverlay(settingsOverlay),
+                    TooltipText = "每日一句(bushi)"
                 }
             };
         }

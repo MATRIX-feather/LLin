@@ -21,6 +21,9 @@ namespace LLin.Game.Screens.Mvis.SideBar.Settings.Sections
             Title = "基本设置";
         }
 
+        private Bindable<string> audioControlBindable;
+        private Bindable<string> functionBarProviderBindable;
+
         [BackgroundDependencyLoader]
         private void load(MConfigManager config, MvisPluginManager pluginManager, MvisScreen mvisScreen)
         {
@@ -31,8 +34,8 @@ namespace LLin.Game.Screens.Mvis.SideBar.Settings.Sections
             var functionBarProviders = pluginManager.GetAllFunctionBarProviders();
             functionBarProviders.Insert(0, pluginManager.DummyFunctionBar);
 
-            var currentAudioControlPlugin = config.Get<string>(MSetting.MvisCurrentAudioProvider);
-            var currentFunctionbar = config.Get<string>(MSetting.MvisCurrentFunctionBar);
+            audioControlBindable = config.GetBindable<string>(MSetting.MvisCurrentAudioProvider);
+            functionBarProviderBindable = config.GetBindable<string>(MSetting.MvisCurrentFunctionBar);
 
             Bindable<IProvideAudioControlPlugin> audioConfigBindable;
             Bindable<IFunctionBarProvider> functionBarConfigBindable;
@@ -60,7 +63,6 @@ namespace LLin.Game.Screens.Mvis.SideBar.Settings.Sections
                     Description = "音乐控制插件",
                     Bindable = audioConfigBindable = new Bindable<IProvideAudioControlPlugin>
                     {
-                        Value = pluginManager.GetAudioControlByPath(currentAudioControlPlugin),
                         Default = pluginManager.DefaultAudioController
                     },
                     Values = pluginManager.GetAllAudioControlPlugin()
@@ -71,7 +73,6 @@ namespace LLin.Game.Screens.Mvis.SideBar.Settings.Sections
                     Description = "底栏插件",
                     Bindable = functionBarConfigBindable = new Bindable<IFunctionBarProvider>
                     {
-                        Value = pluginManager.GetFunctionBarProviderByPath(currentFunctionbar),
                         Default = pluginManager.DummyFunctionBar
                     },
                     Values = functionBarProviders
@@ -109,8 +110,13 @@ namespace LLin.Game.Screens.Mvis.SideBar.Settings.Sections
                     Description = "启用背景动画",
                     Bindable = config.GetBindable<bool>(MSetting.MvisEnableBgTriangles),
                     TooltipText = "如果条件允许,播放器将会在背景显示动画"
-                },
+                }
             });
+
+            audioControlBindable.BindValueChanged(v =>
+            {
+                audioConfigBindable.Value = pluginManager.GetAudioControlByPath(audioControlBindable.Value);
+            }, true);
 
             audioConfigBindable.BindValueChanged(v =>
             {
@@ -122,6 +128,11 @@ namespace LLin.Game.Screens.Mvis.SideBar.Settings.Sections
 
                 config.SetValue(MSetting.MvisCurrentAudioProvider, pluginManager.ToPath(v.NewValue));
             });
+
+            functionBarProviderBindable.BindValueChanged(v =>
+            {
+                functionBarConfigBindable.Value = pluginManager.GetFunctionBarProviderByPath(functionBarProviderBindable.Value);
+            }, true);
 
             functionBarConfigBindable.BindValueChanged(v =>
             {
