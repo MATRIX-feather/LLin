@@ -1,6 +1,5 @@
-﻿using osu.Framework.Platform;
-using osu.Framework;
-using LLin.Game;
+﻿using osu.Framework;
+using osu.Framework.Platform;
 
 namespace LLin.Desktop
 {
@@ -9,7 +8,7 @@ namespace LLin.Desktop
         public static void Main()
         {
             using (GameHost host = Host.GetSuitableHost(@"LLin"))
-            using (osu.Framework.Game game = new LLinGame())
+            using (osu.Framework.Game game = new LLinGameDesktop())
                 host.Run(game);
         }
     }

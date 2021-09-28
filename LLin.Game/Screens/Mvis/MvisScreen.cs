@@ -173,6 +173,9 @@ namespace LLin.Game.Screens.Mvis
         [Resolved]
         private CustomColourProvider colourProvider { get; set; }
 
+        [Resolved]
+        private ScreenContainer screenContainer { get; set; }
+
         private DependencyContainer dependencies;
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent) =>
@@ -622,6 +625,20 @@ namespace LLin.Game.Screens.Mvis
             base.LoadComplete();
         }
 
+        private void onScreenContainerStatusChanged(ValueChangedEvent<ScreenStatus> v)
+        {
+            switch (v.NewValue)
+            {
+                case ScreenStatus.Display:
+                    ApplyToBackground(b => b.FadeIn(300, Easing.OutQuint));
+                    break;
+
+                default:
+                    ApplyToBackground(b => b.FadeOut(300, Easing.OutQuint));
+                    break;
+            }
+        }
+
         private void changeAudioControlProvider(IProvideAudioControlPlugin pacp)
         {
             //如果没找到(为null)，则解锁Beatmap.Disabled
@@ -816,6 +833,9 @@ namespace LLin.Game.Screens.Mvis
             //触发一次onBeatmapChanged和onTrackRunningToggle
             Beatmap.BindValueChanged(onBeatmapChanged, true);
             OnTrackRunningToggle?.Invoke(CurrentTrack.IsRunning);
+
+            screenContainer.CurrentStatus.BindValueChanged(onScreenContainerStatusChanged, true);
+
             showOverlays(true);
         }
 
@@ -892,9 +912,6 @@ namespace LLin.Game.Screens.Mvis
             background.FadeOut().Then().Delay(duration * 0.6f).FadeIn(duration / 2);
             OnScreenResuming?.Invoke();
         }
-
-        [Resolved]
-        private ScreenContainer screenContainer { get; set; }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> action)
         {

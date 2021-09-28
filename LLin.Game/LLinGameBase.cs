@@ -61,6 +61,7 @@ namespace LLin.Game
 
         protected IAPIProvider APIAccess { get; set; }
         protected OsuConfigManager OsuConfig { get; set; }
+        protected MConfigManager MConfig { get; set; }
         protected RulesetStore OsuRulesetStore { get; set; }
         protected MusicController OsuMusicController { get; set; }
         protected Storage Storage { get; set; }
@@ -83,7 +84,7 @@ namespace LLin.Game
             Resources.AddStore(new DllResourceStore(MResources.ResourceAssembly));
             Resources.AddStore(new DllResourceStore(OsuResources.ResourceAssembly));
 
-            dependencies.CacheAs(new MConfigManager(Storage));
+            dependencies.CacheAs(MConfig = new MConfigManager(Storage));
             dependencies.CacheAs(Storage);
 
             LargeTextureStore largeTextureStore;
