@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors> </Authors>
+        <Copyright> </Copyright>
+        <PackageProjectUrl>https://github.com/matrix-feather/osu</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/matrix-feather/osu</RepositoryUrl>
+        <PackageTags />
+        <Company> </Company>
+    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Tmds.DBus" Version="0.11.0" />
+    <PackageReference Include="ppy.osu.Framework"/>
+  </ItemGroup>
+</Project>

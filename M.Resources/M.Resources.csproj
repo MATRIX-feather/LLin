@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors> </Authors>
+        <Copyright> </Copyright>
+        <PackageProjectUrl>https://github.com/MATRIX-feather/osu</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/MATRIX-feather/osu</RepositoryUrl>
+        <PackageTags />
+        <Company></Company>
+    </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Fonts\**\*" />
+    <EmbeddedResource Include="Samples\**\*" />
+    <EmbeddedResource Include="Textures\**\*" />
+    <EmbeddedResource Include="Tracks\**\*" />
+    <EmbeddedResource Include="Documents\**\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ppy.osu.Framework"/>
+  </ItemGroup>
+</Project>

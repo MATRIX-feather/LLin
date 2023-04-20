@@ -1,0 +1,168 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.IGPlayer", "osu.Game.Rulesets.IGPlayer\osu.Game.Rulesets.IGPlayer.csproj", "{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.IGPlayer.Tests", "osu.Game.Rulesets.IGPlayer.Tests\osu.Game.Rulesets.IGPlayer.Tests.csproj", "{B4577C85-CB83-462A-BCE3-22FFEB16311D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.DBus", "M.DBus\M.DBus.csproj", "{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.Resources", "M.Resources\M.Resources.csproj", "{2A12314F-04A6-44C9-B784-D222A32DEF21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvis.Plugin.BottomBar", "Mvis.Plugin.BottomBar\Mvis.Plugin.BottomBar.csproj", "{3FBFC2D1-4B65-44B9-8C61-CB16587B1F6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvis.Plugin.CloudMusicSupport", "Mvis.Plugin.CloudMusicSupport\Mvis.Plugin.CloudMusicSupport.csproj", "{F5EB2BAC-5A1C-460E-B0F3-666DA36703AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvis.Plugin.CollectionSupport", "Mvis.Plugin.CollectionSupport\Mvis.Plugin.CollectionSupport.csproj", "{90FE0932-9473-4EA1-A5E7-C6EBFE67F8E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvis.Plugin.SandboxToPanel", "Mvis.Plugin.SandboxToPanel\Mvis.Plugin.SandboxToPanel.csproj", "{D293D6CA-4D61-4D8F-B5DC-F3FE78E79C2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvis.Plugin.StoryboardSupport", "Mvis.Plugin.StoryboardSupport\Mvis.Plugin.StoryboardSupport.csproj", "{0B9E32D7-447A-4FAE-9653-588795E02F0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGPlayerLoader", "IGPlayerLoader\IGPlayerLoader.csproj", "{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvis.Plugin.Yasp", "Mvis.Plugin.Yasp\Mvis.Plugin.Yasp.csproj", "{4122B7C3-E99C-428F-A3A5-06A6CB4B3220}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		VisualTests|Any CPU = VisualTests|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}.VisualTests|Any CPU.ActiveCfg = Release|Any CPU
+		{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}.VisualTests|Any CPU.Build.0 = Release|Any CPU
+		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4577C85-CB83-462A-BCE3-22FFEB16311D}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{2A12314F-04A6-44C9-B784-D222A32DEF21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A12314F-04A6-44C9-B784-D222A32DEF21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A12314F-04A6-44C9-B784-D222A32DEF21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A12314F-04A6-44C9-B784-D222A32DEF21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A12314F-04A6-44C9-B784-D222A32DEF21}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A12314F-04A6-44C9-B784-D222A32DEF21}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{3FBFC2D1-4B65-44B9-8C61-CB16587B1F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FBFC2D1-4B65-44B9-8C61-CB16587B1F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FBFC2D1-4B65-44B9-8C61-CB16587B1F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FBFC2D1-4B65-44B9-8C61-CB16587B1F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FBFC2D1-4B65-44B9-8C61-CB16587B1F6D}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FBFC2D1-4B65-44B9-8C61-CB16587B1F6D}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{F5EB2BAC-5A1C-460E-B0F3-666DA36703AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5EB2BAC-5A1C-460E-B0F3-666DA36703AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5EB2BAC-5A1C-460E-B0F3-666DA36703AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5EB2BAC-5A1C-460E-B0F3-666DA36703AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5EB2BAC-5A1C-460E-B0F3-666DA36703AA}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5EB2BAC-5A1C-460E-B0F3-666DA36703AA}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{90FE0932-9473-4EA1-A5E7-C6EBFE67F8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90FE0932-9473-4EA1-A5E7-C6EBFE67F8E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90FE0932-9473-4EA1-A5E7-C6EBFE67F8E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90FE0932-9473-4EA1-A5E7-C6EBFE67F8E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90FE0932-9473-4EA1-A5E7-C6EBFE67F8E8}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{90FE0932-9473-4EA1-A5E7-C6EBFE67F8E8}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{D293D6CA-4D61-4D8F-B5DC-F3FE78E79C2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D293D6CA-4D61-4D8F-B5DC-F3FE78E79C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D293D6CA-4D61-4D8F-B5DC-F3FE78E79C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D293D6CA-4D61-4D8F-B5DC-F3FE78E79C2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D293D6CA-4D61-4D8F-B5DC-F3FE78E79C2E}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{D293D6CA-4D61-4D8F-B5DC-F3FE78E79C2E}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{0B9E32D7-447A-4FAE-9653-588795E02F0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9E32D7-447A-4FAE-9653-588795E02F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B9E32D7-447A-4FAE-9653-588795E02F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9E32D7-447A-4FAE-9653-588795E02F0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B9E32D7-447A-4FAE-9653-588795E02F0C}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9E32D7-447A-4FAE-9653-588795E02F0C}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{4122B7C3-E99C-428F-A3A5-06A6CB4B3220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4122B7C3-E99C-428F-A3A5-06A6CB4B3220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4122B7C3-E99C-428F-A3A5-06A6CB4B3220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4122B7C3-E99C-428F-A3A5-06A6CB4B3220}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4122B7C3-E99C-428F-A3A5-06A6CB4B3220}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{4122B7C3-E99C-428F-A3A5-06A6CB4B3220}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {671B0BEC-2403-45B0-9357-2C97CC517668}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.EolMarker = Windows
+		$1.inheritsSet = VisualStudio
+		$1.inheritsScope = text/plain
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.IndentSwitchSection = True
+		$2.NewLinesForBracesInProperties = True
+		$2.NewLinesForBracesInAccessors = True
+		$2.NewLinesForBracesInAnonymousMethods = True
+		$2.NewLinesForBracesInControlBlocks = True
+		$2.NewLinesForBracesInAnonymousTypes = True
+		$2.NewLinesForBracesInObjectCollectionArrayInitializers = True
+		$2.NewLinesForBracesInLambdaExpressionBody = True
+		$2.NewLineForElse = True
+		$2.NewLineForCatch = True
+		$2.NewLineForFinally = True
+		$2.NewLineForMembersInObjectInit = True
+		$2.NewLineForMembersInAnonymousTypes = True
+		$2.NewLineForClausesInQuery = True
+		$2.SpacingAfterMethodDeclarationName = False
+		$2.SpaceAfterMethodCallName = False
+		$2.SpaceBeforeOpenSquareBracket = False
+		$2.inheritsSet = Mono
+		$2.inheritsScope = text/x-csharp
+		$2.scope = text/x-csharp
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.EolMarker = Windows
+		$1.inheritsSet = VisualStudio
+		$1.inheritsScope = text/plain
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.IndentSwitchSection = True
+		$2.NewLinesForBracesInProperties = True
+		$2.NewLinesForBracesInAccessors = True
+		$2.NewLinesForBracesInAnonymousMethods = True
+		$2.NewLinesForBracesInControlBlocks = True
+		$2.NewLinesForBracesInAnonymousTypes = True
+		$2.NewLinesForBracesInObjectCollectionArrayInitializers = True
+		$2.NewLinesForBracesInLambdaExpressionBody = True
+		$2.NewLineForElse = True
+		$2.NewLineForCatch = True
+		$2.NewLineForFinally = True
+		$2.NewLineForMembersInObjectInit = True
+		$2.NewLineForMembersInAnonymousTypes = True
+		$2.NewLineForClausesInQuery = True
+		$2.SpacingAfterMethodDeclarationName = False
+		$2.SpaceAfterMethodCallName = False
+		$2.SpaceBeforeOpenSquareBracket = False
+		$2.inheritsSet = Mono
+		$2.inheritsScope = text/x-csharp
+		$2.scope = text/x-csharp
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Project">
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Description>RulesetPanel</Description>
+    <Authors>MATRIX-夜翎</Authors>
+    <Copyright />
+    <PackageProjectUrl>https://github.com/MATRIX-feather/osu</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MATRIX-feather/osu</RepositoryUrl>
+    <Company />
+  </PropertyGroup>
+
+  <ItemGroup Label="Project References">
+    <ProjectReference Include="..\osu.Game.Rulesets.IGPlayer\osu.Game.Rulesets.IGPlayer.csproj" />
+  </ItemGroup>
+</Project>
