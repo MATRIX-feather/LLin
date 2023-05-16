@@ -265,12 +265,10 @@ namespace osu.Game.Rulesets.IGPlayer.Player
             };
         }
 
-        protected override bool Handle(UIEvent e)
+        protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            if (e is MouseMoveEvent)
-                makeActive(false);
-
-            return base.Handle(e);
+            makeActive(false);
+            return base.OnMouseMove(e);
         }
 
         protected override bool OnKeyDown(KeyDownEvent e)
@@ -626,6 +624,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player
 
             InternalChildren = new Drawable[]
             {
+                tracker,
                 hashResolver,
                 backgroundLayer = new Container
                 {
@@ -901,6 +900,27 @@ namespace osu.Game.Rulesets.IGPlayer.Player
 
         public override bool AcceptsFocus => this.IsCurrentScreen();
 
+        protected override void OnFocus(FocusEvent e)
+        {
+            bool blockInput = tracker.ShouldBlockFirstInput();
+            if (blockInput) tracker.ClearHistory();
+
+            if (inputHandler != null)
+                inputHandler.BlockNextAction = blockInput;
+
+            this.focusNum++;
+            var focusNum = this.focusNum;
+            this.Delay(2).Schedule(() =>
+            {
+                if (this.focusNum != focusNum) return;
+                inputHandler.BlockNextAction = false;
+            });
+
+            base.OnFocus(e);
+        }
+
+        private int focusNum;
+
         protected override void OnFocusLost(FocusLostEvent e)
         {
             if (inputHandler != null)
@@ -908,6 +928,8 @@ namespace osu.Game.Rulesets.IGPlayer.Player
 
             base.OnFocusLost(e);
         }
+
+        private readonly InputManagerTracker tracker = new();
 
         private RulesetInputHandler? inputHandler;
 
@@ -964,7 +986,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player
             //设置键位
             initInternalKeyBindings();
 
-            var rsInputHandler = new RulesetInputHandler(internalKeyBindings);
+            var rsInputHandler = new RulesetInputHandler(internalKeyBindings, this);
             var rsInput = new IGPlayerInputManager(IGPlayerRuleset.GetRulesetInfo()!);
             this.AddInternal(rsInput);
             rsInput.Add(rsInputHandler);

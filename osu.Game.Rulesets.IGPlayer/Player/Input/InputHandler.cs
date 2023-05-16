@@ -9,10 +9,13 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Input;
 
 public partial class RulesetInputHandler : CompositeDrawable, IKeyBindingHandler<IGAction>
 {
-    public RulesetInputHandler(Dictionary<IGAction, Action> keybinds)
+    public RulesetInputHandler(Dictionary<IGAction, Action> keybinds, LLinScreen screen)
     {
         this.keyBinds = keybinds;
+        this.screen = screen;
     }
+
+    private readonly LLinScreen screen;
 
     private readonly Dictionary<IGAction, Action> keyBinds;
 
@@ -25,6 +28,8 @@ public partial class RulesetInputHandler : CompositeDrawable, IKeyBindingHandler
             BlockNextAction = false;
             return true;
         }
+
+        if (!screen.HasFocus) return true;
 
         //查找本体按键绑定
         var target = keyBinds.FirstOrDefault(b => b.Key == action.Action).Value;
