@@ -7,17 +7,25 @@ using osu.Framework.Input.Events;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Input;
 
-public partial class InputHandler : CompositeDrawable, IKeyBindingHandler<IGAction>
+public partial class RulesetInputHandler : CompositeDrawable, IKeyBindingHandler<IGAction>
 {
-    public InputHandler(Dictionary<IGAction, Action> keybinds)
+    public RulesetInputHandler(Dictionary<IGAction, Action> keybinds)
     {
         this.keyBinds = keybinds;
     }
 
     private readonly Dictionary<IGAction, Action> keyBinds;
 
+    public bool BlockNextAction;
+
     public bool OnPressed(KeyBindingPressEvent<IGAction> action)
     {
+        if (BlockNextAction)
+        {
+            BlockNextAction = false;
+            return true;
+        }
+
         //查找本体按键绑定
         var target = keyBinds.FirstOrDefault(b => b.Key == action.Action).Value;
         target?.Invoke();

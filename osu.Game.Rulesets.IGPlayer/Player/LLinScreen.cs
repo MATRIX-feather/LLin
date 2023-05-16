@@ -657,35 +657,9 @@ namespace osu.Game.Rulesets.IGPlayer.Player
             };
         }
 
-        [Resolved]
-        private MConfigManager mConfigManager { get; set; }
-
         [BackgroundDependencyLoader]
-        private void load(Storage storage, IdleTracker idleTracker, FrameworkConfigManager fcm)
+        private void load(MConfigManager config, IdleTracker idleTracker, FrameworkConfigManager fcm)
         {
-            var gameDepContainer = OsuGameInjector.GetGameDepManager(game);
-
-            if (gameDepContainer == null)
-            {
-                if (this.IsCurrentScreen())
-                    this.Exit();
-
-                this.ClearInternal();
-                return;
-            }
-
-            MConfigManager config;
-
-            if (mConfigManager == null)
-            {
-                config = mConfigManager = new MConfigManager(storage);
-                gameDepContainer.Cache(mConfigManager);
-            }
-            else
-            {
-                config = mConfigManager!;
-            }
-
             this.AddInternal(colourProvider);
 
             inputManager = GetContainingInputManager();
@@ -851,8 +825,15 @@ namespace osu.Game.Rulesets.IGPlayer.Player
             currentAudioControlProviderSetting = config.GetBindable<string>(MSetting.MvisCurrentAudioProvider);
             currentFunctionbarSetting = config.GetBindable<string>(MSetting.MvisCurrentFunctionBar);
 
-            //fcm.BindWith(FrameworkSetting.FrameSync, frameSyncMode);
-            //fcm.BindWith(FrameworkSetting.ExecutionMode, gameExecutionMode);
+            try
+            {
+                fcm.BindWith(FrameworkSetting.FrameSync, frameSyncMode);
+                fcm.BindWith(FrameworkSetting.ExecutionMode, gameExecutionMode);
+            }
+            catch (Exception e)
+            {
+                Logging.LogError(e, "无法绑定Framework设置");
+            }
 
             //加载插件
             foreach (var pl in pluginManager.GetAllPlugins(true))
@@ -916,6 +897,20 @@ namespace osu.Game.Rulesets.IGPlayer.Player
             Enabled = false
         };
 
+        public override bool RequestsFocus => true;
+
+        public override bool AcceptsFocus => this.IsCurrentScreen();
+
+        protected override void OnFocusLost(FocusLostEvent e)
+        {
+            if (inputHandler != null)
+                inputHandler.BlockNextAction = true;
+
+            base.OnFocusLost(e);
+        }
+
+        private RulesetInputHandler? inputHandler;
+
         protected override void LoadComplete()
         {
             bgBlur.BindValueChanged(v => updateBackground(Beatmap.Value));
@@ -969,9 +964,11 @@ namespace osu.Game.Rulesets.IGPlayer.Player
             //设置键位
             initInternalKeyBindings();
 
+            var rsInputHandler = new RulesetInputHandler(internalKeyBindings);
             var rsInput = new IGPlayerInputManager(IGPlayerRuleset.GetRulesetInfo()!);
             this.AddInternal(rsInput);
-            rsInput.Add(new InputHandler(internalKeyBindings));
+            rsInput.Add(rsInputHandler);
+            this.inputHandler = rsInputHandler;
 
             //添加DBusEntry
             pluginManager.AddDBusMenuEntry(dbusEntry);
@@ -1092,12 +1089,15 @@ namespace osu.Game.Rulesets.IGPlayer.Player
         {
             base.OnResuming(e);
 
+            if (inputHandler != null)
+                inputHandler.BlockNextAction = false;
+
             //更新Mod
             lastScreenMods = ((OsuScreen)e.Last).Mods.Value;
 
             Mods.Value = new List<Mod> { modRateAdjust };
 
-            Beatmap.Disabled = audioControlPlugin != null && audioControlPlugin != pluginManager.DefaultAudioController;
+            Beatmap.Disabled = audioControlPlugin != pluginManager.DefaultAudioController;
             this.FadeIn(300 * 0.6f)
                 .ScaleTo(1, 300 * 0.6f, Easing.OutQuint);
 
@@ -1121,8 +1121,8 @@ namespace osu.Game.Rulesets.IGPlayer.Player
                                   && currentFunctionBar.OkForHide()
                                   && !lockButton.Bindable.Value
                                   && !lockButton.Bindable.Disabled
-                                  && inputManager?.DraggedDrawable == null
-                                  && inputManager?.FocusedDrawable == null;
+                                  && inputManager.DraggedDrawable == null
+                                  && inputManager.FocusedDrawable == null;
 
         private void makeIdle(bool forceIdle)
         {

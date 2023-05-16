@@ -18,6 +18,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Database;
 using osu.Game.Overlays;
+using osu.Game.Rulesets.IGPlayer;
 using osu.Game.Rulesets.IGPlayer.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
@@ -156,10 +157,17 @@ namespace Mvis.Plugin.CollectionSupport
 
         public bool TogglePause()
         {
-            if (drawableTrack.IsRunning)
-                drawableTrack.Stop();
-            else
-                drawableTrack.Start();
+            try
+            {
+                if (drawableTrack.IsRunning)
+                    drawableTrack.Stop();
+                else
+                    drawableTrack.Start();
+            }
+            catch (Exception e)
+            {
+                Logging.LogError(e, "无法播放音频");
+            }
 
             return true;
         }

@@ -1,5 +1,6 @@
 #nullable disable
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
@@ -32,7 +33,16 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
 
         public bool TogglePause()
         {
-            controller.TogglePause();
+            try
+            {
+                controller.TogglePause();
+            }
+            catch (Exception e)
+            {
+                //播放时此DrawableTrack可能已经被回收
+                Logging.LogError(e, "无法播放音频");
+                return false;
+            }
 
             return true;
         }

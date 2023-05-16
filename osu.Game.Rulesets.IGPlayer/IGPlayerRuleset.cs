@@ -11,7 +11,6 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
-using osu.Framework.Screens;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Rulesets.Difficulty;
@@ -21,8 +20,6 @@ using osu.Game.Rulesets.IGPlayer.Player;
 using osu.Game.Rulesets.IGPlayer.UI;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
-using osu.Game.Screens.Menu;
-using osu.Game.Screens.Select;
 using osuTK;
 using osuTK.Graphics;
 
@@ -123,15 +120,8 @@ namespace osu.Game.Rulesets.IGPlayer
                     return;
                 }
 
-                AddInternal(new ClickableContainer
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Action = () => game.PerformFromScreen(s => s.Push(new LLinScreen()), new[]
-                    {
-                        typeof(MainMenu),
-                        typeof(PlaySongSelect)
-                    })
-                });
+                this.Schedule(() =>
+                    game.Add(new GameScreenInjector()));
             }
         }
 
