@@ -14,6 +14,7 @@ public partial class AccelDownloadProgressBar : DownloadProgressBar
     public AccelDownloadProgressBar(IBeatmapSetInfo beatmapSet)
         : base(beatmapSet)
     {
+        this.beatmapSetInfo = beatmapSet;
     }
 
     private readonly IBeatmapSetInfo beatmapSetInfo;

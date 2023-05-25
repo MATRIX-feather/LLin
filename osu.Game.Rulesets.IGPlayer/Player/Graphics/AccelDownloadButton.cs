@@ -1,6 +1,7 @@
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.Containers;
 using osu.Game.Online;
@@ -17,6 +18,8 @@ public partial class AccelDownloadButton : HeaderDownloadButton
     public AccelDownloadButton(APIBeatmapSet beatmapSet, bool noVideo = false)
         : base(beatmapSet, noVideo)
     {
+        Anchor = Anchor.Centre;
+        Origin = Anchor.Centre;
         this.beatmapSet = beatmapSet;
         this.noVideo = noVideo;
     }
@@ -58,7 +61,11 @@ public partial class AccelDownloadButton : HeaderDownloadButton
                 ((Bindable<DownloadState>)downloadTracker.State).Value = v.NewValue;
             }, true);
 
-            shakeContainer.Add(new AccelDownloadProgressBar(this.beatmapSet));
+            shakeContainer.Add(new AccelDownloadProgressBar(this.beatmapSet)
+            {
+                Anchor = Anchor.BottomLeft,
+                Origin = Anchor.BottomLeft
+            });
             AddInternal(this.tracker);
         }
         catch (Exception e)

@@ -42,6 +42,8 @@ public partial class PreviewTrackInjector : AbstractInjector
     [Resolved(canBeNull: true)]
     private IAPIProvider apiProvider { get; set; }
 
+    private APIBeatmapSet? currentApiBeatmapSet;
+
     [BackgroundDependencyLoader]
     private void load(AudioManager audio, TextureStore textures, INotificationOverlay notificationOverlay)
     {
@@ -132,7 +134,6 @@ public partial class PreviewTrackInjector : AbstractInjector
 
     private APIBeatmapSet getAPISet(PreviewTrackManager.TrackManagerPreviewTrack previewTrack)
     {
-        const BindingFlags flag = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
         APIBeatmapSet? val;
 
         var field = this.FindFieldInstance(previewTrack, typeof(IBeatmapSetInfo));
@@ -147,11 +148,22 @@ public partial class PreviewTrackInjector : AbstractInjector
     {
         Logger.Log($"🦢🦢 Preview track changed! {e.OldValue} -> {e.NewValue}");
         PreviewTrackManager.TrackManagerPreviewTrack? track = e.NewValue;
-        if (track == null) return;
+        prevContainer?.Hide();
+        prevContainer?.Expire();
+
+        if (track == null)
+        {
+            currentApiBeatmapSet = null;
+            return;
+        }
 
         var apiSet = getAPISet(track);
+        if (apiSet.Equals(currentApiBeatmapSet)) return;
+        currentApiBeatmapSet = apiSet;
 
-        prevContainer?.Expire();
+        //apiSet.TitleUnicode = "标题Unicodeeeeeeeeeeeeeeeeeeeeeeeeeeeeee测试";
+        //apiSet.Title = "Title Romanist";
+
         var container = new AccelOptionContainer(apiSet);
         prevContainer = container;
         game.Add(container);

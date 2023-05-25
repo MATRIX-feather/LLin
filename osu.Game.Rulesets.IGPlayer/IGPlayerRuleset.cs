@@ -125,16 +125,6 @@ namespace osu.Game.Rulesets.IGPlayer
                         Logger.Log("[IGPlayer] Inject failed!");
                         return;
                     }
-
-                    this.Schedule(() =>
-                    {
-                        game.AddRange(new Drawable[]
-                        {
-                            new SentryLoggerDisabler(),
-                            new GameScreenInjector(),
-                            new PreviewTrackInjector()
-                        });
-                    });
                 }
                 catch (Exception e)
                 {

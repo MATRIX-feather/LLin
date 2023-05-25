@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using osu.Framework.Allocation;
+using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Online;
 using osu.Game.Online.API;
@@ -13,10 +14,15 @@ public partial class AccelBeatmapDownloadTracker : BeatmapDownloadTracker
     public AccelBeatmapDownloadTracker(IBeatmapSetInfo trackedItem)
         : base(trackedItem)
     {
+        if (trackedItem == null)
+            throw new NullDependencyException("Tracked item may not be null");
     }
 
     protected override void LoadComplete()
     {
+        Logger.Log($"Deps: {TrackedItem}");
+        base.LoadComplete();
+
         var accelDownloader = PreviewTrackInjector.AccelBeatmapModelDownloader;
         if (accelDownloader == null) throw new NullDependencyException("Null dep");
 

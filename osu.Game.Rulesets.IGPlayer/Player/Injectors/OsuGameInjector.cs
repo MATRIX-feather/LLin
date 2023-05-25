@@ -1,6 +1,7 @@
 using System;
 using M.Resources;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
@@ -34,12 +35,19 @@ public partial class OsuGameInjector : AbstractInjector
             var plMgr = new LLinPluginManager();
 
             //Load MResources
-            var ress = new MResources();
+            var resources = new MResources();
 
             depMgr.CacheAs(typeof(MConfigManager), new MConfigManager(storage));
             depMgr.Cache(plMgr);
 
             scheduler.AddDelayed(() => gameInstance.Add(plMgr), 1);
+
+            scheduler.AddDelayed(() => gameInstance.AddRange(new Drawable[]
+            {
+                new SentryLoggerDisabler(),
+                new GameScreenInjector(),
+                new PreviewTrackInjector()
+            }), 1);
         }
         catch (Exception e)
         {
