@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osu.Game.Rulesets.IGPlayer.Player;
+using osu.Game.Rulesets.IGPlayer.Player.Injectors;
 using osu.Game.Screens;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
@@ -18,7 +19,7 @@ using osuTK.Input;
 
 namespace osu.Game.Rulesets.IGPlayer;
 
-public partial class GameScreenInjector : CompositeDrawable
+public partial class GameScreenInjector : AbstractInjector
 {
     private static OsuScreenStack? screenStack;
 
@@ -52,10 +53,9 @@ public partial class GameScreenInjector : CompositeDrawable
         {
             if (screenStack != null) return false;
 
-            const BindingFlags flag = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
-            var screenStackField = game.GetType().GetFields(flag).FirstOrDefault(f => f.FieldType == typeof(OsuScreenStack));
+            var screenStackField = this.FindFieldInstance(game, typeof(OsuScreenStack));
 
-            if (screenStackField == null) return true;
+            if (screenStackField == null) return false;
 
             object? val = screenStackField.GetValue(game);
 
@@ -107,10 +107,8 @@ public partial class GameScreenInjector : CompositeDrawable
         {
             const BindingFlags flag = BindingFlags.Instance | BindingFlags.NonPublic;
 
-            var buttonSystem = menu.GetType().GetFields(flag)
-                                   .FirstOrDefault(f => f.FieldType == typeof(ButtonSystem))?.GetValue(menu) as ButtonSystem;
-
-            if (buttonSystem == null)
+            if (menu.GetType().GetFields(flag)
+                    .FirstOrDefault(f => f.FieldType == typeof(ButtonSystem))?.GetValue(menu) is not ButtonSystem buttonSystem)
             {
                 Logger.Log("无法向主界面添加入口, 因为没有找到ButtonSystem", level: LogLevel.Important);
                 return;

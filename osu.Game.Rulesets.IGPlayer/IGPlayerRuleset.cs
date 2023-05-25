@@ -12,11 +12,14 @@ using osu.Framework.Input.Bindings;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
+using osu.Game.Database;
 using osu.Game.Graphics;
+using osu.Game.Online.API;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.IGPlayer.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Mods;
 using osu.Game.Rulesets.IGPlayer.Player;
+using osu.Game.Rulesets.IGPlayer.Player.Injectors;
 using osu.Game.Rulesets.IGPlayer.UI;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
@@ -109,19 +112,39 @@ namespace osu.Game.Rulesets.IGPlayer
                 };
             }
 
-            [BackgroundDependencyLoader]
-            private void load(OsuGame game, Storage storage)
+            [BackgroundDependencyLoader(permitNulls: true)]
+            private void load(OsuGame game, Storage storage, IModelImporter<BeatmapSetInfo> beatmapImporter, IAPIProvider api)
             {
-                Logger.Log("[IGPlayer] Injecting dependencies...");
-
-                if (!OsuGameInjector.InjectDependencies(storage, game, this.Scheduler))
+                try
                 {
-                    Logger.Log("[IGPlayer] Inject failed!");
-                    return;
-                }
+                    Logger.Log("[IGPlayer] Injecting dependencies...");
+                    Logger.Log($"Deps: {game} :: {storage} :: {beatmapImporter} :: {api}");
 
-                this.Schedule(() =>
-                    game.Add(new GameScreenInjector()));
+                    if (!OsuGameInjector.InjectDependencies(storage, game, this.Scheduler))
+                    {
+                        Logger.Log("[IGPlayer] Inject failed!");
+                        return;
+                    }
+
+                    this.Schedule(() =>
+                    {
+                        game.AddRange(new Drawable[]
+                        {
+                            new SentryLoggerDisabler(),
+                            new GameScreenInjector(),
+                            new PreviewTrackInjector()
+                        });
+                    });
+                }
+                catch (Exception e)
+                {
+                    Logging.LogError(e, "??");
+                }
+            }
+
+            protected override void LoadComplete()
+            {
+                base.LoadComplete();
             }
         }
 

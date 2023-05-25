@@ -5,11 +5,12 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Player.Injectors;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Player;
 
-public class OsuGameInjector
+public partial class OsuGameInjector : AbstractInjector
 {
     public static DependencyContainer? GetGameDepManager(OsuGame? gameInstance)
     {
