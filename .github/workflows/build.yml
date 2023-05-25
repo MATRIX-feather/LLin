@@ -1,0 +1,31 @@
+name: dotnet
+on:
+  push:
+    branches: [ "ruleset" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['6.0.x']
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup dotnet (${{ matrix.dotnet-version }})
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Resolve dependencies
+        run: dotnet restore IGPlayerLoader
+
+      - name: Build
+        run: dotnet build IGPlayerLoader -c Release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: MSIX Package
+          path: IGPlayerLoader/bin/Release/net6.0/
