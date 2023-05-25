@@ -27,5 +27,4 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: MSIX Package
           path: IGPlayerLoader/bin/Release/net6.0/
