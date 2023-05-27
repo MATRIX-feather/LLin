@@ -96,10 +96,7 @@ public partial class AccelOptionContainer : Container
                         Spacing = new Vector2(5),
                         Anchor = Anchor.TopCentre,
                         Origin = Anchor.TopCentre,
-                        Children = new Drawable[]
-                        {
-                            new AccelDownloadButton(apiBeatmapSet)
-                        }
+                        Child = new AccelDownloadButton(apiBeatmapSet)
                     }
                 }
             }
