@@ -5,6 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Input.Events;
 using osu.Framework.Logging;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
@@ -55,6 +56,7 @@ public partial class AccelOptionContainer : Container
 
         OsuAnimatedButton closeButton;
 
+        FillFlowContainer buttonFillFlow;
         InternalChildren = new Drawable[]
         {
             tracker,
@@ -87,7 +89,7 @@ public partial class AccelOptionContainer : Container
                         Origin = Anchor.TopCentre,
                         Margin = new MarginPadding { Horizontal = 16 }
                     },
-                    new FillFlowContainer
+                    buttonFillFlow = new FillFlowContainer
                     {
                         Height = 40,
                         AutoSizeAxes = Axes.X,
@@ -96,13 +98,15 @@ public partial class AccelOptionContainer : Container
                         Origin = Anchor.TopCentre,
                         Children = new Drawable[]
                         {
-                            new AccelDownloadButton(apiBeatmapSet),
-                            new AccelDownloadButton(apiBeatmapSet, true)
+                            new AccelDownloadButton(apiBeatmapSet)
                         }
                     }
                 }
             }
         };
+
+        if (apiBeatmapSet.HasVideo)
+            buttonFillFlow.Add(new AccelDownloadButton(apiBeatmapSet, true));
 
         closeButton.Colour = Color4.White;
         closeButton.Add(new SpriteIcon
@@ -144,5 +148,15 @@ public partial class AccelOptionContainer : Container
                 this.Show();
                 break;
         }
+    }
+
+    protected override bool OnClick(ClickEvent e)
+    {
+        return true;
+    }
+
+    protected override bool OnMouseDown(MouseDownEvent e)
+    {
+        return true;
     }
 }

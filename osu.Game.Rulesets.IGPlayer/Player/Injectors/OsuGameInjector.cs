@@ -35,12 +35,29 @@ public partial class OsuGameInjector : AbstractInjector
             var plMgr = new LLinPluginManager();
 
             //Load MResources
-            var resources = new MResources();
+            try
+            {
+                var resources = new MResources();
+            }
+            catch (Exception e)
+            {
+                Logging.LogError(e, "无法装载M.Resources, 一些插件功能可能不会生效");
+            }
 
             depMgr.CacheAs(typeof(MConfigManager), new MConfigManager(storage));
             depMgr.Cache(plMgr);
 
-            scheduler.AddDelayed(() => gameInstance.Add(plMgr), 1);
+            scheduler.AddDelayed(() =>
+            {
+                try
+                {
+                    gameInstance.Add(plMgr);
+                }
+                catch (Exception e)
+                {
+                    Logging.LogError(e, "未能初始化插件管理器, 可能是因为DBus集成没有安装?");
+                }
+            }, 1);
 
             scheduler.AddDelayed(() => gameInstance.AddRange(new Drawable[]
             {
