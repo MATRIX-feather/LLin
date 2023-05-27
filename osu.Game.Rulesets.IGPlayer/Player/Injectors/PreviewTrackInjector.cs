@@ -7,9 +7,11 @@ using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Logging;
+using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
+using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
@@ -26,21 +28,21 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Injectors;
 
 public partial class PreviewTrackInjector : AbstractInjector
 {
-    private object injectLock = new();
+    private readonly object injectLock = new();
 
     private ThreadSafeReference.List<OsuFocusedOverlayContainer> focusedContainers;
 
     [Resolved]
-    private PreviewTrackManager previewTrackManager { get; set; }
+    private PreviewTrackManager previewTrackManager { get; set; } = null!;
 
     [Resolved]
-    private OsuGame game { get; set; }
+    private OsuGame game { get; set; } = null!;
 
     [Resolved(canBeNull: true)]
     private BeatmapManager? beatmapManager { get; set; }
 
     [Resolved(canBeNull: true)]
-    private IAPIProvider apiProvider { get; set; }
+    private IAPIProvider apiProvider { get; set; } = null!;
 
     private APIBeatmapSet? currentApiBeatmapSet;
 
@@ -70,15 +72,32 @@ public partial class PreviewTrackInjector : AbstractInjector
                 {
                     new OsuSpriteText()
                     {
-                        Text = "dddddddddddd"
+                        Text = "New track",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Font = OsuFont.GetFont(size: 24)
                     }
                 },
                 Action = () =>
                 {
-                    var inf = new DummyWorkingBeatmap(audio, textures);
-                    var apiSet = new APIBeatmapSet();
+                    var apiSet = new APIBeatmapSet
+                    {
+                        HasVideo = RNG.Next(0, 1000) < 500,
+                        OnlineID = 1247651 + RNG.Next(0, 100),
+                        Title = "Anemone",
+                        TitleUnicode = "Anomone (Unicode)",
+                        Artist = "DUSTCELL",
+                        Author = new APIUser
+                        {
+                            Username = "Sparhtend"
+                        },
+                        Covers = new BeatmapSetOnlineCovers
+                        {
+                            Card = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg",
+                            CardLowRes = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg"
+                        }
+                    };
 
-                    apiSet.HasVideo = true;
                     previewTrack.Value = new PreviewTrackManager.TrackManagerPreviewTrack(apiSet, new OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualStore(this.Clock));
                 }
             });
@@ -98,7 +117,8 @@ public partial class PreviewTrackInjector : AbstractInjector
 
         try
         {
-            if (previewTrackFieldInfo != null)
+            // 不在Debug模式下自动更新previewTrack
+            if (previewTrackFieldInfo != null && !DebugUtils.IsDebugBuild)
                 previewTrack.Value = (PreviewTrackManager.TrackManagerPreviewTrack)previewTrackFieldInfo.GetValue(previewTrackManager);
         }
         catch (Exception e)

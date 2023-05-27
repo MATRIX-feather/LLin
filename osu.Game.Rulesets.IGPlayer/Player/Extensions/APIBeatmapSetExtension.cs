@@ -8,4 +8,9 @@ public static class APIBeatmapSetExtension
     {
         return string.IsNullOrEmpty(apiSet.TitleUnicode) ? apiSet.Title : apiSet.TitleUnicode;
     }
+
+    public static string GetDisplayArtist(this APIBeatmapSet apiBeatmapSet)
+    {
+        return string.IsNullOrEmpty(apiBeatmapSet.ArtistUnicode) ? apiBeatmapSet.Artist : apiBeatmapSet.ArtistUnicode;
+    }
 }

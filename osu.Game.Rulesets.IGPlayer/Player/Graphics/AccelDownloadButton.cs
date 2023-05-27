@@ -38,7 +38,7 @@ public partial class AccelDownloadButton : HeaderDownloadButton
             var shakeContainer = (ShakeContainer)thisAsHeaderButton.FindInstance(typeof(ShakeContainer));
             var beatmaps = PreviewTrackInjector.AccelBeatmapModelDownloader;
 
-            baseButton.BackgroundColour = Color4.Coral;
+            baseButton.BackgroundColour = Color4.Teal;
 
             baseButton.Action = () =>
             {
