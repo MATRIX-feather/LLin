@@ -4,7 +4,7 @@
 ## 安装方法
 先将你在[Release](https://github.com/MATRIX-feather/LLin/releases)或[Actions](https://github.com/MATRIX-feather/LLin/actions/new)下载到的文件解压，然后：
 1. 在游戏里点击`设置 ~> 打开 osu! 文件夹`
-2. [将`osu.Game.Rulesets.IGPlayer.dll, M.DBus.dll 和 M.Resources.dll`安装到你的osu!游戏模式目录下](https://bbs.hiosu.com/thread-5-1-1.html)
+2. [将`osu.Game.Rulesets.IGPlayer.dll, M.DBus.dll, Tmds.DBus.dll 和 M.Resources.dll`四个dll安装到你的osu!游戏模式目录下](https://bbs.hiosu.com/thread-5-1-1.html)
 3. 重启osu!
 4. 完成！
 
