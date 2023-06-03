@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -19,7 +20,6 @@ using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.IGPlayer.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Mods;
 using osu.Game.Rulesets.IGPlayer.Player;
-using osu.Game.Rulesets.IGPlayer.Player.Injectors;
 using osu.Game.Rulesets.IGPlayer.UI;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
@@ -30,7 +30,9 @@ namespace osu.Game.Rulesets.IGPlayer
 {
     public partial class IGPlayerRuleset : Ruleset
     {
-        public override string Description => "a very igplayerruleset ruleset";
+        public override string Description => "下载加速&音乐播放器";
+
+        public override string ShortName => "igplayerruleset";
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
             new DrawableIGPlayerRuleset(this, beatmap, mods);
@@ -65,8 +67,6 @@ namespace osu.Game.Rulesets.IGPlayer
             }
         }
 
-        public override string ShortName => "igplayerruleset";
-
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new KeyBinding[]
         {
             new KeyBinding(InputKey.Left, IGAction.MusicPrev),
@@ -93,21 +93,32 @@ namespace osu.Game.Rulesets.IGPlayer
         {
             public Icon(char c)
             {
+                RelativeSizeAxes = Axes.Both;
+
                 InternalChildren = new Drawable[]
                 {
                     new Circle
                     {
-                        Size = new Vector2(20),
+                        Size = new Vector2(1),
                         Colour = Color4.White,
                         Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Child = new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = Color4.Black.Opacity(0.001f)
+                        },
+                        BorderColour = Color4.White,
+                        BorderThickness = 3
                     },
-                    new SpriteText
+                    new SpriteIcon
                     {
+                        Size = new Vector2(0.4f),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Text = c.ToString(),
-                        Font = OsuFont.Default.With(size: 18)
+                        Icon = FontAwesome.Solid.Lemon,
+                        RelativeSizeAxes = Axes.Both,
                     }
                 };
             }
