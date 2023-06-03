@@ -24,6 +24,9 @@ jobs:
       - name: Build
         run: dotnet build IGPlayerLoader -c Release
 
+      - name: Copy README.md
+        run: cp 'README.md' IGPlayerLoader/bin/Release/net6.0/
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
