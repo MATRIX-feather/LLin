@@ -30,7 +30,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          path:
-            -| IGPlayerLoader/bin/Release/net6.0/publish/M.*.dll
-            -| IGPlayerLoader/bin/Release/net6.0/publish/osu.Game.Ruleset.*.dll
-            -| IGPlayerLoader/bin/Release/net6.0/publish/Tmds.*.dll
+          path: |
+            IGPlayerLoader/bin/Release/net6.0/publish/M.?.dll
+            IGPlayerLoader/bin/Release/net6.0/publish/osu.Game.Ruleset.?.dll
+            IGPlayerLoader/bin/Release/net6.0/publish/Tmds.?.dll
