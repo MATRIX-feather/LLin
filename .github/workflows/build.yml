@@ -22,7 +22,7 @@ jobs:
         run: dotnet restore IGPlayerLoader
 
       - name: Build
-        run: dotnet build IGPlayerLoader -c Release
+        run: dotnet publish IGPlayerLoader -c Release
 
       - name: Copy README.md
         run: cp 'README.md' IGPlayerLoader/bin/Release/net6.0/
@@ -30,4 +30,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: IGPlayerLoader/bin/Release/net6.0/
+          path:
+            -| IGPlayerLoader/bin/Release/net6.0/publish/M.*.dll
+            -| IGPlayerLoader/bin/Release/net6.0/publish/osu.Game.Ruleset.*.dll
+            -| IGPlayerLoader/bin/Release/net6.0/publish/Tmds.*.dll
