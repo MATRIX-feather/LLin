@@ -6,9 +6,9 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Platform;
 using osu.Game.Overlays;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
-using osu.Game.Rulesets.IGPlayer.Player.SideBar.Settings.Items;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
 {

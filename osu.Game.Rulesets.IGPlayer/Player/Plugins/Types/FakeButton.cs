@@ -5,7 +5,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
 {
-    public class FakeButton : IFunctionProvider
+    public class ButtonWrapper : IFunctionProvider
     {
         public Vector2 Size { get; set; } = new Vector2(30);
         public Func<bool>? Action { get; set; }

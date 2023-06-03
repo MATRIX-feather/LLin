@@ -4,6 +4,7 @@ using System.Linq;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
+using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Input;
 

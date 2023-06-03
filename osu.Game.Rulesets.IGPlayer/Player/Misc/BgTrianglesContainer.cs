@@ -5,6 +5,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Misc
 {

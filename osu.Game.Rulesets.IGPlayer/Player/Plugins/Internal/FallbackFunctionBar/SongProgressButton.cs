@@ -4,6 +4,7 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Audio;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.FallbackFunctionBar
 {

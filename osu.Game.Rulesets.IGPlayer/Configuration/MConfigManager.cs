@@ -9,7 +9,7 @@ using osu.Framework;
 using osu.Framework.Configuration;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.IGPlayer.Player.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.IGPlayer.Configuration
@@ -63,8 +63,8 @@ namespace osu.Game.Rulesets.IGPlayer.Configuration
             SetDefault(MSetting.MvisInterfaceRed, value: 0, 0, 255f);
             SetDefault(MSetting.MvisInterfaceGreen, value: 119f, 0, 255f);
             SetDefault(MSetting.MvisInterfaceBlue, value: 255f, 0, 255f);
-            SetDefault(MSetting.MvisCurrentAudioProvider, "DummyAudioPlugin@osu.Game.Screens.LLin.Plugins.Internal.DummyAudio");
-            SetDefault(MSetting.MvisCurrentFunctionBar, "LegacyBottomBar@Mvis.Plugin.BottomBar");
+            SetDefault(MSetting.MvisCurrentAudioProvider, "DummyAudioPlugin@osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.DummyAudio");
+            SetDefault(MSetting.MvisCurrentFunctionBar, "LegacyBottomBar@osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.BottomBar");
             SetDefault(MSetting.MvisTabControlPosition, TabControlPosition.Right);
             SetDefault(MSetting.MvisAutoVSync, true);
             SetDefault(MSetting.MvisPlayerSettingsMaxWidth, 0.6f, 0.2f, 1f);

@@ -15,14 +15,20 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.IGPlayer.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Player.Misc.PluginResolvers;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.BottomBar;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Yasp;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.DummyAudio;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.DummyBase;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.FallbackFunctionBar;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types.SettingsItems;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
 {
@@ -318,6 +324,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
                 PluginStore = null;
             }
 
+            // 内置插件
             DummyBasePluginProvider dbpp;
             DummyAudioPluginProvider dapp;
             //LuaPluginProvider luapp;
@@ -331,6 +338,23 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
             AddPlugin(dbpp.CreatePlugin);
             AddPlugin(dapp.CreatePlugin);
             //AddPlugin(luapp.CreatePlugin);
+
+            // 随Ruleset附送
+            var bundledPlugins = new LLinPluginProvider[]
+            {
+                new SandboxPanelProvider(),
+                new BottomBarProvider(),
+                new CollectionHelperProvider(),
+                new StoryboardPluginProvider(),
+
+                new LyricPluginProvider(),
+                new YaspProvider()
+            };
+
+            providers.AddRange(bundledPlugins);
+
+            foreach (var lLinPluginProvider in bundledPlugins)
+                AddPlugin(lLinPluginProvider.CreatePlugin);
 
             if (PluginStore != null)
             {

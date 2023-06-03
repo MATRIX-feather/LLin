@@ -3,7 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.SideBar.Settings.Sections;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Sections;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Config
 {

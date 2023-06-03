@@ -5,6 +5,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.DummyBase

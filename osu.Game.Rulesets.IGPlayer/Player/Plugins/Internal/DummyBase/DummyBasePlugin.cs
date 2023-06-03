@@ -2,10 +2,10 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
 using osu.Game.Rulesets.IGPlayer.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types.SettingsItems;
-using osu.Game.Rulesets.IGPlayer.Player.SideBar.Tabs;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.DummyBase
 {

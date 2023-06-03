@@ -23,4 +23,8 @@
       <HintPath>..\..\osu-framework\osu.Framework\bin\Debug\net6.0\osu.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Player\Plugins\Bundle" />
+    <Folder Include="Rs" />
+  </ItemGroup>
 </Project>

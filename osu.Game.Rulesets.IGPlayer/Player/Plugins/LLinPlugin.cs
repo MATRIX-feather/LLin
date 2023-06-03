@@ -6,8 +6,10 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types.SettingsItems;
+using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
 {

@@ -2,6 +2,7 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport.LuaFunctions
 {

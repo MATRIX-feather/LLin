@@ -8,7 +8,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
 {
-    public class ToggleableFakeButton : IToggleableFunctionProvider
+    public class ToggleableButtonWrapper : IToggleableFunctionProvider
     {
         public Vector2 Size { get; set; } = new Vector2(30);
         public Func<bool> Action { get; set; }
