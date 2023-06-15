@@ -29,11 +29,11 @@ namespace osu.Game.Rulesets.IGPlayer
 {
     public partial class IGPlayerRuleset : Ruleset
     {
-        public override string Description => "下载加速&音乐播放器";
+        public override string Description => "下载加速&音乐播放器&Gosu支持";
 
         public override string ShortName => "igplayerruleset";
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) =>
+        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods) =>
             new DrawableIGPlayerRuleset(this, beatmap, mods);
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) =>

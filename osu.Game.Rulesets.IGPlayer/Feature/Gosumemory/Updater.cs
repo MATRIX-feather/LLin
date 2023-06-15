@@ -10,7 +10,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
-using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
@@ -41,9 +40,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
         {
             this.wsLoader = game;
         }
-
-        [Resolved]
-        private Storage storage { get; set; } = null!;
 
         [Resolved]
         private OsuGame game { get; set; } = null!;
@@ -84,7 +80,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 
             workingBeatmap.BindValueChanged(v =>
             {
-                lastStrainCalc = Clock.CurrentTime;
+                beatmapChangedTime = Clock.CurrentTime;
 
                 if (!isInGame()) updateOverallPerformancePoints(workingBeatmap.Value, v.OldValue != v.NewValue);
                 obj.UpdateBeatmap(v.NewValue);
@@ -156,42 +152,53 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 
         private void updateOverallPerformancePoints(WorkingBeatmap workingBeatmap, bool recalculateStrains = true)
         {
-            var modsCopy = mods.Value.Select(m => m.DeepClone()).ToArray();
+            // 排除Classic模组（会导致最大pp不准确）
+            var modsCopy = mods.Value.Where(m => m.Acronym != "CL")
+                               .Select(m => m.DeepClone()).ToArray();
 
             overallPPCancellationTokenSource?.Cancel();
             overallPPCancellationTokenSource = new CancellationTokenSource();
 
             scheduleStrainComputes = true;
 
-            Task.Run(() =>
+            Task.Run(async () => await updateOverallPPTask(workingBeatmap, modsCopy), overallPPCancellationTokenSource.Token);
+        }
+
+        private Task updateOverallPPTask(WorkingBeatmap workingBeatmap, Mod[] modsCopy)
+        {
+            int maxpp = 0;
+            var obj = wsLoader.DataRoot;
+
+            try
             {
-                int maxpp = 0;
-                var obj = wsLoader.DataRoot;
-
-                try
+                var score = new ScoreInfo(workingBeatmap.BeatmapInfo, ruleset.Value)
                 {
-                    var score = new ScoreInfo(workingBeatmap.BeatmapInfo, ruleset.Value)
-                    {
-                        Mods = modsCopy
-                    };
+                    Mods = modsCopy
+                };
 
-                    PerformanceAttributes performanceAttribute;
+                PerformanceAttributes performanceAttribute;
 
-                    if (!rsInstance?.CreateBeatmapConverter(workingBeatmap.Beatmap).CanConvert() ?? true)
-                        performanceAttribute = new PerformanceAttributes();
-                    else
-                        performanceAttribute = new Calculator(rsInstance, rsInstance.CreatePerformanceCalculator()).CalculatePerfectPerformance(score, workingBeatmap) ?? new PerformanceAttributes();
-
-                    maxpp = (int)performanceAttribute.Total;
-                }
-                catch (Exception)
+                if (!rsInstance?.CreateBeatmapConverter(workingBeatmap.Beatmap).CanConvert() ?? true)
+                    performanceAttribute = new PerformanceAttributes();
+                else
                 {
+                    // 使用此rsInstance的performanceCalc
+                    performanceAttribute = this.performanceCalculator != null
+                        ? new Calculator(rsInstance, this.performanceCalculator).CalculatePerfectPerformance(score, workingBeatmap)
+                        : new PerformanceAttributes();
                 }
 
-                this.maxPP = maxpp;
-                obj.GameplayValues.pp.MaxThisPlay = obj.GameplayValues.pp.PPIfFc = maxpp;
-                obj.MenuValues.pp.PPPerfect = maxpp;
-            }, overallPPCancellationTokenSource.Token);
+                maxpp = (int)performanceAttribute.Total;
+            }
+            catch (Exception)
+            {
+            }
+
+            this.maxPP = maxpp;
+            obj.GameplayValues.pp.MaxThisPlay = obj.GameplayValues.pp.PPIfFc = maxpp;
+            obj.MenuValues.pp.PPPerfect = maxpp;
+
+            return Task.CompletedTask;
         }
 
         private Ruleset? rsInstance;
@@ -200,7 +207,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 
         private bool scheduleStrainComputes;
 
-        private double lastStrainCalc;
+        private double beatmapChangedTime;
 
         private void updatePPStrains(WorkingBeatmap workingBeatmap)
         {
@@ -218,7 +225,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                     {
                         //持续5秒都没有音频，可能已经损坏，清空分布
                         //todo: 没有音频的时候使用谱面长度来计算并更新分布和进度
-                        if (Clock.CurrentTime - lastStrainCalc >= 5 * 1000)
+                        if (Clock.CurrentTime - beatmapChangedTime >= 5 * 1000)
                         {
                             wsLoader.DataRoot.MenuValues.pp.Strains = new[] { 0f };
                             return;
@@ -229,13 +236,17 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                     }
 
                     scheduleStrainComputes = false;
+
+                    // 最大分段数和密度缩放
                     int maximumSegments = 512;
                     double segmentScale = 1;
 
+                    // 根据歌曲长度分段，每 (1 * segScale) 秒分一段
                     int targetSegments = (int)(TimeSpan.FromMilliseconds(length).TotalSeconds * segmentScale);
                     targetSegments = Math.Min(maximumSegments, targetSegments);
                     if (targetSegments <= 0) targetSegments = 1;
 
+                    // 尝试自动转谱
                     var converter = workingBeatmap.BeatmapInfo.Ruleset.CreateInstance().CreateBeatmapConverter(workingBeatmap.Beatmap);
                     IBeatmap? beatmap = null;
 
@@ -255,18 +266,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                         double startTime = i * audioStep;
                         double endTime = (1 + i) * audioStep;
 
-                        int count = 0;
-
                         //将跨度内的所有物件添加进来
-                        foreach (var hitObject in hitObjects)
-                        {
-                            if (hitObject.StartTime < endTime && hitObject.StartTime >= startTime)
-                                count++;
-                        }
+                        //o -> [startTime, endTime)
+                        int count = hitObjects.Count(o => o.StartTime < endTime && o.StartTime >= startTime);
 
                         segments.TryAdd(i, count);
                     }
 
+                    //最后添加到DataRoot里
                     wsLoader.DataRoot.MenuValues.pp.Strains = segments.Values.ToArray();
                 }
                 catch (Exception e)
@@ -286,6 +293,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 
         private Screens.Play.Player? playerScreen;
 
+        private ResultsScreen? resultsScreen;
+
         private CancellationTokenSource? scorePPCalcTokenSource;
 
         private string playerName = "???";
@@ -295,6 +304,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             scorePPCalcTokenSource?.Cancel();
 
             this.playerScreen = null;
+            this.resultsScreen = null;
 
             //updateCancellationTokenSource?.Cancel();
 
@@ -334,8 +344,10 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                                                  dataRoot.GameplayValues.pp.Current = (int?)total ?? 0;
                                              });
                     }
-
+;
+                    dataRoot.MenuValues.Mods.UpdateFrom(score.Mods.Where(m => m.Acronym != "CL").ToArray());
                     dataRoot.MenuValues.OsuState = OsuStates.PLAYING;
+                    this.resultsScreen = results;
                     break;
 
                 case Screens.Play.Player player:
@@ -350,7 +362,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                     break;
             }
 
-            dataRoot.GameplayValues.Name = playerName = playerScreen != null ? playerScreen.Score.ScoreInfo.User.Username : api.LocalUser.Value.Username;
+            dataRoot.GameplayValues.Name = playerName = (playerScreen != null)
+                ? playerScreen.Score.ScoreInfo.User.Username
+                : (resultsScreen != null ? resultsScreen.Score.User.Username : api.LocalUser.Value.Username);
         }
 
         private void updateLeaderboard(IList<ScoreInfo> scoreInfos)
