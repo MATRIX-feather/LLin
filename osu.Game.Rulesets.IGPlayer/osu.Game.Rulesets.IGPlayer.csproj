@@ -11,8 +11,9 @@
     <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="NetCoreServer" Version="6.7.0" />
     <PackageReference Include="NLua" Version="1.6.2" />
-    <PackageReference Include="ppy.osu.Game" Version="2023.419.0" />
+    <PackageReference Include="ppy.osu.Game" Version="2023.614.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\M.DBus\M.DBus.csproj" />
@@ -24,7 +25,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Player\Plugins\Bundle" />
+    <Folder Include="Helper" />
     <Folder Include="Rs" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,8 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Feature;
+using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Injectors;
@@ -43,27 +45,34 @@ public partial class OsuGameInjector : AbstractInjector
                 Logging.LogError(e, "无法装载M.Resources, 一些插件功能可能不会生效");
             }
 
+            var featureManager = new FeatureManager();
+
             depMgr.CacheAs(typeof(MConfigManager), new MConfigManager(storage));
             depMgr.Cache(plMgr);
+            depMgr.Cache(featureManager);
 
             scheduler.AddDelayed(() =>
             {
                 try
                 {
+                    gameInstance.Add(featureManager);
                     gameInstance.Add(plMgr);
                 }
                 catch (Exception e)
                 {
                     Logging.LogError(e, "未能初始化插件管理器, 可能是因为DBus集成没有安装?");
                 }
-            }, 1);
 
-            scheduler.AddDelayed(() => gameInstance.AddRange(new Drawable[]
-            {
-                new SentryLoggerDisabler(),
-                new GameScreenInjector(),
-                new PreviewTrackInjector()
-            }), 1);
+                gameInstance.AddRange(new Drawable[]
+                {
+                    new SentryLoggerDisabler(),
+                    new GameScreenInjector(),
+                    new PreviewTrackInjector()
+                });
+
+                if (featureManager.CanUseGlazerMemory.Value)
+                    gameInstance.Add(new GosuCompatInjector());
+            }, 1);
         }
         catch (Exception e)
         {

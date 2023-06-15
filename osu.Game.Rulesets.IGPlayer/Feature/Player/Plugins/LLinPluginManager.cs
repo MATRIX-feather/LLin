@@ -15,6 +15,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Feature;
 using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.IGPlayer.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Player.Misc.PluginResolvers;
@@ -106,7 +107,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
         internal IFunctionBarProvider? GetFunctionBarProviderByPath([NotNull] string path)
             => (IFunctionBarProvider?)avaliablePlugins.FirstOrDefault(pl => pl is IFunctionBarProvider && resolver.ToPath(pl) == path);
 
-        private bool platformSupportsDBus => RuntimeInfo.OS == RuntimeInfo.Platform.Linux;
+        private bool platformSupportsDBus => RuntimeInfo.OS == RuntimeInfo.Platform.Linux && (FeatureManager.Instance?.CanUseDBus.Value ?? false);
 
         internal bool AddPlugin(LLinPlugin? pl)
         {
