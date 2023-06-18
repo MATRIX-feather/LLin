@@ -35,4 +35,5 @@ jobs:
             IGPlayerLoader/bin/Release/net6.0/publish/osu.Game.Rulesets.*.dll
             IGPlayerLoader/bin/Release/net6.0/publish/Tmds.*.dll
             IGPlayerLoader/bin/Release/net6.0/publish/*.md
+            IGPlayerLoader/bin/Release/net6.0/publish/NetCoreServ*.dll
             !IGPlayerLoader/bin/Release/net6.0/publish/*.txt
