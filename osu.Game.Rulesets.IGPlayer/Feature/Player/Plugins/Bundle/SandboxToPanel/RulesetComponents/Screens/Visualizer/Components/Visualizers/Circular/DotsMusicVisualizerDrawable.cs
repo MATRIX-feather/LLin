@@ -43,11 +43,11 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.Rulese
                 var amplitudeOffset = new Vector2(rotationCos * dotSize.X, rotationSin * dotSize.Y);
 
                 var rectangle = new Quad(
-                        Vector2Extensions.Transform(dotPosition - bottomOffset, DrawInfo.Matrix),
-                        Vector2Extensions.Transform(dotPosition - bottomOffset + amplitudeOffset, DrawInfo.Matrix),
-                        Vector2Extensions.Transform(dotPosition + bottomOffset, DrawInfo.Matrix),
-                        Vector2Extensions.Transform(dotPosition + bottomOffset + amplitudeOffset, DrawInfo.Matrix)
-                    );
+                    Vector2Extensions.Transform(dotPosition - bottomOffset, DrawInfo.Matrix),
+                    Vector2Extensions.Transform(dotPosition - bottomOffset + amplitudeOffset, DrawInfo.Matrix),
+                    Vector2Extensions.Transform(dotPosition + bottomOffset, DrawInfo.Matrix),
+                    Vector2Extensions.Transform(dotPosition + bottomOffset + amplitudeOffset, DrawInfo.Matrix)
+                );
 
                 renderer.DrawQuad(
                     Texture,

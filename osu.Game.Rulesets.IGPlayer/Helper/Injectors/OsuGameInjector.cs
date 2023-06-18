@@ -2,6 +2,7 @@ using System;
 using M.Resources;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
@@ -35,14 +36,17 @@ public partial class OsuGameInjector : AbstractInjector
         {
             var plMgr = new LLinPluginManager();
 
-            //Load MResources
+            // Add Resource store
+            gameInstance.Resources.AddStore(new DllResourceStore(typeof(IGPlayerRuleset).Assembly));
+
             try
             {
-                var resources = new MResources();
+                //Load MResources
+                gameInstance.Resources.AddStore(new DllResourceStore(MResources.ResourceAssembly));
             }
             catch (Exception e)
             {
-                Logging.LogError(e, "无法装载M.Resources, 一些插件功能可能不会生效");
+                Logging.LogError(e, "无法装载M.Resources, 一些意外情况可能发生！");
             }
 
             var featureManager = new FeatureManager();
