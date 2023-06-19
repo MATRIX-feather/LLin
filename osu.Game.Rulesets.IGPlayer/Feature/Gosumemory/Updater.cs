@@ -323,29 +323,33 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             switch (nextScreen)
             {
                 case ResultsScreen results:
-                    var score = results.Score;
+                    var score = results.SelectedScore.Value;
 
-                    dataRoot.GameplayValues.FromScore(score);
-                    dataRoot.GameplayValues.pp.Current = (int?)score.PP ?? 0;
-
-                    if (score.PP.HasValue)
+                    if (score != null)
                     {
-                        dataRoot.GameplayValues.pp.Current = (int)score.PP;
-                    }
-                    else
-                    {
-                        scorePPCalcTokenSource = new CancellationTokenSource();
-                        scorePerformanceCache.CalculatePerformanceAsync(score, scorePPCalcTokenSource.Token)
-                                             .ContinueWith(t =>
-                                             {
-                                                 if (screenStack?.CurrentScreen != results) return;
+                        dataRoot.GameplayValues.FromScore(score);
+                        dataRoot.GameplayValues.pp.Current = (int?)score.PP ?? 0;
 
-                                                 double? total = t.GetResultSafely<PerformanceAttributes?>()?.Total;
-                                                 dataRoot.GameplayValues.pp.Current = (int?)total ?? 0;
-                                             });
+                        if (score.PP.HasValue)
+                        {
+                            dataRoot.GameplayValues.pp.Current = (int)score.PP;
+                        }
+                        else
+                        {
+                            scorePPCalcTokenSource = new CancellationTokenSource();
+                            scorePerformanceCache.CalculatePerformanceAsync(score, scorePPCalcTokenSource.Token)
+                                                 .ContinueWith(t =>
+                                                 {
+                                                     if (screenStack?.CurrentScreen != results) return;
+
+                                                     double? total = t.GetResultSafely<PerformanceAttributes?>()?.Total;
+                                                     dataRoot.GameplayValues.pp.Current = (int?)total ?? 0;
+                                                 });
+                        }
+
+                        dataRoot.MenuValues.Mods.UpdateFrom(score.Mods.Where(m => m.Acronym != "CL").ToArray());
                     }
-;
-                    dataRoot.MenuValues.Mods.UpdateFrom(score.Mods.Where(m => m.Acronym != "CL").ToArray());
+
                     dataRoot.MenuValues.OsuState = OsuStates.PLAYING;
                     this.resultsScreen = results;
                     break;
@@ -364,7 +368,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 
             dataRoot.GameplayValues.Name = playerName = (playerScreen != null)
                 ? playerScreen.Score.ScoreInfo.User.Username
-                : (resultsScreen != null ? resultsScreen.Score.User.Username : api.LocalUser.Value.Username);
+                : (resultsScreen != null ? (resultsScreen.SelectedScore.Value?.User.Username ?? "???") : api.LocalUser.Value.Username);
         }
 
         private void updateLeaderboard(IList<ScoreInfo> scoreInfos)
