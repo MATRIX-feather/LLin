@@ -121,20 +121,18 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.PluginsPage
                                     Text = string.IsNullOrEmpty(Plugin.Name) ? Plugin.GetType().Name : Plugin.Name,
                                     Font = OsuFont.GetFont(size: 19)
                                 },
-                                new OsuSpriteText
+                                new TruncatingSpriteText
                                 {
                                     Text = string.IsNullOrEmpty(Plugin.Author) ? " " : Plugin.Author,
                                     RelativeSizeAxes = Axes.X,
-                                    Truncate = true,
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                     Font = OsuFont.GetFont(size: 19)
                                 },
-                                new OsuSpriteText
+                                new TruncatingSpriteText
                                 {
                                     Text = string.IsNullOrEmpty(Plugin.Description) ? " " : Plugin.Description,
                                     RelativeSizeAxes = Axes.X,
-                                    Truncate = true,
                                     Anchor = Anchor.TopRight,
                                     Origin = Anchor.TopRight,
                                     Font = OsuFont.GetFont(size: 19)

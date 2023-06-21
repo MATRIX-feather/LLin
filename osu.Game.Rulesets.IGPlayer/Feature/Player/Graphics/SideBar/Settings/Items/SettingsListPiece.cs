@@ -77,14 +77,13 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
                     lastText?.MoveToY(5, 200, Easing.OutQuint)
                             .FadeOut(200, Easing.OutQuint).Then().Expire();
 
-                    var currentText = new OsuSpriteText
+                    var currentText = new TruncatingSpriteText
                     {
                         Text = value,
                         Alpha = 0,
                         Font = OsuFont.GetFont(size: 20),
                         Y = -5,
-                        RelativeSizeAxes = Axes.X,
-                        Truncate = true
+                        RelativeSizeAxes = Axes.X
                     };
                     AddInternal(currentText);
 

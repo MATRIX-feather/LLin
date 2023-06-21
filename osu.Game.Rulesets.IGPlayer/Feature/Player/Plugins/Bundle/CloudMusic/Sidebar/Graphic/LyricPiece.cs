@@ -134,16 +134,14 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Sidebar.Gr
                                     AutoSizeAxes = Axes.Y,
                                     Children = new Drawable[]
                                     {
-                                        contentText = new OsuSpriteText
+                                        contentText = new TruncatingSpriteText
                                         {
                                             RelativeSizeAxes = Axes.X,
-                                            Truncate = true,
                                             Margin = new MarginPadding { Left = 5, Bottom = 5 }
                                         },
-                                        translateText = new OsuSpriteText
+                                        translateText = new TruncatingSpriteText
                                         {
                                             RelativeSizeAxes = Axes.X,
-                                            Truncate = true,
                                             Margin = new MarginPadding { Left = 5, Bottom = 5 }
                                         },
                                     }

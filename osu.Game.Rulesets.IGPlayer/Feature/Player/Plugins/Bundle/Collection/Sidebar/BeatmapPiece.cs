@@ -130,19 +130,17 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Sidebar
                         Padding = new MarginPadding { Left = 15 },
                         Children = new Drawable[]
                         {
-                            new OsuSpriteText
+                            new TruncatingSpriteText
                             {
                                 Text = getRomanisableStringFor(Beatmap.Metadata.TitleUnicode, Beatmap.Metadata.Title),
                                 Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 20),
-                                RelativeSizeAxes = Axes.X,
-                                Truncate = true
+                                RelativeSizeAxes = Axes.X
                             },
-                            new OsuSpriteText
+                            new TruncatingSpriteText
                             {
                                 Text = getRomanisableStringFor(Beatmap.Metadata.ArtistUnicode, Beatmap.Metadata.Artist),
                                 Font = OsuFont.GetFont(weight: FontWeight.Bold),
-                                RelativeSizeAxes = Axes.X,
-                                Truncate = true
+                                RelativeSizeAxes = Axes.X
                             }
                         }
                     },
