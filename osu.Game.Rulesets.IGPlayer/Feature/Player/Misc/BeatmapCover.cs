@@ -134,7 +134,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Misc
             [BackgroundDependencyLoader]
             private void load(TextureStore textures)
             {
-                Texture = b?.Background;
+                Texture = b?.GetBackground();
             }
         }
     }

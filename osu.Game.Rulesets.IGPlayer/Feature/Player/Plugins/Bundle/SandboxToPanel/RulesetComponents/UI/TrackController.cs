@@ -232,7 +232,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.Rulese
                 FillMode = FillMode.Fill;
                 Anchor = Anchor.Centre;
                 Origin = Anchor.Centre;
-                Texture = beatmap.Background ?? textures.Get("Backgrounds/bg4");
+                Texture = beatmap.GetBackground() ?? textures.Get("Backgrounds/bg4");
             }
         }
     }
