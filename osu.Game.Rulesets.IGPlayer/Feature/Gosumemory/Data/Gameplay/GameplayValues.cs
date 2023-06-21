@@ -45,10 +45,28 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Gameplay
             ComboInfo.MaxCombo = scoreInfo.MaxCombo;
             ComboInfo.CurrentCombo = scoreInfo.Combo;
 
-            HitResults.Perfect = scoreInfo.GetResultsPerfect();
-            HitResults.Great = scoreInfo.GetResultsGreat();
-            HitResults.Meh = scoreInfo.Statistics.GetValueOrDefault(HitResult.Meh, 0);
-            HitResults.Miss = scoreInfo.Statistics.GetValueOrDefault(HitResult.Miss, 0);
+            var stat = scoreInfo.Statistics;
+
+            switch (scoreInfo.Ruleset.Name)
+            {
+                default:
+                case "osu!":
+                    HitResults.Perfect = scoreInfo.GetResultsPerfect();
+                    HitResults.Great = scoreInfo.GetResultsGreat();
+                    HitResults.Meh = stat.GetValueOrDefault(HitResult.Meh, 0);
+                    HitResults.Miss = stat.GetValueOrDefault(HitResult.Miss, 0);
+                    break;
+
+                case "osu!mania":
+                    HitResults.Geki = stat.GetValueOrDefault(HitResult.Perfect, 0);
+                    HitResults.Perfect = stat.GetValueOrDefault(HitResult.Great, 0);
+                    HitResults.Great = stat.GetValueOrDefault(HitResult.Good, 0);
+                    HitResults.Katu = stat.GetValueOrDefault(HitResult.Ok, 0);
+
+                    HitResults.Meh = stat.GetValueOrDefault(HitResult.Meh, 0);
+                    HitResults.Miss = stat.GetValueOrDefault(HitResult.Miss, 0);
+                    break;
+            }
 
             Score = (int)scoreInfo.TotalScore;
             Accuracy = 100 * (float)scoreInfo.Accuracy;

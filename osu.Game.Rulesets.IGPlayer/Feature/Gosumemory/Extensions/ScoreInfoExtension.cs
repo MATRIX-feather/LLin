@@ -15,5 +15,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Extensions
         {
             return scoreInfo.Statistics.GetValueOrDefault(HitResult.Good, 0) + scoreInfo.Statistics.GetValueOrDefault(HitResult.Ok, 0);
         }
+
+        public static int GetAllMisses(this ScoreInfo scoreInfo)
+        {
+            var stat = scoreInfo.Statistics;
+
+            return stat.GetValueOrDefault(HitResult.SmallTickMiss, 0)
+                   + stat.GetValueOrDefault(HitResult.LargeTickMiss, 0)
+                   + stat.GetValueOrDefault(HitResult.Miss, 0);
+        }
     }
 }
