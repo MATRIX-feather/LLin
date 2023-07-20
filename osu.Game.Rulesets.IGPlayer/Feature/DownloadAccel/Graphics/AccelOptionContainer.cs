@@ -1,3 +1,4 @@
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -158,11 +159,26 @@ public partial class AccelOptionContainer : Container
     [Resolved]
     private OsuGame game { get; set; } = null!;
 
+    private bool useToolbarHeight = true;
+
     protected override void UpdateAfterChildren()
     {
         base.UpdateAfterChildren();
-        var toolbar = game.Toolbar;
-        this.Y = toolbar.Y + toolbar.Height + 8;
+
+        this.Y = 0 + 40 + 8;
+
+        if (!useToolbarHeight) return;
+
+        try
+        {
+            var toolbar = game.Toolbar;
+            this.Y = toolbar.Y + toolbar.Height + 8;
+        }
+        catch (Exception e)
+        {
+            Logging.LogError(e, "无法在此版本中找到Toolbar, 如果方便的话请将此问题汇报给我们!");
+            useToolbarHeight = false;
+        }
     }
 
     public override void Hide()

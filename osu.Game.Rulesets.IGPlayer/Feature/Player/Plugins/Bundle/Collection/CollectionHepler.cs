@@ -369,7 +369,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection
 
         public static readonly BeatmapCollection DEFAULT_COLLECTION = new BeatmapCollection("未选择任何收藏夹");
 
-        private void onCollectionChange(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes, Exception error)
+        private void onCollectionChange(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes)
         {
             AvaliableCollections = collections.AsEnumerable().Select(c => c).ToList();
 
