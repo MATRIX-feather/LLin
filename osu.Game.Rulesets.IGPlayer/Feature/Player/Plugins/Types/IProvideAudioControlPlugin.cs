@@ -1,5 +1,3 @@
-using osu.Framework.Graphics.Audio;
-
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
 {
     public interface IProvideAudioControlPlugin
@@ -28,12 +26,6 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
         /// <param name="position">目标时间(毫秒)</param>
         /// <returns>操作是否被允许</returns>
         public bool Seek(double position);
-
-        /// <summary>
-        /// 获取当前音轨
-        /// </summary>
-        /// <returns>当前音轨</returns>
-        public DrawableTrack GetCurrentTrack();
 
         /// <summary>
         /// 是否被选中为Mvis音频控制器

@@ -211,8 +211,6 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection
 
         private DrawableTrack drawableTrack = null!;
 
-        public DrawableTrack GetCurrentTrack() => drawableTrack;
-
         private bool isCurrent;
 
         public bool IsCurrent

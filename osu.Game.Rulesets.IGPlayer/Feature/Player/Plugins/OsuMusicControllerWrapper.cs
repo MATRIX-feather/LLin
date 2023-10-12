@@ -1,7 +1,6 @@
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Audio;
 using osu.Framework.Platform;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items;
@@ -51,8 +50,6 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
 
             return true;
         }
-
-        public DrawableTrack GetCurrentTrack() => controller.CurrentTrack;
 
         public bool IsCurrent { get; set; }
 

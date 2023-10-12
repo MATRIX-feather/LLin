@@ -114,7 +114,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
             return success;
         }
 
-        public DrawableTrack CurrentTrack => audioControlPlugin.GetCurrentTrack();
+        public DrawableTrack CurrentTrack => musicController.CurrentTrack;
 
         public void RequestAudioControl(IProvideAudioControlPlugin pacp, LocalisableString message, Action? onDeny, Action? onAllow)
         {
