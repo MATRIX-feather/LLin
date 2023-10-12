@@ -213,8 +213,6 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection
 
         public DrawableTrack GetCurrentTrack() => drawableTrack;
 
-        public Action<DrawableTrack> OnTrackChange { get; set; }
-
         private bool isCurrent;
 
         public bool IsCurrent
@@ -228,7 +226,6 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection
                     drawableTrack.Completed += () =>
                     {
                         if (IsCurrent) Schedule(() => NextTrack());
-                        OnTrackChange?.Invoke(drawableTrack);
                     };
                     trackChangedAfterDisable = false;
                 }

@@ -76,6 +76,9 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
         [Resolved(CanBeNull = true)]
         private OsuGame? game { get; set; }
 
+        [Resolved]
+        private MusicController musicController { get; set; }
+
         [Cached]
         private readonly CustomColourProvider colourProvider = new CustomColourProvider();
 
@@ -143,20 +146,14 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
 
             //设置当前控制插件IsCurrent为false
             audioControlPlugin.IsCurrent = false;
-            audioControlPlugin.OnTrackChange -= reBindClock;
 
             var newControlPlugin = pacp ?? pluginManager.DefaultAudioController;
 
             //切换并设置当前控制插件IsCurrent为true
             audioControlPlugin = newControlPlugin;
             newControlPlugin.IsCurrent = true;
-            newControlPlugin.OnTrackChange += reBindClock;
             //Logger.Log($"更改控制插件到{audioControlProvider}");
-
-            this.reBindClock(newControlPlugin.GetCurrentTrack());
         }
-
-        private void reBindClock(DrawableTrack track) => AudioClock.ChangeSource(track);
 
         private readonly LLinModRateAdjust modRateAdjust = new LLinModRateAdjust();
 
@@ -1038,12 +1035,22 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
             base.LoadComplete();
         }
 
+        private DrawableTrack? prevTrack;
+
         protected override void Update()
         {
             songProgressButton.Bindable.Value = CurrentTrack.IsRunning;
 
             //this.AudioClock.Seek(CurrentTrack.CurrentTime);
             base.Update();
+
+            var currentTrack = musicController.CurrentTrack;
+
+            if (currentTrack == prevTrack) return;
+
+            prevTrack = currentTrack;
+            AudioClock.ChangeSource(currentTrack);
+            AudioClock.Seek(currentTrack.CurrentTime); //workaround: 有时候需要手动Seek一遍才能让AudioClock和当前音轨正确同步
         }
 
         private IReadOnlyList<Mod>? lastScreenMods;

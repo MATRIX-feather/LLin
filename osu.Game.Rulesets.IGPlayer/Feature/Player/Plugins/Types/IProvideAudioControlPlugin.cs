@@ -1,4 +1,3 @@
-using System;
 using osu.Framework.Graphics.Audio;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
@@ -35,8 +34,6 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
         /// </summary>
         /// <returns>当前音轨</returns>
         public DrawableTrack GetCurrentTrack();
-
-        public Action<DrawableTrack> OnTrackChange { get; set; }
 
         /// <summary>
         /// 是否被选中为Mvis音频控制器
