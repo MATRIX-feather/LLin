@@ -145,14 +145,22 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
             audioControlPlugin.IsCurrent = false;
             audioControlPlugin.OnTrackChange -= reBindClock;
 
+            var newControlPlugin = pacp ?? pluginManager.DefaultAudioController;
+
             //切换并设置当前控制插件IsCurrent为true
-            audioControlPlugin = pacp ?? pluginManager.DefaultAudioController;
-            audioControlPlugin.IsCurrent = true;
-            audioControlPlugin.OnTrackChange += reBindClock;
+            audioControlPlugin = newControlPlugin;
+            newControlPlugin.IsCurrent = true;
+            newControlPlugin.OnTrackChange += reBindClock;
             //Logger.Log($"更改控制插件到{audioControlProvider}");
+
+            this.reBindClock(newControlPlugin.GetCurrentTrack());
         }
 
-        private void reBindClock(DrawableTrack track) => AudioClock.ChangeSource(track);
+        private void reBindClock(DrawableTrack track)
+        {
+            AudioClock.ChangeSource(track);
+            AudioClock.Seek(track.CurrentTime);
+        }
 
         private readonly LLinModRateAdjust modRateAdjust = new LLinModRateAdjust();
 
