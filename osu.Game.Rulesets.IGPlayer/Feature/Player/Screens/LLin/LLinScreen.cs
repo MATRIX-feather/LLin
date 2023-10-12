@@ -156,11 +156,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
             this.reBindClock(newControlPlugin.GetCurrentTrack());
         }
 
-        private void reBindClock(DrawableTrack track)
-        {
-            AudioClock.ChangeSource(track);
-            AudioClock.Seek(track.CurrentTime);
-        }
+        private void reBindClock(DrawableTrack track) => AudioClock.ChangeSource(track);
 
         private readonly LLinModRateAdjust modRateAdjust = new LLinModRateAdjust();
 
