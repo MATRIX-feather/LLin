@@ -5,6 +5,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
+using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins;
@@ -130,6 +131,8 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
         public bool InterfacesHidden { get; }
 
         #region 音频插件控制
+
+        public DecouplingFramedClock AudioClock { get; }
 
         /// <summary>
         /// 请求接手音频控制

@@ -6,7 +6,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Logging;
 using osuTK;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.Visualizers.Circular
@@ -69,8 +68,6 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.Rulese
                         Vector2Extensions.Transform(bottomDotPosition + dotBottomOffset, DrawInfo.Matrix),
                         Vector2Extensions.Transform(bottomDotPosition + dotBottomOffset + dotAmplitudeOffset, DrawInfo.Matrix)
                     );
-
-                Logger.Log($"T {circleTexture} :; Q {bottomDotQuad} :: DC {DrawColourInfo.Colour} :: VA {VertexBatch.AddAction}");
 
                 renderer.DrawQuad(
                     circleTexture,

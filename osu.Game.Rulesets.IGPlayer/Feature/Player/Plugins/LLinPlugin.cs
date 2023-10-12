@@ -93,7 +93,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
 
         public abstract int Version { get; }
 
-        [Resolved(CanBeNull = true)]
+        [Resolved(canBeNull: true)]
         private IImplementLLin? llin { get; set; }
 
         [Obsolete("Mvis => LLin")]

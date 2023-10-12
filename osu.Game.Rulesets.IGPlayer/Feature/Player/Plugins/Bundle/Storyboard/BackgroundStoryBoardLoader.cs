@@ -4,6 +4,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
@@ -116,11 +117,29 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard
             }
         }
 
-        protected override Drawable CreateContent() => currentStoryboard = new BackgroundStoryboard(targetBeatmap)
+        protected override Drawable CreateContent()
         {
-            RunningClock = new InterpolatingFramedClock(targetBeatmap.Track),
-            Alpha = 0.1f
-        };
+            DecouplingFramedClock clock;
+
+            if (LLin != null)
+            {
+                clock = LLin.AudioClock;
+            }
+            else
+            {
+                clock = new DecouplingFramedClock();
+                clock.Stop();
+                Logger.Log("Called CreateContent() but LLin is null?", level: LogLevel.Error);
+            }
+
+            currentStoryboard = new BackgroundStoryboard(targetBeatmap)
+            {
+                RunningClock = new InterpolatingFramedClock(clock),
+                Alpha = 0.1f
+            };
+
+            return currentStoryboard;
+        }
 
         public override IPluginConfigManager CreateConfigManager(Storage storage) => new SbLoaderConfigManager(storage);
 

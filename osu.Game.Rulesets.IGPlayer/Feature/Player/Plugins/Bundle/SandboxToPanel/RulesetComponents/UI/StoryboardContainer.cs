@@ -13,6 +13,7 @@ using osu.Game.Graphics.Backgrounds;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration;
 using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers;
+using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
 using osu.Game.Storyboards.Drawables;
 using osuTK;
 using osuTK.Graphics;
@@ -102,7 +103,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.Rulese
             }
 
             [BackgroundDependencyLoader]
-            private void load()
+            private void load(IImplementLLin llin)
             {
                 RelativeSizeAxes = Axes.Both;
                 Volume.Value = 0;
@@ -126,7 +127,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.Rulese
                 Children = new Drawable[]
                 {
                     layer,
-                    new FillStoryboard(beatmap.Storyboard) { Clock = new InterpolatingFramedClock(beatmap.Track) }
+                    new FillStoryboard(beatmap.Storyboard) { Clock = new InterpolatingFramedClock(llin.AudioClock) }
                 };
             }
 

@@ -21,6 +21,7 @@ using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
+using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.UserInterface;
@@ -85,6 +86,11 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
 
         #region 音频
 
+        public DecouplingFramedClock AudioClock { get; } = new()
+        {
+            AllowDecoupling = false
+        };
+
         private IProvideAudioControlPlugin? realAudioControlPlugin;
 
         private IProvideAudioControlPlugin audioControlPlugin
@@ -137,12 +143,16 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
 
             //设置当前控制插件IsCurrent为false
             audioControlPlugin.IsCurrent = false;
+            audioControlPlugin.OnTrackChange -= reBindClock;
 
             //切换并设置当前控制插件IsCurrent为true
             audioControlPlugin = pacp ?? pluginManager.DefaultAudioController;
             audioControlPlugin.IsCurrent = true;
+            audioControlPlugin.OnTrackChange += reBindClock;
             //Logger.Log($"更改控制插件到{audioControlProvider}");
         }
+
+        private void reBindClock(DrawableTrack track) => AudioClock.ChangeSource(track);
 
         private readonly LLinModRateAdjust modRateAdjust = new LLinModRateAdjust();
 
@@ -1027,6 +1037,8 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
         protected override void Update()
         {
             songProgressButton.Bindable.Value = CurrentTrack.IsRunning;
+
+            //this.AudioClock.Seek(CurrentTrack.CurrentTime);
             base.Update();
         }
 

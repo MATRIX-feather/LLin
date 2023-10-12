@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -56,6 +54,10 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
 
         public DrawableTrack GetCurrentTrack() => controller.CurrentTrack;
 
+        private DrawableTrack? prevTrack;
+
+        public Action<DrawableTrack> OnTrackChange { get; set; }
+
         public bool IsCurrent { get; set; }
 
         protected override Drawable CreateContent() => new PlaceHolder();
@@ -79,6 +81,18 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
             storage ??= (Storage)DependenciesContainer.Get(typeof(Storage));
 
             return base.CreateConfigManager(storage);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            var currentTrack = GetCurrentTrack();
+
+            if (currentTrack == prevTrack) return;
+
+            prevTrack = currentTrack;
+            OnTrackChange?.Invoke(currentTrack);
         }
     }
 }
