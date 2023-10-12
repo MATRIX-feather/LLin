@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard.Storyboard
     [LongRunningLoad]
     public partial class BackgroundStoryboard : BeatmapSkinProvidingContainer
     {
-        public InterpolatingFramedClock RunningClock;
+        public IFrameBasedClock RunningClock;
         private DrawableStoryboard drawableStoryboard;
 
         private readonly WorkingBeatmap working;

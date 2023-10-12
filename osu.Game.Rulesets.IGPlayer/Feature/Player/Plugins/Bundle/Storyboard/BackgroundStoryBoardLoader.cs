@@ -134,7 +134,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard
 
             currentStoryboard = new BackgroundStoryboard(targetBeatmap)
             {
-                RunningClock = new InterpolatingFramedClock(clock),
+                RunningClock = clock,
                 Alpha = 0.1f
             };
 
