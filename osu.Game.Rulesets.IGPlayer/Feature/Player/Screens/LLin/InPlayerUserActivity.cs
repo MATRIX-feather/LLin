@@ -1,7 +1,7 @@
 using osu.Game.Beatmaps;
 using osu.Game.Users;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
 public class InPlayerUserActivity : UserActivity.InGame
 {

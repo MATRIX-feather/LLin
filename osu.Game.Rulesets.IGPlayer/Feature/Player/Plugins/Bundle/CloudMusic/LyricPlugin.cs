@@ -11,18 +11,18 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.DBus;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Helper;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Sidebar;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.UI;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SettingsItems;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.DBus;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.UI;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
 {
     public partial class LyricPlugin : BindableControlledPlugin
     {

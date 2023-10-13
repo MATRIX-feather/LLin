@@ -1,6 +1,6 @@
-using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.DummyAudio
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyAudio
 {
     internal class DummyAudioPluginProvider : LLinPluginProvider
     {

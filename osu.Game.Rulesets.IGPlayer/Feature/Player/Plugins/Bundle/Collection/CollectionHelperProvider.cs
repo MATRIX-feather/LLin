@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
 {
     public class CollectionHelperProvider : LLinPluginProvider
     {

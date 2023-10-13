@@ -1,7 +1,7 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers
 {
     public partial class MusicIntensityController : MusicAmplitudesProvider
     {

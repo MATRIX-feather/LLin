@@ -5,7 +5,7 @@ using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.UI
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.UI
 {
     public partial class InteractiveContainer : Container
     {

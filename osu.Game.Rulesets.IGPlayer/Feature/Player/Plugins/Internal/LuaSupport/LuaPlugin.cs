@@ -11,12 +11,12 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input.Bindings;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport.Graphics;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport.LuaFunctions;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport.LuaFunctions;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport
 {
     public partial class LuaPlugin : BindableControlledPlugin, IKeyBindingHandler<GlobalAction>
     {

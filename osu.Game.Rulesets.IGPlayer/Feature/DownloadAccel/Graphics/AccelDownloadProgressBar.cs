@@ -4,9 +4,9 @@ using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Drawables;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online;
-using osu.Game.Rulesets.IGPlayer.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel.Graphics;
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Graphics;
 
 public partial class AccelDownloadProgressBar : DownloadProgressBar
 {

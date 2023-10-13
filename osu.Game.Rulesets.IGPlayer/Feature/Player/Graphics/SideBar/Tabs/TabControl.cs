@@ -7,11 +7,11 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics.Containers;
-using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs
 {
     internal partial class TabControl : CompositeDrawable
     {

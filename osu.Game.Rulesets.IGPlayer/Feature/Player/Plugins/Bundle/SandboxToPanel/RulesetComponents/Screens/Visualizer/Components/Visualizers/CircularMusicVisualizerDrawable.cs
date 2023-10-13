@@ -1,7 +1,7 @@
 ﻿using osu.Framework.Bindables;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.Visualizers
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.Visualizers
 {
     public abstract partial class CircularMusicVisualizerDrawable : MusicVisualizerDrawable
     {

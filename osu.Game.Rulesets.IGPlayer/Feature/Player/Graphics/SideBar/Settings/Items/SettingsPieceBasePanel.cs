@@ -13,13 +13,13 @@ using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items
 {
     public partial class SettingsPieceBasePanel : CompositeDrawable
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using osu.Game.Overlays.BeatmapSet.Buttons;
 
-namespace osu.Game.Rulesets.IGPlayer.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public static class InjectorExtension
 {

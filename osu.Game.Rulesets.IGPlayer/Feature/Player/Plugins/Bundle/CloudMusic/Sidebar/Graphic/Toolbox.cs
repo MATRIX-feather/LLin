@@ -11,13 +11,13 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Helper;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic
 {
     public partial class Toolbox : CompositeDrawable
     {

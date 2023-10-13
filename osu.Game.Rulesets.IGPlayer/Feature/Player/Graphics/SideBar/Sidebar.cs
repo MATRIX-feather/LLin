@@ -8,11 +8,11 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar
 {
     internal partial class Sidebar : VisibilityContainer
     {

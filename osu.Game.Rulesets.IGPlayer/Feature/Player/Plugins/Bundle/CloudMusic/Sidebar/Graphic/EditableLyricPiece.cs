@@ -14,12 +14,12 @@ using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic
 {
     public partial class EditableLyricPiece : DrawableLyric, IHasTooltip
     {

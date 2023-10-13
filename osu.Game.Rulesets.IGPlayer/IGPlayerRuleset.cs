@@ -16,7 +16,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Difficulty;
-using osu.Game.Rulesets.IGPlayer.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 using osu.Game.Rulesets.IGPlayer.Rs.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Rs.Mods;
 using osu.Game.Rulesets.IGPlayer.Rs.UI;

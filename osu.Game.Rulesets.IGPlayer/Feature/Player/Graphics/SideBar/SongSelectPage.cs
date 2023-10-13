@@ -11,7 +11,7 @@ using osu.Game.Graphics.Sprites;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar
 {
     public partial class SongSelectPage : CompositeDrawable, ISidebarContent
     {

@@ -1,7 +1,7 @@
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc
 {
     public partial class BlockMouseBox : Box
     {

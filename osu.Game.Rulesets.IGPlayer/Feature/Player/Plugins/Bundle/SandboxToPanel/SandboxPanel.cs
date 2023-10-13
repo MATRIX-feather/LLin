@@ -6,17 +6,17 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SettingsItems;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osuTK;
-using LayoutController = osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.LayoutController;
-using Particles = osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.Particles;
+using LayoutController = osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.LayoutController;
+using Particles = osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.Particles;
 
 #nullable disable
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel
 {
     [Cached]
     public partial class SandboxPlugin : BindableControlledPlugin

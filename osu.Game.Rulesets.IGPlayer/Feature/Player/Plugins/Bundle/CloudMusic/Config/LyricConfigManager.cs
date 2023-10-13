@@ -1,9 +1,9 @@
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Config
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Config
 {
     public class LyricConfigManager : PluginConfigManager<LyricSettings>
     {

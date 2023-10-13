@@ -8,10 +8,10 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Pooling;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Cursor;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Sidebar.Screens
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar.Screens
 {
     public abstract partial class LyricScreen<T> : SidebarScreen
         where T : DrawableLyric, new()

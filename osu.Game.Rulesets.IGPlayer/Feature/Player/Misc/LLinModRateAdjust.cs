@@ -5,7 +5,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Localisation;
 using osu.Game.Rulesets.Mods;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc
 {
     internal class LLinModRateAdjust : ModRateAdjust
     {

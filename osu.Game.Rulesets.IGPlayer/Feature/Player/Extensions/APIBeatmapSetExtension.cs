@@ -1,6 +1,6 @@
 using osu.Game.Online.API.Requests.Responses;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Extensions;
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Extensions;
 
 public static class APIBeatmapSetExtension
 {

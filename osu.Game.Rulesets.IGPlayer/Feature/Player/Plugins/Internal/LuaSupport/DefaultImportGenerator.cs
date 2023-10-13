@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using osu.Framework.Graphics.Sprites;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport
 {
     public class DefaultImportGenerator
     {

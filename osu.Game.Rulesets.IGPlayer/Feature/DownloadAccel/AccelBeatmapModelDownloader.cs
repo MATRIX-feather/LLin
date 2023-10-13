@@ -5,10 +5,10 @@ using osu.Game.Database;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.DownloadAccel.Extensions;
+using osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Extensions;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel;
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel;
 
 public class AccelBeatmapModelDownloader : BeatmapModelDownloader
 {

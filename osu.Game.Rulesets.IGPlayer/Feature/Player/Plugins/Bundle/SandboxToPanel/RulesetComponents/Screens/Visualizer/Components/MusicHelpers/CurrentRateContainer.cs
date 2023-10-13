@@ -2,7 +2,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers
 {
     public partial class CurrentRateContainer : RateAdjustableContainer
     {

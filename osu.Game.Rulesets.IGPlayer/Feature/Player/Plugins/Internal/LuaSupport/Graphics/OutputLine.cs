@@ -13,7 +13,7 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport.Graphics
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport.Graphics
 {
     internal partial class OutputLine : CompositeDrawable, IHasContextMenu
     {

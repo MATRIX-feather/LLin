@@ -1,7 +1,7 @@
 using osu.Framework.Platform;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard.Config
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard.Config
 {
     public class SbLoaderConfigManager : PluginConfigManager<SbLoaderSettings>
     {

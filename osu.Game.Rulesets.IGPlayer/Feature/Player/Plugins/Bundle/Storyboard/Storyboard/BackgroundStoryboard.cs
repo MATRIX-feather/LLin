@@ -7,7 +7,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Skinning;
 using osu.Game.Storyboards.Drawables;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard.Storyboard
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard.Storyboard
 {
     [LongRunningLoad]
     public partial class BackgroundStoryboard : BeatmapSkinProvidingContainer

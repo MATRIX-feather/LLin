@@ -2,10 +2,10 @@ using System;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types
 {
     public interface IFunctionProvider
     {

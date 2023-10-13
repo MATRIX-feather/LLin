@@ -4,9 +4,9 @@ using System.Linq;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Input;
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Input;
 
 public partial class RulesetInputHandler : CompositeDrawable, IKeyBindingHandler<IGAction>
 {

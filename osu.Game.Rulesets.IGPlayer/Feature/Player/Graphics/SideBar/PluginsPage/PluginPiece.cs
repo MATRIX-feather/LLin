@@ -17,12 +17,12 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.PluginsPage
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.PluginsPage
 {
     public partial class PluginPiece : CompositeDrawable, IHasTooltip
     {

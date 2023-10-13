@@ -1,8 +1,8 @@
 using System;
 using osu.Framework.Graphics.Pooling;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic
 {
     public abstract partial class DrawableLyric : PoolableDrawable, IComparable<DrawableLyric>
     {

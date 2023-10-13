@@ -7,7 +7,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Beatmaps;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc
 {
     public partial class BeatmapBackground : BufferedContainer
     {

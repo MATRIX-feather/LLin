@@ -3,10 +3,10 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Rulesets.IGPlayer.Player.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.BottomBar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.BottomBar
 {
     public partial class SongProgressBar : ProgressBar
     {

@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 using M.DBus;
 using Tmds.DBus;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.DBus
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.DBus
 {
     [DBusInterface("io.matrix_feather.mvis.lyric")]
     public interface ILyricDBusObject : IMDBusObject

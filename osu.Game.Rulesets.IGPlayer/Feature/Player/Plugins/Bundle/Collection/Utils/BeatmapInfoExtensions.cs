@@ -4,7 +4,7 @@
 using System;
 using osu.Game.Beatmaps;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Utils
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Utils
 {
     public static class BeatmapInfoExtensions
     {

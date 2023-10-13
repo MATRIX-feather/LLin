@@ -1,10 +1,10 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Input.Events;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.BottomBar.Buttons
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.BottomBar.Buttons
 {
     public partial class BottomBarSwitchButton : BottomBarButton
     {

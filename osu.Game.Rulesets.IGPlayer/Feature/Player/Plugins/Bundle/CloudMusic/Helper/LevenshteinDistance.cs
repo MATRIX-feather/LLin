@@ -1,6 +1,6 @@
 using System;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Helper
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper
 {
     /// <summary>
     /// From https://stackoverflow.com/questions/6944056/compare-string-similarity/6944095

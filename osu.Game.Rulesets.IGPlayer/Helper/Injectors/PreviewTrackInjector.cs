@@ -18,13 +18,13 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.IGPlayer.DownloadAccel;
-using osu.Game.Rulesets.IGPlayer.DownloadAccel.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel;
+using osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Graphics;
 using osu.Game.Tests.Visual;
 using osuTK;
 using Realms;
 
-namespace osu.Game.Rulesets.IGPlayer.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public partial class PreviewTrackInjector : AbstractInjector
 {
@@ -53,7 +53,7 @@ public partial class PreviewTrackInjector : AbstractInjector
 
         try
         {
-            if(!locateOverlays())
+            if (!locateOverlays())
                 Logger.Log("无法定位到PreviewTrackManager", level: LogLevel.Important);
 
             if (AccelBeatmapModelDownloader == null)
@@ -62,7 +62,7 @@ public partial class PreviewTrackInjector : AbstractInjector
                 AccelBeatmapModelDownloader.attachOsuGame(notificationOverlay);
             }
 
-            if (DebugUtils.IsDebugBuild)
+#if DEBUG
             game.Add(new OsuAnimatedButton
             {
                 Size = new Vector2(120),
@@ -101,6 +101,7 @@ public partial class PreviewTrackInjector : AbstractInjector
                     previewTrack.Value = new PreviewTrackManager.TrackManagerPreviewTrack(apiSet, new OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualStore(this.Clock));
                 }
             });
+#endif
         }
         catch (Exception e)
         {

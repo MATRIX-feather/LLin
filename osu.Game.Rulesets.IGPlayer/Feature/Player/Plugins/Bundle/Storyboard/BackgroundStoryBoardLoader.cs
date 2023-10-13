@@ -9,14 +9,14 @@ using osu.Framework.Platform;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard.Storyboard;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SettingsItems;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard.Storyboard;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osu.Game.Screens.Play;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard
 {
     ///<summary>
     /// 负责故事版的异步加载功能

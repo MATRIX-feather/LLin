@@ -9,10 +9,10 @@ using osu.Framework;
 using osu.Framework.Configuration;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Configuration
+namespace osu.Game.Rulesets.IGPlayer.Helper.Configuration
 {
     public class MConfigManager : IniConfigManager<MSetting>
     {

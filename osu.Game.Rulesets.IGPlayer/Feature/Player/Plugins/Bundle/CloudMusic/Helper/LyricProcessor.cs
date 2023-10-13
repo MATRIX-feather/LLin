@@ -11,11 +11,11 @@ using osu.Framework.Bindables;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.IGPlayer.Player.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
 using Component = osu.Framework.Graphics.Component;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Helper
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper
 {
     public partial class LyricProcessor : Component
     {

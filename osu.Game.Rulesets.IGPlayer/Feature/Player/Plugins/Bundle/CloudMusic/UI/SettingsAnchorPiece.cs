@@ -1,9 +1,9 @@
 using System.Linq;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.UI
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.UI
 {
     public partial class SettingsAnchorPiece : SettingsListPiece<Anchor>
     {

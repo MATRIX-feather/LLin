@@ -1,7 +1,7 @@
 using System;
 using osu.Framework.Extensions.EnumExtensions;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc
 {
     /// <summary>
     /// 播放器相关信息

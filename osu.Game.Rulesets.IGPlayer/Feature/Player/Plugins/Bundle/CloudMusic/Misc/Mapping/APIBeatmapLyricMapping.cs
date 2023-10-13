@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc.Mapping
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc.Mapping
 {
     public class APIBeatmapLyricMapping : IDisposable
     {

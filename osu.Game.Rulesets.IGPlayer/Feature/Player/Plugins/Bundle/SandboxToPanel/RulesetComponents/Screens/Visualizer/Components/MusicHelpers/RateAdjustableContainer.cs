@@ -1,7 +1,7 @@
 ﻿using osu.Framework.Graphics.Containers;
 using osu.Framework.Timing;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers
 {
     public partial class RateAdjustableContainer : Container
     {

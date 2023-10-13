@@ -10,9 +10,9 @@ using osu.Framework.Graphics.Containers;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Backgrounds;
-using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 {
     public partial class MBgTriangles : VisibilityContainer
     {

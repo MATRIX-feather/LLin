@@ -10,14 +10,14 @@ using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Rulesets.IGPlayer.Player.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK;
 using Color4 = osuTK.Graphics.Color4;
 
 #nullable disable
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Yasp.Panels
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
 {
     public partial class NsiPanel : CompositeDrawable, IPanel
     {

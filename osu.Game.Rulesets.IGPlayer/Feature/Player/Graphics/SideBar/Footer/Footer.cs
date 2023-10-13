@@ -6,9 +6,9 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Footer
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Footer
 {
     public partial class Footer : CompositeDrawable
     {

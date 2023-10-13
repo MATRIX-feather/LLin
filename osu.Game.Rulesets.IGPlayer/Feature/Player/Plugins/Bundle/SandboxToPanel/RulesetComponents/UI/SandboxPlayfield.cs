@@ -6,7 +6,7 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.UI;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.UI
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.UI
 {
     public partial class SandboxPlayfield : Playfield
     {

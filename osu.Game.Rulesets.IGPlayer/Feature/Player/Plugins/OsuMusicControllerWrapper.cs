@@ -3,11 +3,11 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
 {
     internal partial class OsuMusicControllerWrapper : LLinPlugin, IProvideAudioControlPlugin
     {

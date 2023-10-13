@@ -11,7 +11,7 @@ using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
 {
     internal class PluginStore : NamespacedResourceStore<byte[]>
     {

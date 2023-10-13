@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using osu.Framework.Extensions;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items
 {
     public partial class SettingsEnumPiece<T> : SettingsListPiece<T>
         where T : struct, Enum

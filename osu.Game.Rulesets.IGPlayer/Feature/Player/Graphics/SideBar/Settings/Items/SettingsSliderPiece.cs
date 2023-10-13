@@ -6,7 +6,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items
 {
     public partial class SettingsSliderPiece<T> : SettingsPieceBasePanel, ISettingsItem<T>
         where T : struct, IEquatable<T>, IComparable<T>, IConvertible

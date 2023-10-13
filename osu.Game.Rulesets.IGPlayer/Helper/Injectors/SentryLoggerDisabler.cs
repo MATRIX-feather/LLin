@@ -3,7 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Logging;
 using osu.Game.Utils;
 
-namespace osu.Game.Rulesets.IGPlayer.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public partial class SentryLoggerDisabler : AbstractInjector
 {

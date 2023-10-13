@@ -5,9 +5,9 @@ using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Online;
 using osu.Game.Online.API;
-using osu.Game.Rulesets.IGPlayer.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel;
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel;
 
 public partial class AccelBeatmapDownloadTracker : BeatmapDownloadTracker
 {

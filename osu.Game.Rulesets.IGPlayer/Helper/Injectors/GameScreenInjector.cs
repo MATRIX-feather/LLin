@@ -9,14 +9,14 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osu.Game.Screens;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace osu.Game.Rulesets.IGPlayer.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public partial class GameScreenInjector : AbstractInjector
 {

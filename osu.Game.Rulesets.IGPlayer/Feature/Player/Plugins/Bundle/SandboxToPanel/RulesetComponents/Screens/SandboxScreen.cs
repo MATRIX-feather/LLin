@@ -3,7 +3,7 @@ using osu.Framework.Screens;
 using osu.Game.Beatmaps;
 using osu.Game.Screens.Play;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens
 {
     public abstract partial class SandboxScreen : ScreenWithBeatmapBackground
     {

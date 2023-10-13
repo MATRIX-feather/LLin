@@ -12,11 +12,11 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.Containers;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Utils;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Utils;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Sidebar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Sidebar
 {
     public partial class BeatmapList : CompositeDrawable
     {

@@ -1,7 +1,7 @@
 using System;
 using osu.Game.Overlays.Dialog;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.PluginsPage
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.PluginsPage
 {
     public partial class PluginRemoveConfirmDialog : PopupDialog
     {

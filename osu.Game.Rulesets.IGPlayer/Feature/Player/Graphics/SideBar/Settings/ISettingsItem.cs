@@ -3,7 +3,7 @@ using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings
 {
     public interface ISettingsItem<T> : IHasTooltip
     {

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration
 {
     public partial class SandboxRulesetConfigManager : PluginConfigManager<SandboxRulesetSetting>
     {

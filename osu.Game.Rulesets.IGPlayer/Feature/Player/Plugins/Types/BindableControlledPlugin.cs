@@ -3,7 +3,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types
 {
     public abstract partial class BindableControlledPlugin : LLinPlugin
     {
