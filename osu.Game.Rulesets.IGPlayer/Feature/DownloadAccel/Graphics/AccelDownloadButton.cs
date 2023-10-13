@@ -7,7 +7,7 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Online;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.BeatmapSet.Buttons;
-using osu.Game.Rulesets.IGPlayer.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.IGPlayer.DownloadAccel.Graphics;

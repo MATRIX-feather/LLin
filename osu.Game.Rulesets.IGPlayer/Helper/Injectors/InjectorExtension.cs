@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using osu.Game.Overlays.BeatmapSet.Buttons;
 
-namespace osu.Game.Rulesets.IGPlayer.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public static class InjectorExtension
 {
@@ -29,7 +28,7 @@ public static class InjectorExtension
         if (baseType != null && field == null)
             field = FindFieldInstanceInBaseType(baseType, type);
 
-        return obj is not HeaderDownloadButton ? field : field;
+        return field;
     }
 
     public static object? FindInstance(this object obj, Type type)

@@ -16,7 +16,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Difficulty;
-using osu.Game.Rulesets.IGPlayer.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 using osu.Game.Rulesets.IGPlayer.Rs.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Rs.Mods;
 using osu.Game.Rulesets.IGPlayer.Rs.UI;
@@ -128,23 +128,17 @@ namespace osu.Game.Rulesets.IGPlayer
                 try
                 {
                     Logger.Log("[IGPlayer] Injecting dependencies...");
-                    Logger.Log($"Deps: {game} :: {storage} :: {beatmapImporter} :: {api}");
+                    Logger.Log($"Deps: Game = {game} :: Storage = {storage} :: Importer = {beatmapImporter} :: IAPIProvider = {api}");
 
-                    if (!OsuGameInjector.InjectDependencies(storage, game, this.Scheduler))
-                    {
-                        Logger.Log("[IGPlayer] Inject failed!");
-                        return;
-                    }
+                    if (OsuGameInjector.InjectDependencies(storage, game, this.Scheduler)) return;
+
+                    Logger.Log("[IGPlayer] Inject failed!", level: LogLevel.Error);
+                    return;
                 }
                 catch (Exception e)
                 {
                     Logging.LogError(e, "??");
                 }
-            }
-
-            protected override void LoadComplete()
-            {
-                base.LoadComplete();
             }
         }
 

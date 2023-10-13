@@ -1,11 +1,9 @@
 using System;
 using System.Reflection;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Development;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Logging;
 using osu.Framework.Utils;
 using osu.Game.Audio;
@@ -18,13 +16,14 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
+using osu.Game.Overlays.Notifications;
 using osu.Game.Rulesets.IGPlayer.DownloadAccel;
 using osu.Game.Rulesets.IGPlayer.DownloadAccel.Graphics;
 using osu.Game.Tests.Visual;
 using osuTK;
 using Realms;
 
-namespace osu.Game.Rulesets.IGPlayer.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public partial class PreviewTrackInjector : AbstractInjector
 {
@@ -47,60 +46,80 @@ public partial class PreviewTrackInjector : AbstractInjector
     private APIBeatmapSet? currentApiBeatmapSet;
 
     [BackgroundDependencyLoader]
-    private void load(AudioManager audio, TextureStore textures, INotificationOverlay notificationOverlay)
+    private void load(INotificationOverlay notificationOverlay)
     {
         previewTrack.BindValueChanged(this.onPreviewTrackChanged);
 
         try
         {
-            if(!locateOverlays())
-                Logger.Log("无法定位到PreviewTrackManager", level: LogLevel.Important);
-
-            if (AccelBeatmapModelDownloader == null)
+            if (!locateOverlays())
             {
-                SetupAccelDownloader(beatmapManager, apiProvider);
-                AccelBeatmapModelDownloader.attachOsuGame(notificationOverlay);
+                const string msg = "无法定位到PreviewTrackManager, 下载加速将无法使用！";
+                notificationOverlay.Post(new SimpleNotification
+                {
+                    Text = msg
+                });
+
+                Logger.Log($"[{Constants.LOG_PREFIX}] {msg}");
+                return;
             }
 
-            if (DebugUtils.IsDebugBuild)
-            game.Add(new OsuAnimatedButton
+            if (beatmapManager == null)
             {
-                Size = new Vector2(120),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Children = new Drawable[]
+                const string msg = "未能获取到重要组件, 下载加速将无法使用！";
+                notificationOverlay.Post(new SimpleNotification
                 {
-                    new OsuSpriteText()
-                    {
-                        Text = "New track",
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Font = OsuFont.GetFont(size: 24)
-                    }
-                },
-                Action = () =>
-                {
-                    var apiSet = new APIBeatmapSet
-                    {
-                        HasVideo = RNG.Next(0, 1000) < 500,
-                        OnlineID = 1247651 + RNG.Next(0, 100),
-                        Title = "Anemone",
-                        TitleUnicode = "Anomone (Unicode)",
-                        Artist = "DUSTCELL",
-                        Author = new APIUser
-                        {
-                            Username = "Sparhtend"
-                        },
-                        Covers = new BeatmapSetOnlineCovers
-                        {
-                            Card = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg",
-                            CardLowRes = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg"
-                        }
-                    };
+                    Text = msg
+                });
 
-                    previewTrack.Value = new PreviewTrackManager.TrackManagerPreviewTrack(apiSet, new OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualStore(this.Clock));
-                }
-            });
+                Logger.Log($"[{Constants.LOG_PREFIX}] {msg}");
+                return;
+            }
+
+            SetupAccelDownloader(beatmapManager, apiProvider);
+            AccelBeatmapModelDownloader!.attachOsuGame(notificationOverlay);
+
+            if (DebugUtils.IsDebugBuild)
+            {
+                game.Add(new OsuAnimatedButton
+                {
+                    Size = new Vector2(120),
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Children = new Drawable[]
+                    {
+                        new OsuSpriteText
+                        {
+                            Text = "New track",
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Font = OsuFont.GetFont(size: 24)
+                        }
+                    },
+                    Action = () =>
+                    {
+                        var apiSet = new APIBeatmapSet
+                        {
+                            HasVideo = RNG.Next(0, 1000) < 500,
+                            OnlineID = 1247651 + RNG.Next(0, 100),
+                            Title = "Anemone",
+                            TitleUnicode = "Anomone (Unicode)",
+                            Artist = "DUSTCELL",
+                            Author = new APIUser
+                            {
+                                Username = "Sparhtend"
+                            },
+                            Covers = new BeatmapSetOnlineCovers
+                            {
+                                Card = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg",
+                                CardLowRes = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg"
+                            }
+                        };
+
+                        previewTrack.Value = new PreviewTrackManager.TrackManagerPreviewTrack(apiSet, new OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualStore(this.Clock));
+                    }
+                });
+            }
         }
         catch (Exception e)
         {
@@ -132,7 +151,7 @@ public partial class PreviewTrackInjector : AbstractInjector
     {
         lock (injectLock)
         {
-            object? val;
+            //object? val;
 
             if (previewTrackFieldInfo == null)
             {
@@ -141,7 +160,7 @@ public partial class PreviewTrackInjector : AbstractInjector
 
                 if (overlaysField == null) return false;
 
-                val = overlaysField.GetValue(previewTrackManager);
+                //val = overlaysField.GetValue(previewTrackManager);
                 //if (val is not PreviewTrackManager.TrackManagerPreviewTrack) throw new NullDependencyException("获取到的值不是PreviewTrack");
 
                 this.previewTrackFieldInfo = overlaysField;
@@ -152,7 +171,7 @@ public partial class PreviewTrackInjector : AbstractInjector
         }
     }
 
-    private APIBeatmapSet getAPISet(PreviewTrackManager.TrackManagerPreviewTrack previewTrack)
+    private APIBeatmapSet? getAPISet(PreviewTrackManager.TrackManagerPreviewTrack previewTrack)
     {
         APIBeatmapSet? val;
 
@@ -171,6 +190,7 @@ public partial class PreviewTrackInjector : AbstractInjector
         prevContainer?.Hide();
         prevContainer?.Expire();
 
+        // Yes, new track is nullable
         if (track == null)
         {
             currentApiBeatmapSet = null;
@@ -178,7 +198,8 @@ public partial class PreviewTrackInjector : AbstractInjector
         }
 
         var apiSet = getAPISet(track);
-        if (apiSet.Equals(currentApiBeatmapSet)) return;
+        if (apiSet == null || apiSet.Equals(currentApiBeatmapSet)) return;
+
         currentApiBeatmapSet = apiSet;
 
         //apiSet.TitleUnicode = "标题Unicodeeeeeeeeeeeeeeeeeeeeeeeeeeeeee测试";
