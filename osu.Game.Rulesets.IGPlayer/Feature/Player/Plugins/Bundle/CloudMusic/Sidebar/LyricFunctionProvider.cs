@@ -1,10 +1,10 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using M.Resources.Localisation.LLin.Plugins;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar
 {

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using M.DBus.Tray;
-using M.Resources.Localisation.LLin;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
@@ -41,6 +40,7 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.FallbackFunctio
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.SongSelect;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Screens;

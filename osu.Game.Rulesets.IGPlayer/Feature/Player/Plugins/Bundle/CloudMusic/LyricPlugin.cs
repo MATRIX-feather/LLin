@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using M.DBus.Tray;
-using M.Resources.Localisation.LLin;
-using M.Resources.Localisation.LLin.Plugins;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
@@ -21,6 +19,8 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sideba
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.UI;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
 {

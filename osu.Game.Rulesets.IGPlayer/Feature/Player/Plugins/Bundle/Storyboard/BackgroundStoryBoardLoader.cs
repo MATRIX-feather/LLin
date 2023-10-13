@@ -1,5 +1,4 @@
 using System;
-using M.Resources.Localisation.LLin;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -14,6 +13,7 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard.Config
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard.Storyboard;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin;
 using osu.Game.Screens.Play;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard

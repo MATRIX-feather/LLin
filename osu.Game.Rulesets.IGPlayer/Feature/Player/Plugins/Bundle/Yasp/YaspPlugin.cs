@@ -1,6 +1,4 @@
 using System;
-using M.Resources.Localisation.LLin;
-using M.Resources.Localisation.LLin.Plugins;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -12,6 +10,8 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp
 {

@@ -27,7 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helper" />
-    <Folder Include="Resources" />
     <Folder Include="Rs" />
   </ItemGroup>
 </Project>
