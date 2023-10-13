@@ -2,7 +2,6 @@ using System;
 using NetCoreServer;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Logging;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature;
 
@@ -15,13 +14,6 @@ public partial class FeatureManager : CompositeDrawable
 
     public FeatureManager()
     {
-        if (Instance != null && Instance != this)
-        {
-            Logger.Log($"[{Constants.LOG_PREFIX}] Duplicate FeatureManager instance", level: LogLevel.Error);
-            this.Expire();
-            return;
-        }
-
         Instance = this;
 
         // Check DBus

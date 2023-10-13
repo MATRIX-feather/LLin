@@ -1,8 +1,10 @@
 #nullable disable
 
 using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Game.Overlays;
+using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Screens.SongSelect
@@ -13,6 +15,12 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.SongSelect
 
         [Resolved]
         private MusicController musicController { get; set; }
+
+        protected override void LogoArriving(OsuLogo logo, bool resuming)
+        {
+            base.LogoArriving(logo, resuming);
+            logo.ScaleTo(0);
+        }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -30,18 +38,24 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.SongSelect
 
         protected override BeatmapDetailArea CreateBeatmapDetailArea() => new MvisBeatmapDetailArea
         {
-            SelectCurrentAction = () => OnStart()
+            SelectCurrentAction = callStart
         };
 
         public override bool AllowEditing => false;
 
-        protected override bool OnStart()
+        private void callStart(bool startAtZero)
         {
             SampleConfirm?.Play();
-            musicController.SeekTo(0);
+
+            if (startAtZero)
+                musicController.SeekTo(0);
 
             this.Exit();
+        }
 
+        protected override bool OnStart()
+        {
+            callStart(true);
             return true;
         }
     }
