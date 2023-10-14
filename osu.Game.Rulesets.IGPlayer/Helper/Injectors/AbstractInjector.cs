@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public abstract partial class AbstractInjector : CompositeDrawable
 {
-    private static readonly BindingFlags instanceFlag = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
+    protected static readonly BindingFlags InstanceOrStaticFlag = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
 
     /// <summary>
     /// 在给定的对象中寻找第一个符合<para>type</para>的非公开字段

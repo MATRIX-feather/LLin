@@ -3,7 +3,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
@@ -119,17 +118,21 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard
 
         protected override Drawable CreateContent()
         {
-            DecouplingFramedClock clock;
+            DecouplingFramedClock clock = new DecouplingFramedClock()
+            {
+                AllowDecoupling = false
+            };
 
             if (LLin != null)
+                clock.ChangeSource(LLin.AudioClock);
+
+            if (currentStoryboard != null)
             {
-                clock = LLin.AudioClock;
-            }
-            else
-            {
-                clock = new DecouplingFramedClock();
-                clock.Stop();
-                Logger.Log("Called CreateContent() but LLin is null?", level: LogLevel.Error);
+                var sbClock = (DecouplingFramedClock)currentStoryboard.RunningClock;
+
+                sbClock.AllowDecoupling = true;
+                sbClock.ChangeSource(null);
+                sbClock.Stop();
             }
 
             currentStoryboard = new BackgroundStoryboard(targetBeatmap)

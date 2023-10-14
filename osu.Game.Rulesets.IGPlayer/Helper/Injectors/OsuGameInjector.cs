@@ -15,6 +15,16 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public partial class OsuGameInjector : AbstractInjector
 {
+    /// <summary>
+    /// 当前注入生效的游戏中 OsuGame 的 HashCode，-1则代表未曾注入过
+    /// </summary>
+    private static int currentSessionHash = -1;
+
+    public static int GetRegisteredSessionHash()
+    {
+        return currentSessionHash;
+    }
+
     public static DependencyContainer? GetGameDepManager(OsuGame? gameInstance)
     {
         return gameInstance?.Dependencies as DependencyContainer;
@@ -22,15 +32,23 @@ public partial class OsuGameInjector : AbstractInjector
 
     public static bool InjectDependencies(Storage storage, OsuGame gameInstance, Scheduler scheduler)
     {
+        int sessionHashCode = gameInstance.GetHashCode();
+
+        if (currentSessionHash == sessionHashCode)
+        {
+            Logger.Log($"[{Constants.LOG_PREFIX}] Duplicate dependency inject call for current session, skipping...");
+            return true;
+        }
+
+        currentSessionHash = sessionHashCode;
+
         var depMgr = GetGameDepManager(gameInstance);
 
         if (depMgr == null)
         {
-            Logger.Log("[IGPlayer] DependencyContainer not found");
+            Logger.Log($"{Constants.LOG_PREFIX} DependencyContainer not found");
             return false;
         }
-
-        if (depMgr.Get<MConfigManager>() != null) return true;
 
         try
         {
@@ -69,7 +87,7 @@ public partial class OsuGameInjector : AbstractInjector
 
                 gameInstance.AddRange(new Drawable[]
                 {
-                    new SentryLoggerDisabler(),
+                    new SentryLoggerDisabler(gameInstance),
                     new GameScreenInjector(),
                     new PreviewTrackInjector()
                 });
@@ -80,6 +98,7 @@ public partial class OsuGameInjector : AbstractInjector
         }
         catch (Exception e)
         {
+            Logging.LogError(e, "注入游戏时出现错误，一些功能可能不会正常工作！");
             Logger.Log(e.Message, level: LogLevel.Important);
             return false;
         }

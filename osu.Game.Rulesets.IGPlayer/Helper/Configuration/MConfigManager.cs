@@ -95,6 +95,8 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Configuration
             SetDefault(MSetting.MprisUseAvatarlogoAsCover, true);
             SetDefault(MSetting.MprisUpdateInterval, 500d, 100d, 1000d);
 
+            SetDefault(MSetting.MvisStartFromBeginning, true);
+
             //排行榜
             //SetDefault(MSetting.InGameLeaderboardState, LeaderboardState.Fold);
         }
@@ -163,7 +165,8 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Configuration
         InGameLeaderboardState,
         MvisAutoVSync,
         MvisPlayerSettingsMaxWidth,
-        MvisUseTriangleV2
+        MvisUseTriangleV2,
+        MvisStartFromBeginning
     }
 
     public enum GamemodeActivateCondition

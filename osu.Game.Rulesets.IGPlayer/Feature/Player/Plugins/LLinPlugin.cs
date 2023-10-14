@@ -132,11 +132,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
         {
             PluginManager ??= DependenciesContainer.Get<LLinPluginManager>();
 
+            if (PluginManager == null)
+                throw new NullDependencyException("Null LLinPluginManager!");
+
             var config = PluginManager.GetConfigManager(this);
 
-            if (config != null)
-                DependenciesContainer.Cache(config);
-
+            DependenciesContainer.Cache(config);
             DependenciesContainer.Cache(this);
         }
 

@@ -9,7 +9,7 @@ public class Logging
     {
         while (true)
         {
-            Logger.Log($"{(string.IsNullOrEmpty(message) ? "" : $"{message}: ")}{e.Message}", level: LogLevel.Important);
+            Logger.Log($"[{Constants.LOG_PREFIX}] {(string.IsNullOrEmpty(message) ? "" : $"{message}: ")}{e.Message}", level: LogLevel.Important);
             Logger.Log(e.StackTrace);
 
             if (e.InnerException != null)

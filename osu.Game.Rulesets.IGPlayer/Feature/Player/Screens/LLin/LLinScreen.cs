@@ -1167,8 +1167,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                                   && currentFunctionBar.OkForHide()
                                   && !lockButton.Bindable.Value
                                   && !lockButton.Bindable.Disabled
-                                  && inputManager.DraggedDrawable == null
-                                  && inputManager.FocusedDrawable == null;
+                                  && inputManager?.DraggedDrawable == null
+                                  && inputManager?.FocusedDrawable == null;
 
         private void makeIdle(bool forceIdle)
         {

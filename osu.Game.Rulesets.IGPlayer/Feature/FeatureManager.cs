@@ -2,7 +2,6 @@ using System;
 using NetCoreServer;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Logging;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature;
 
@@ -15,13 +14,6 @@ public partial class FeatureManager : CompositeDrawable
 
     public FeatureManager()
     {
-        if (Instance != null && Instance != this)
-        {
-            Logger.Log("Duplicate FeatureManager instance", level: LogLevel.Important);
-            this.Expire();
-            return;
-        }
-
         Instance = this;
 
         // Check DBus
@@ -33,6 +25,7 @@ public partial class FeatureManager : CompositeDrawable
         {
             try
             {
+                // 尝试访问Tmds.DBus和M.DBus中的值，如果访问成功则代表安装了DBus集成
                 string? tmdsDBusSystrmAddr = Tmds.DBus.Address.System;
                 var mDbus = new M.DBus.ServiceUtils();
             }
@@ -48,6 +41,7 @@ public partial class FeatureManager : CompositeDrawable
         // Check GLazer
         try
         {
+            // 尝试加载Gosu集成所需的NetCoreServer，如果成功则代表安装了对应DLL
             var server = new HttpServer("127.0.0.1", 32763);
         }
         catch (Exception e)

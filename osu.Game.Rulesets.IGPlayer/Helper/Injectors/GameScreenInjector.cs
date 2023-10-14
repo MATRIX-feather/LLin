@@ -33,7 +33,7 @@ public partial class GameScreenInjector : AbstractInjector
     [BackgroundDependencyLoader]
     private void load()
     {
-        locateScreenStack();
+        hookScreenStack();
 
         if (ruleset is Bindable<RulesetInfo> rs)
         {
@@ -46,12 +46,10 @@ public partial class GameScreenInjector : AbstractInjector
         }
     }
 
-    private bool locateScreenStack()
+    private bool hookScreenStack()
     {
         lock (injectLock)
         {
-            if (screenStack != null) return false;
-
             var screenStackField = this.FindFieldInstance(game, typeof(OsuScreenStack));
 
             if (screenStackField == null) return false;
