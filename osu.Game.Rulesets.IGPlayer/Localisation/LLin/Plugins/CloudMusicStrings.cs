@@ -17,21 +17,21 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins
 
         public static LocalisableString ExperimentalWarning => new TranslatableString(getKey(@"experimental_warning"), @"Experimental Feature!");
 
-        public static LocalisableString SaveLyricOnDownloadedMain => new TranslatableString(getKey(@"save_lrc_on_downloaded_main"), @"Automatically Save Lyrics Locally");
+        public static LocalisableString SaveLyricOnDownloadedMain => new TranslatableString(getKey(@"save_lrc_on_downloaded_main"), @"Save Lyrics");
 
         public static LocalisableString SaveLyricOnDownloadedSub => new TranslatableString(getKey(@"save_lrc_on_downloaded_sub"), "Lyrics will be saved in custom/lyrics/beatmap-<ID>.json");
 
-        public static LocalisableString DisableShader => new TranslatableString(getKey(@"disable_shader"), @"Disable Additional Shadows");
+        public static LocalisableString DisableShader => new TranslatableString(getKey(@"disable_shader"), @"Disable Shadows");
 
         public static LocalisableString LocalOffset => new TranslatableString(getKey(@"global_offset_main"), @"Local Offset");
 
-        public static LocalisableString LyricFadeInDuration => new TranslatableString(getKey(@"lyric_fade_in_duration"), @"Lyric Fade-In Duration");
+        public static LocalisableString LyricFadeInDuration => new TranslatableString(getKey(@"lyric_fade_in_duration"), @"Fade-In Duration");
 
-        public static LocalisableString LyricFadeOutDuration => new TranslatableString(getKey(@"lyric_fade_out_duration"), @"Lyric Fade-Out Duration");
+        public static LocalisableString LyricFadeOutDuration => new TranslatableString(getKey(@"lyric_fade_out_duration"), @"Fade-Out Duration");
 
         public static LocalisableString LyricAutoScrollMain => new TranslatableString(getKey(@"lyric_auto_scroll_main"), @"Auto Scroll");
 
-        public static LocalisableString LyricAutoScrollSub => new TranslatableString(getKey(@"lyric_auto_scroll_sub"), @"Enables automatic scrolling in lyric interface");
+        public static LocalisableString LyricAutoScrollSub => new TranslatableString(getKey(@"lyric_auto_scroll_sub"), @"Enables auto scrolling in lyric interface");
 
         public static LocalisableString AudioControlRequest => new TranslatableString(getKey(@"audio_control_request"), @"Editing lyrics requires disabling song switching");
 
