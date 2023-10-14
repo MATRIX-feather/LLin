@@ -3,6 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Sections;
 
 namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Config
@@ -64,7 +65,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Config
                     //bug: 直接设置FillFlow的Width可能并不会生效，灵异事件？
                     Width = v.NewValue;
 
-                    int nmr = (int)Math.Floor(DrawWidth / (150 + 10f));
+                    int nmr = (int)Math.Floor(DrawWidth / (SettingsPieceBasePanel.SinglePanelWidth + 10f));
 
                     if (nmr != MaxRows)
                     {

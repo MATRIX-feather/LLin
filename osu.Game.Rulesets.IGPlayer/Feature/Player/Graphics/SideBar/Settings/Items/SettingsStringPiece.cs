@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
+using osu.Framework.Logging;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
@@ -26,7 +27,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
         {
             Schedule(() =>
             {
-                this.ResizeWidthTo(150 * rows + 5 * (rows - 1), 300, Easing.OutQuint);
+                this.ResizeWidthTo(180 * rows + 5 * (rows - 1), 300, Easing.OutQuint);
             });
         }
 
