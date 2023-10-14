@@ -11,8 +11,8 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items
 {
@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.It
         {
             Schedule(() =>
             {
-                this.ResizeWidthTo(150 * rows + 5 * (rows - 1), 300, Easing.OutQuint);
+                this.ResizeWidthTo(SinglePanelWidth * rows + 5 * (rows - 1), 300, Easing.OutQuint);
             });
         }
 

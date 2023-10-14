@@ -75,12 +75,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.It
         [Resolved]
         private Bindable<TabControlPosition> tabpos { get; set; }
 
+        public static readonly float SinglePanelWidth = 180f;
+
         public SettingsPieceBasePanel()
         {
             Masking = true;
             CornerRadius = 7.5f;
             AutoSizeAxes = Axes.Y;
-            Width = 150;
+            Width = SinglePanelWidth;
         }
 
         [BackgroundDependencyLoader]

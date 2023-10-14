@@ -9,8 +9,8 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Sections;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
+using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
 using osuTK;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings

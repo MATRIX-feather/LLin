@@ -2,10 +2,13 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Sections;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config
+namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Config
 {
     [Obsolete("请使用GetSettingEntries")]
     public abstract partial class PluginSidebarSettingsSection : Section
@@ -64,7 +67,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config
                     //bug: 直接设置FillFlow的Width可能并不会生效，灵异事件？
                     Width = v.NewValue;
 
-                    int nmr = (int)Math.Floor(DrawWidth / (150 + 10f));
+                    int nmr = (int)Math.Floor(DrawWidth / (SettingsPieceBasePanel.SinglePanelWidth + 10f));
 
                     if (nmr != MaxRows)
                     {
