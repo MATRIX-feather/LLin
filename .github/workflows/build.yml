@@ -32,6 +32,7 @@ jobs:
         with:
           path: |
             IGPlayerLoader/bin/Release/net6.0/publish/M.*.dll
+            IGPlayerLoader/bin/Release/net6.0/publish/*/M.*.dll
             IGPlayerLoader/bin/Release/net6.0/publish/osu.Game.Rulesets.*.dll
             IGPlayerLoader/bin/Release/net6.0/publish/Tmds.*.dll
             IGPlayerLoader/bin/Release/net6.0/publish/*.md
