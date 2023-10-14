@@ -8,7 +8,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\**\*" />
     <EmbeddedResource Include="Textures\**\*" />
   </ItemGroup>
   <ItemGroup>
