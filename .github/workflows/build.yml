@@ -2,6 +2,8 @@ name: dotnet
 on:
   push:
     branches: [ "ruleset" ]
+  pull_request:
+    branches: [ "ruleset" ]
 
 jobs:
   build:
