@@ -1,6 +1,7 @@
 using M.Resources;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
@@ -64,7 +65,10 @@ public partial class TestScenePlayerScreen : OsuTestScene
             Origin = Anchor.BottomLeft
         });
 
-        backButton.Action = stack.Exit;
+        backButton.Action = () =>
+        {
+            if (backButton.State.Value == Visibility.Visible && stack.CurrentScreen != null) stack.Exit();
+        };
 
         //AddGame(gameInstance = new OsuGame());
         AddStep("Push player", pushPlayer);
