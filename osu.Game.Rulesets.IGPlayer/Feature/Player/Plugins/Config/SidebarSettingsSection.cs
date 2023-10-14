@@ -4,11 +4,9 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Sections;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Config
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config
 {
     [Obsolete("请使用GetSettingEntries")]
     public abstract partial class PluginSidebarSettingsSection : Section
