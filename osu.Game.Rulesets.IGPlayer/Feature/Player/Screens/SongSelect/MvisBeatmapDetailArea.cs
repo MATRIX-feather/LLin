@@ -3,6 +3,7 @@
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -36,6 +37,8 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.SongSelect
         }
 
         private OsuCheckbox checkbox;
+
+        public readonly BindableBool StartFromZero = new BindableBool();
 
         [BackgroundDependencyLoader]
         private void load(MConfigManager config)
@@ -98,7 +101,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Screens.SongSelect
                 Margin = new MarginPadding { Vertical = 20, Horizontal = 10 }
             });
 
-            config.BindWith(MSetting.MvisStartFromBeginning, checkbox.Current);
+            checkbox.Current.BindTo(StartFromZero);
         }
 
         private class VoidTabItem : BeatmapDetailAreaTabItem
