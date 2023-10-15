@@ -8,11 +8,11 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.FallbackFunctionBar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.FallbackFunctionBar
 {
     public partial class SimpleBarButton : CompositeDrawable, IHasTooltip
     {

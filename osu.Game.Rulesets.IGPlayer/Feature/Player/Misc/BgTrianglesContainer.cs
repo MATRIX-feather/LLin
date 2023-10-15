@@ -4,10 +4,10 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc
 {
     public partial class BgTrianglesContainer : VisibilityContainer
     {

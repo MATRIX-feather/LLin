@@ -12,7 +12,7 @@ using osu.Game.Overlays;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.UI.Settings
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.UI.Settings
 {
     public partial class SandboxSettings : CompositeDrawable, IKeyBindingHandler<GlobalAction>
     {

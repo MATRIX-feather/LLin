@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Yasp.Config
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Config
 {
     public class YaspConfigManager : PluginConfigManager<YaspSettings>
     {

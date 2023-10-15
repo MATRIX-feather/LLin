@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel.Extensions
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Extensions
 {
     public interface IExtensionHandler
     {

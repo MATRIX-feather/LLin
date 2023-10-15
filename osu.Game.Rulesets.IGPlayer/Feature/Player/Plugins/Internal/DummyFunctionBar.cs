@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal
 {
     public partial class DummyFunctionBar : LLinPlugin, IFunctionBarProvider
     {

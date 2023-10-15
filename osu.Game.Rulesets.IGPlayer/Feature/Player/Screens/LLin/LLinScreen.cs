@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using M.DBus.Tray;
-using M.Resources.Localisation.LLin;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
@@ -30,17 +29,18 @@ using osu.Game.Input.Bindings;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Dialog;
 using osu.Game.Overlays.Notifications;
-using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
-using osu.Game.Rulesets.IGPlayer.Player.Input;
-using osu.Game.Rulesets.IGPlayer.Player.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.FallbackFunctionBar;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.SongSelect;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Input;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.FallbackFunctionBar;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.SongSelect;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Screens;
@@ -50,7 +50,7 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 {
     [Cached(typeof(IImplementLLin))]
     public partial class LLinScreen : ScreenWithBeatmapBackground, IImplementLLin, IKeyBindingHandler<GlobalAction>

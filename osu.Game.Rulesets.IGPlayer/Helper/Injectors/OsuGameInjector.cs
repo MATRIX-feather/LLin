@@ -6,10 +6,10 @@ using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
-using osu.Game.Rulesets.IGPlayer.Configuration;
 using osu.Game.Rulesets.IGPlayer.Feature;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
 namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 

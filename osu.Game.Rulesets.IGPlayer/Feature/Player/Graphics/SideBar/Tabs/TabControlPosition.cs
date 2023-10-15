@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs
 {
     public enum TabControlPosition
     {

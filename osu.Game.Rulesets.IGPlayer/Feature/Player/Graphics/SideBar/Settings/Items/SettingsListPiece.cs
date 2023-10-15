@@ -9,7 +9,7 @@ using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items
 {
     public partial class SettingsListPiece<T> : SettingsPieceBasePanel, ISettingsItem<T>
     {

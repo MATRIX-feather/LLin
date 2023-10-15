@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Yasp
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp
 {
     public class YaspProvider : LLinPluginProvider
     {

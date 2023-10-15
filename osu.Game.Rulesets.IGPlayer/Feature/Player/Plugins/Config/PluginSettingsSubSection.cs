@@ -4,7 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Localisation;
 using osu.Game.Overlays.Settings;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Config
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config
 {
     [Obsolete("请使用GetSettingEntries")]
     public abstract partial class PluginSettingsSubSection : SettingsSubsection

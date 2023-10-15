@@ -6,12 +6,12 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SettingsItems;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SettingsItems;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
 {
     public abstract partial class LLinPlugin : Container
     {

@@ -1,6 +1,6 @@
-using osu.Game.Rulesets.IGPlayer.Configuration;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.DummyBase
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyBase
 {
     internal class DummyBasePluginProvider : LLinPluginProvider
     {

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc.PluginResolvers
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc.PluginResolvers
 {
     public class LLinPluginResolver
     {

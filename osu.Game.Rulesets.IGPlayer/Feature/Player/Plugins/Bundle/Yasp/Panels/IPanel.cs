@@ -1,6 +1,6 @@
 using osu.Game.Beatmaps;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Yasp.Panels
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
 {
     public interface IPanel
     {

@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
 {
     public abstract class LLinPluginProvider
     {

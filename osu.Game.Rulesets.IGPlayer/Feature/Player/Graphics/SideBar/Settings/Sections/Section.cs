@@ -6,11 +6,11 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Sections
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Sections
 {
     public abstract partial class Section : CompositeDrawable, ISidebarContent
     {

@@ -8,9 +8,9 @@ using osu.Framework.Screens;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osu.Game.Screens;
 using osu.Game.Tests.Visual;
 

@@ -14,18 +14,18 @@ using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Database;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items;
-using osu.Game.Rulesets.IGPlayer.Player.Misc;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.DBus;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Sidebar;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Utils;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.DBus;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Sidebar;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Utils;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using Realms;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
 {
     public partial class CollectionHelper : BindableControlledPlugin, IProvideAudioControlPlugin
     {

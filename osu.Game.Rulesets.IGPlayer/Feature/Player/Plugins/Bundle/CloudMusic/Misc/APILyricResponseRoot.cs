@@ -4,7 +4,7 @@ using System.Linq;
 using Markdig.Helpers;
 using Newtonsoft.Json;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc
 {
     public class APILyricResponseRoot : IDisposable
     {

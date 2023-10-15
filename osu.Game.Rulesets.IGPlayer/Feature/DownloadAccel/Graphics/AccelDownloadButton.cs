@@ -10,7 +10,7 @@ using osu.Game.Overlays.BeatmapSet.Buttons;
 using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel.Graphics;
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Graphics;
 
 public partial class AccelDownloadButton : HeaderDownloadButton
 {

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading;
-using M.Resources.Localisation.LLin.Plugins;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -10,10 +9,11 @@ using osu.Game.Collections;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
-using osu.Game.Rulesets.IGPlayer.Player.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.Sidebar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Sidebar
 {
     public partial class CollectionInfo : CompositeDrawable
     {

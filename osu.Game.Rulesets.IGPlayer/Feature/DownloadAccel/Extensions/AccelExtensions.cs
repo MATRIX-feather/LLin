@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using osu.Framework.Logging;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel.Extensions
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Extensions
 {
     public static class AccelExtensionsUtil
     {

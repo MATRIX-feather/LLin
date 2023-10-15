@@ -9,7 +9,7 @@ using osu.Game.Overlays;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Screens.SongSelect
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.SongSelect
 {
     public partial class LLinSongSelect : Game.Screens.Select.SongSelect
     {

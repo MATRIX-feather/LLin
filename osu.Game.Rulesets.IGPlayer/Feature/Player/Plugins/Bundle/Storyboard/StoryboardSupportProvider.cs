@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Storyboard
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard
 {
     public class StoryboardPluginProvider : LLinPluginProvider
     {

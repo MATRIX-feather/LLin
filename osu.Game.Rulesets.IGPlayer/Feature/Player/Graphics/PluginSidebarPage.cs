@@ -6,15 +6,15 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Logging;
 using osu.Game.Online.Placeholders;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osuTK;
 using osuTK.Input;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics
 {
     public abstract partial class PluginSidebarPage : Container, ISidebarContent
     {

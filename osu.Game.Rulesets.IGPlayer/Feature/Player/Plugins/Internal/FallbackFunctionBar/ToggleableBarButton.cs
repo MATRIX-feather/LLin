@@ -3,10 +3,10 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.FallbackFunctionBar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.FallbackFunctionBar
 {
     public partial class ToggleableBarButton : SimpleBarButton
     {

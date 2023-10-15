@@ -3,7 +3,7 @@
 
 using osu.Game.Beatmaps;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc
 {
     public static class BeatmapMetataExtension
     {

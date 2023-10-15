@@ -3,7 +3,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Types
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types
 {
     public class ButtonWrapper : IFunctionProvider
     {

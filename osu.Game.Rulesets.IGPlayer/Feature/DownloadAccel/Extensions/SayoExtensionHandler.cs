@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel.Extensions
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Extensions
 {
     public class SayoExtensionHandler : IExtensionHandler
     {

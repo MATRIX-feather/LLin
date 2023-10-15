@@ -4,7 +4,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport.LuaFunctions
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport.LuaFunctions
 {
     public partial class SubContainerManager : Container<SubContainer>
     {

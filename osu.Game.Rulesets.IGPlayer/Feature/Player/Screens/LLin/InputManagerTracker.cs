@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Input;
 using osu.Framework.Logging;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
 public partial class InputManagerTracker : CompositeDrawable
 {

@@ -7,7 +7,7 @@ using osu.Framework.Utils;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Graphics
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Graphics
 {
     public abstract partial class InnerShadowContainer : Container
     {

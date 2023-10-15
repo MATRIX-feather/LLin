@@ -2,7 +2,7 @@ using System;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Config
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config
 {
     public abstract class PluginConfigManager<TLookup> : IniConfigManager<TLookup>, IPluginConfigManager
         where TLookup : struct, Enum

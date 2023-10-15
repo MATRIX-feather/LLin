@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 using M.DBus;
 using Tmds.DBus;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.Collection.DBus
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.DBus
 {
     [DBusInterface("io.matrix_feather.mvis.collection")]
     public interface ICollectionDBusObject : IMDBusObject

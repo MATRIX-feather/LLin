@@ -17,8 +17,8 @@ using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Notifications;
-using osu.Game.Rulesets.IGPlayer.DownloadAccel;
-using osu.Game.Rulesets.IGPlayer.DownloadAccel.Graphics;
+using osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel;
+using osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Graphics;
 using osu.Game.Tests.Visual;
 using osuTK;
 using Realms;
@@ -79,47 +79,46 @@ public partial class PreviewTrackInjector : AbstractInjector
             SetupAccelDownloader(beatmapManager, apiProvider);
             AccelBeatmapModelDownloader!.attachOsuGame(notificationOverlay);
 
-            if (DebugUtils.IsDebugBuild)
+#if DEBUG
+            game.Add(new OsuAnimatedButton
             {
-                game.Add(new OsuAnimatedButton
+                Size = new Vector2(120),
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Children = new Drawable[]
                 {
-                    Size = new Vector2(120),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Children = new Drawable[]
+                    new OsuSpriteText
                     {
-                        new OsuSpriteText
-                        {
-                            Text = "New track",
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Font = OsuFont.GetFont(size: 24)
-                        }
-                    },
-                    Action = () =>
-                    {
-                        var apiSet = new APIBeatmapSet
-                        {
-                            HasVideo = RNG.Next(0, 1000) < 500,
-                            OnlineID = 1247651 + RNG.Next(0, 100),
-                            Title = "Anemone",
-                            TitleUnicode = "Anomone (Unicode)",
-                            Artist = "DUSTCELL",
-                            Author = new APIUser
-                            {
-                                Username = "Sparhtend"
-                            },
-                            Covers = new BeatmapSetOnlineCovers
-                            {
-                                Card = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg",
-                                CardLowRes = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg"
-                            }
-                        };
-
-                        previewTrack.Value = new PreviewTrackManager.TrackManagerPreviewTrack(apiSet, new OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualStore(this.Clock));
+                        Text = "New track",
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Font = OsuFont.GetFont(size: 24)
                     }
-                });
-            }
+                },
+                Action = () =>
+                {
+                    var apiSet = new APIBeatmapSet
+                    {
+                        HasVideo = RNG.Next(0, 1000) < 500,
+                        OnlineID = 1247651 + RNG.Next(0, 100),
+                        Title = "Anemone",
+                        TitleUnicode = "Anomone (Unicode)",
+                        Artist = "DUSTCELL",
+                        Author = new APIUser
+                        {
+                            Username = "Sparhtend"
+                        },
+                        Covers = new BeatmapSetOnlineCovers
+                        {
+                            Card = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg",
+                            CardLowRes = "https://a.sayobot.cn/beatmaps/1247651/covers/cover.jpg"
+                        }
+                    };
+
+                    previewTrack.Value = new PreviewTrackManager.TrackManagerPreviewTrack(apiSet, new OsuTestScene.ClockBackedTestWorkingBeatmap.TrackVirtualStore(this.Clock));
+                }
+            });
+#endif
         }
         catch (Exception e)
         {

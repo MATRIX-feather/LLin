@@ -7,15 +7,14 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
-using osu.Framework.Logging;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items
 {
     public partial class SettingsStringPiece : SettingsPieceBasePanel, ISettingsItem<string>
     {
@@ -27,7 +26,7 @@ namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items
         {
             Schedule(() =>
             {
-                this.ResizeWidthTo(180 * rows + 5 * (rows - 1), 300, Easing.OutQuint);
+                this.ResizeWidthTo(SinglePanelWidth * rows + 5 * (rows - 1), 300, Easing.OutQuint);
             });
         }
 

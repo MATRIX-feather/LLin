@@ -4,13 +4,13 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Items;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.BottomBar.Buttons;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.BottomBar.Buttons;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.BottomBar
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.BottomBar
 {
     internal partial class LegacyBottomBar : LLinPlugin, IFunctionBarProvider
     {

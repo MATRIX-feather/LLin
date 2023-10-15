@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Internal.LuaSupport
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport
 {
     public class LuaPluginProvider : LLinPluginProvider
     {

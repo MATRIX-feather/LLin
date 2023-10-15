@@ -6,14 +6,14 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics.Containers;
-using osu.Game.Rulesets.IGPlayer.Configuration;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings.Sections;
-using osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Tabs;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Sections;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
+using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Graphics.SideBar.Settings
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings
 {
     public partial class PlayerSettings : OsuScrollContainer, ISidebarContent
     {

@@ -3,9 +3,9 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Overlays.Dialog;
-using osu.Game.Rulesets.IGPlayer.Player.Plugins;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc
 {
     internal partial class LLinDialog : PopupDialog
     {

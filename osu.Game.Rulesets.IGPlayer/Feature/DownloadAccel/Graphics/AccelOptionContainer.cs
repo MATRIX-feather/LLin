@@ -15,11 +15,11 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online;
 using osu.Game.Online.API.Requests.Responses;
-using osu.Game.Rulesets.IGPlayer.Player.Extensions;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Extensions;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.DownloadAccel.Graphics;
+namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Graphics;
 
 public partial class AccelOptionContainer : Container
 {

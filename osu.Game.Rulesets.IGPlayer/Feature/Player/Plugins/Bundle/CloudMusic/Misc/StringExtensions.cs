@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc
 {
     public static class StringExtensions
     {

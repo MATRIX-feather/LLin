@@ -1,6 +1,6 @@
 using System;
 
-namespace osu.Game.Rulesets.IGPlayer.Player.Plugins.Bundle.CloudMusic.Misc.Mapping
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc.Mapping
 {
     public class APIMappingRoot : IDisposable
     {
