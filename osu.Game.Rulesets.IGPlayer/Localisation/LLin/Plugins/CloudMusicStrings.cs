@@ -4,7 +4,7 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins
 {
     public class CloudMusicStrings
     {
-        private const string prefix = "M.Resources.Localisation.LLin.Plugins.CloudMusicStrings";
+        private static string prefix = "M.Resources.Localisation.LLin.Plugins.CloudMusicStrings";
 
         //设置
         public static LocalisableString LocationDirection => new TranslatableString(getKey(@"location_direction"), @"Location Direction");
@@ -70,6 +70,10 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins
 
         //其他
         public static LocalisableString AdjustOffsetToLyric => new TranslatableString(getKey(@"offset_adjust_to_lyric"), @"Adjust offset to lyric");
+
+        public static LocalisableString PluginName => getKey("name").toTranslatable("Lyrics");
+
+        public static LocalisableString SidebarTitle => getKey("sidebar_title").toTranslatable("Lyric");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

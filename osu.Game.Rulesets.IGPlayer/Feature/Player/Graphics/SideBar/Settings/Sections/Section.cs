@@ -4,6 +4,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
@@ -14,10 +15,10 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Se
 {
     public abstract partial class Section : CompositeDrawable, ISidebarContent
     {
-        public string Title
+        public LocalisableString Title
         {
-            get => title.Text.ToString();
-            set => title.Text = value;
+            get => title.Text;
+            protected init => title.Text = value;
         }
 
         public IconUsage Icon { get; set; }

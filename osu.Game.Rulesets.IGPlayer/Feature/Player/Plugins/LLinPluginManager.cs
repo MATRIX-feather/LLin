@@ -372,12 +372,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
             {
                 try
                 {
-                    var oldEntries = pl.GetSettingEntries();
-
-                    if (oldEntries != null)
-                        entryMap[pl.GetType()] = oldEntries;
-                    else
-                        entryMap[pl.GetType()] = pl.GetSettingEntries(GetConfigManager(pl));
+                    entryMap[pl.GetType()] = pl.GetSettingEntries(GetConfigManager(pl));
                 }
                 catch (Exception e)
                 {

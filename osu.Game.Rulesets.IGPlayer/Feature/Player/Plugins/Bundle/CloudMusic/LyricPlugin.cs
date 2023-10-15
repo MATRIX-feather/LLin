@@ -7,6 +7,7 @@ using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
@@ -37,6 +38,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
         private SettingsEntry[]? entries;
 
         public bool IsContentLoaded => ContentLoaded;
+
+        public override LocalisableString PluginName => CloudMusicStrings.PluginName;
 
         public override SettingsEntry[] GetSettingEntries(IPluginConfigManager pluginConfigManager)
         {

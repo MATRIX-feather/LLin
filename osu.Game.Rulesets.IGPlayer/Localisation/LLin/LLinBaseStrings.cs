@@ -4,7 +4,7 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin
 {
     public static class LLinBaseStrings
     {
-        private const string prefix = @"M.Resources.Localisation.LLin.BaseStrings";
+        private static string prefix = @"M.Resources.Localisation.LLin.BaseStrings";
 
         public static LocalisableString Exit => new TranslatableString(getKey(@"exit"), @"Exit");
 

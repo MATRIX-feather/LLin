@@ -8,26 +8,6 @@ using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config
 {
-    [Obsolete("请使用GetSettingEntries")]
-    public abstract partial class PluginSidebarSettingsSection : Section
-    {
-        private readonly LLinPlugin plugin;
-        protected IPluginConfigManager ConfigManager = null!;
-
-        protected PluginSidebarSettingsSection(LLinPlugin plugin)
-        {
-            this.plugin = plugin;
-            Title = plugin.Name;
-        }
-
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-        {
-            var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
-            ConfigManager = dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
-            return dependencies;
-        }
-    }
-
     [Cached]
     public partial class NewPluginSettingsSection : Section
     {
@@ -38,7 +18,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config
         public NewPluginSettingsSection(LLinPlugin plugin)
         {
             this.plugin = plugin;
-            Title = plugin.Name;
+            Title = plugin.PluginName;
 
             Alpha = 0.02f;
         }

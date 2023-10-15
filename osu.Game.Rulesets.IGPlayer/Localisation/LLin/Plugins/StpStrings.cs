@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins
     //Sandbox to panel Strings
     public class StpStrings
     {
-        private const string prefix = @"M.Resources.Localisation.LLin.Plugins.StpStrings";
+        private static string prefix = @"M.Resources.Localisation.LLin.Plugins.StpStrings";
 
         public static LocalisableString AlphaOnIdle => new TranslatableString(getKey(@"alpha_on_idle"), @"Idle Alpha");
 

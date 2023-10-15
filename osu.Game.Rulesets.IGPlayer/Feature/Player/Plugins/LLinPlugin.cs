@@ -5,6 +5,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SettingsItems;
@@ -15,25 +16,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
 {
     public abstract partial class LLinPlugin : Container
     {
+        public virtual LocalisableString PluginName => Name;
+
         /// <summary>
         /// 加载插件要提供的内容
         /// </summary>
         /// <returns>要加载的Drawable</returns>
         protected abstract Drawable CreateContent();
-
-        /// <summary>
-        /// 为游戏设置创建设置页面
-        /// </summary>
-        /// <returns>创建的设置页面</returns>
-        [Obsolete("请使用GetSettingEntries")]
-        public virtual PluginSettingsSubSection? CreateSettingsSubSection() => null;
-
-        /// <summary>
-        /// 为Mvis侧边栏创建设置页面
-        /// </summary>
-        /// <returns>创建的设置页面</returns>
-        [Obsolete("请使用GetSettingEntries")]
-        public virtual PluginSidebarSettingsSection? CreateSidebarSettingsSection() => null;
 
         public virtual IPluginConfigManager CreateConfigManager(Storage storage)
         {
@@ -43,9 +32,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
         }
 
         public virtual SettingsEntry[] GetSettingEntries(IPluginConfigManager pluginConfigManager) => Array.Empty<SettingsEntry>();
-
-        [Obsolete("请使用带IPluginConfigManager作为参数的新方法")]
-        public virtual SettingsEntry[]? GetSettingEntries() => null;
 
         /// <summary>
         /// 内容加载完毕后要执行的步骤
@@ -95,9 +81,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
 
         [Resolved(canBeNull: true)]
         private IImplementLLin? llin { get; set; }
-
-        [Obsolete("Mvis => LLin")]
-        protected IImplementLLin? Mvis => llin;
 
         protected IImplementLLin? LLin => llin;
 

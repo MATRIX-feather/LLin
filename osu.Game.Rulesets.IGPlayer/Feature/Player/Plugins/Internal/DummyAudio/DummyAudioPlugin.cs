@@ -1,14 +1,18 @@
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Localisation;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyAudio
 {
     internal partial class DummyAudioPlugin : LLinPlugin
     {
+        public override LocalisableString PluginName => BuiltinAudioStrings.PluginName;
+
         internal DummyAudioPlugin(MConfigManager config, LLinPluginManager plmgr)
         {
             HideFromPluginManagement = true;
@@ -33,7 +37,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyAudio
                 {
                     new NumberSettingsEntry<double>
                     {
-                        Name = "播放速度",
+                        Name = BuiltinAudioStrings.PlaySpeed,
                         Bindable = config.GetBindable<double>(MSetting.MvisMusicSpeed),
                         KeyboardStep = 0.01f,
                         DisplayAsPercentage = true,
@@ -41,19 +45,19 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyAudio
                     },
                     new BooleanSettingsEntry
                     {
-                        Name = "调整音调",
+                        Name = BuiltinAudioStrings.AdjustPitchTitle,
                         Bindable = config.GetBindable<bool>(MSetting.MvisAdjustMusicWithFreq),
-                        Description = "暂不支持调整故事版的音调"
+                        Description = BuiltinAudioStrings.AdjustPitchDesc
                     },
                     new BooleanSettingsEntry
                     {
-                        Name = "夜核节拍器",
+                        Name = BuiltinAudioStrings.NightCoreTitle,
                         Bindable = config.GetBindable<bool>(MSetting.MvisEnableNightcoreBeat),
-                        Description = "动次打次动次打次"
+                        Description = BuiltinAudioStrings.NightCoreDesc
                     },
                     audioEntry = new ListSettingsEntry<TypeWrapper>
                     {
-                        Name = "音乐控制插件",
+                        Name = BuiltinAudioStrings.AudioControlPlugin,
                         Bindable = audioPluginBindable
                     }
                 };

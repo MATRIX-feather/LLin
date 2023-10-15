@@ -4,6 +4,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Game.Online.Placeholders;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar;
@@ -118,7 +119,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics
             }, true);
         }
 
-        public string Title { get; }
+        public LocalisableString Title { get; }
         public IconUsage Icon { get; set; } = FontAwesome.Solid.Plug;
     }
 }

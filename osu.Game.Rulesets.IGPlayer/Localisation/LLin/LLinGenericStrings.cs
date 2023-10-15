@@ -4,7 +4,7 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin
 {
     public static class LLinGenericStrings
     {
-        private const string prefix = @"M.Resources.Localisation.LLin.GenericStrings";
+        private static string prefix = @"M.Resources.Localisation.LLin.GenericStrings";
 
         public static LocalisableString EnablePlugin => new TranslatableString(getKey(@"enable_plugin"), @"Enable Plugin");
 

@@ -6,6 +6,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osuTK;
@@ -15,7 +16,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar
 {
     public partial class SongSelectPage : CompositeDrawable, ISidebarContent
     {
-        public string Title => "歌曲选择";
+        public LocalisableString Title => "歌曲选择";
         public IconUsage Icon => FontAwesome.Solid.MousePointer;
 
         public SongSelectPage()

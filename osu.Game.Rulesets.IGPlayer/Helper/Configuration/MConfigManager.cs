@@ -67,7 +67,7 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Configuration
             SetDefault(MSetting.MvisCurrentFunctionBar, "LegacyBottomBar@osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.BottomBar");
             SetDefault(MSetting.MvisTabControlPosition, TabControlPosition.Right);
             SetDefault(MSetting.MvisAutoVSync, true);
-            SetDefault(MSetting.MvisPlayerSettingsMaxWidth, 0.6f, 0.2f, 1f);
+            SetDefault(MSetting.MvisPlayerSettingsMaxWidth, 0.7f, 0.2f, 1f);
             SetDefault(MSetting.MvisUseTriangleV2, false);
 
             //实验性功能

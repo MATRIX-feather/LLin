@@ -6,6 +6,7 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyBase
 {
@@ -32,75 +33,74 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyBase
             {
                 new NumberSettingsEntry<float>
                 {
-                    Name = "界面主题色(红)",
+                    Name = DummyBaseStrings.UIColorRed,
                     Bindable = config.GetBindable<float>(MSetting.MvisInterfaceRed),
                     KeyboardStep = 1
                 },
                 new NumberSettingsEntry<float>
                 {
-                    Name = "界面主题色(绿)",
+                    Name = DummyBaseStrings.UIColorGreen,
                     Bindable = config.GetBindable<float>(MSetting.MvisInterfaceGreen),
                     KeyboardStep = 1
                 },
                 new NumberSettingsEntry<float>
                 {
-                    Name = "界面主题色(蓝)",
+                    Name = DummyBaseStrings.UIColorBlue,
                     Bindable = config.GetBindable<float>(MSetting.MvisInterfaceBlue),
                     KeyboardStep = 1
                 },
                 new ColorPreviewEntry(),
                 new NumberSettingsEntry<float>
                 {
-                    Name = "背景模糊",
+                    Name = DummyBaseStrings.BgBlur,
                     Bindable = config.GetBindable<float>(MSetting.MvisBgBlur),
                     DisplayAsPercentage = true,
                     KeyboardStep = 0.01f,
                 },
                 new NumberSettingsEntry<float>
                 {
-                    Name = "空闲时的背景亮度",
+                    Name = DummyBaseStrings.BgDimWhenIdle,
                     Bindable = config.GetBindable<float>(MSetting.MvisIdleBgDim),
                     DisplayAsPercentage = true,
                     KeyboardStep = 0.01f,
                 },
                 new EnumSettingsEntry<TabControlPosition>
                 {
-                    Name = "TabControl位置",
+                    Name = DummyBaseStrings.TabControlPosition,
                     Bindable = config.GetBindable<TabControlPosition>(MSetting.MvisTabControlPosition)
                 },
                 new BooleanSettingsEntry
                 {
-                    Name = "置顶Proxy",
+                    Name = DummyBaseStrings.ProxyOnTop,
                     Bindable = config.GetBindable<bool>(MSetting.MvisStoryboardProxy),
-                    Description = "让所有Proxy显示在前景上方"
+                    Description = DummyBaseStrings.ProxyOnTopDesc
                 },
                 new BooleanSettingsEntry
                 {
-                    Name = "启用背景动画",
+                    Name = DummyBaseStrings.BackgroundAnimations,
                     Bindable = config.GetBindable<bool>(MSetting.MvisEnableBgTriangles),
-                    Description = "如果条件允许,播放器将会在背景显示动画"
+                    Description = DummyBaseStrings.BackgroundAnimationsDesc
                 },
                 listEntry = new ListSettingsEntry<TypeWrapper>
                 {
-                    Name = "底栏插件",
+                    Name = DummyBaseStrings.BottomBarPlugin,
                     Bindable = functionBarBindable
                 },
                 new BooleanSettingsEntry
                 {
-                    Name = "节能模式",
+                    Name = DummyBaseStrings.PowersaveMode,
                     Bindable = config.GetBindable<bool>(MSetting.MvisAutoVSync),
-                    Description = "启用后，将在进入播放器时自动启用垂直同步和单线程，并在退出时恢复进入前的状态",
+                    Description = DummyBaseStrings.PowersaveModeDesc,
                     Icon = FontAwesome.Solid.Leaf
                 },
                 new BooleanSettingsEntry
                 {
-                    Name = "使用新版三角粒子",
+                    Name = DummyBaseStrings.TrianglesV2,
                     Bindable = config.GetBindable<bool>(MSetting.MvisUseTriangleV2),
-                    Description = "可能不适合所有背景，仍需调教"
                 },
                 new NumberSettingsEntry<float>
                 {
-                    Name = "播放器设置最大宽度",
+                    Name = DummyBaseStrings.MaximumWidthForSettingsPanel,
                     Bindable = config.GetBindable<float>(MSetting.MvisPlayerSettingsMaxWidth),
                     DisplayAsPercentage = true,
                     KeyboardStep = 0.01f,
