@@ -41,13 +41,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings
 
             foreach (var pl in pluginManager.GetAllPlugins(false))
             {
-#pragma warning disable CS0618
-                var pluginSidebarSection = pl.CreateSidebarSettingsSection();
-#pragma warning restore CS0618
-
-                if (pluginSidebarSection != null)
-                    AddSection(pluginSidebarSection);
-                else if (pluginManager.GetSettingsFor(pl)?.Length > 0)
+                if (pluginManager.GetSettingsFor(pl)?.Length > 0)
                     AddSection(new NewPluginSettingsSection(pl));
             }
 

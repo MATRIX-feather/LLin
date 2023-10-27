@@ -112,7 +112,7 @@ public partial class GameScreenInjector : AbstractInjector
             }
 
             // Find Multiplayer button
-            var target = this.findChildInContainer(buttonSystem, d => d is MainMenuButton mainMenuButton && mainMenuButton.TriggerKey == Key.M);
+            var target = this.findChildInContainer(buttonSystem, d => d is MainMenuButton mainMenuButton && mainMenuButton.TriggerKeys.Contains(Key.M));
 
             if (target == null)
             {
