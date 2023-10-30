@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Config
             SetDefault(YaspSettings.Scale, 1, 0, 5f);
             SetDefault(YaspSettings.EnablePlugin, true);
             SetDefault(YaspSettings.PanelType, PanelType.Classic);
+            SetDefault(YaspSettings.CoverIIUseUserAvatar, false);
 
             base.InitialiseDefaults();
         }
@@ -33,7 +34,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Config
         Scale,
         EnablePlugin,
 
-        PanelType
+        PanelType,
+        CoverIIUseUserAvatar
     }
 
     public enum PanelType
@@ -42,6 +44,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Config
         Classic,
 
         [Description("封面")]
-        SongCover
+        SongCover,
+
+        CoverII
     }
 }

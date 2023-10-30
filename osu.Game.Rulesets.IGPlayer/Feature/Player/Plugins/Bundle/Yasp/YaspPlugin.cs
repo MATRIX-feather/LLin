@@ -45,6 +45,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp
                     Name = LLinGenericStrings.EnablePlugin,
                     Bindable = config.GetBindable<bool>(YaspSettings.EnablePlugin)
                 },
+                new BooleanSettingsEntry
+                {
+                    Name = YaspStrings.UseAvatarForCoverIICover,
+                    Bindable = config.GetBindable<bool>(YaspSettings.CoverIIUseUserAvatar),
+                },
                 new EnumSettingsEntry<PanelType>
                 {
                     Name = "面板样式",
@@ -79,21 +84,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp
         /// </summary>
         protected override Drawable CreateContent()
         {
-            Drawable target;
-
-            switch (panelType.Value)
+            Drawable target = panelType.Value switch
             {
-                case PanelType.Classic:
-                    target = new ClassicPanel();
-                    break;
-
-                case PanelType.SongCover:
-                    target = new NsiPanel();
-                    break;
-
-                default:
-                    throw new InvalidOperationException($"未知的PanelType: {panelType.Value}");
-            }
+                PanelType.Classic => new ClassicPanel(),
+                PanelType.SongCover => new NsiPanel(),
+                PanelType.CoverII => new CoverIIPanel(),
+                _ => throw new InvalidOperationException($"未知的PanelType: {panelType.Value}")
+            };
 
             return target;
         }
@@ -156,6 +153,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp
         {
             if (currentContent is IPanel panel)
                 panel.Refresh(currentWorkingBeatmap!);
+            else if (currentContent != null)
+                Logging.LogError(new InvalidCastException("CurrentContent不是IPanel?"));
         }
 
         private void onBeatmapChanged(WorkingBeatmap working)

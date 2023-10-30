@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using osu.Framework.Graphics.Audio;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Extensions;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
 {
