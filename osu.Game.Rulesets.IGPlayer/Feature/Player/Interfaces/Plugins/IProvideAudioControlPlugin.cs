@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins
 {
     public interface IProvideAudioControlPlugin
     {

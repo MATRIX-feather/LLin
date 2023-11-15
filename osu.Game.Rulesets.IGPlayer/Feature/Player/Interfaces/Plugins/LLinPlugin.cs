@@ -8,10 +8,10 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SettingsItems;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins
 {
     public abstract partial class LLinPlugin : Container
     {

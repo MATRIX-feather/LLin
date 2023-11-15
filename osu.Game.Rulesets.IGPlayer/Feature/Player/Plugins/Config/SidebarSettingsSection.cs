@@ -4,6 +4,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Sections;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config

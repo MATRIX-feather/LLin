@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Misc.PluginResolvers
 {

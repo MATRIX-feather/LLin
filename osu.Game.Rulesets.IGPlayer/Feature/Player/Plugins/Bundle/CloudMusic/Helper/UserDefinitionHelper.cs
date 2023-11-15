@@ -10,9 +10,9 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Online.API;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc.Mapping;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper

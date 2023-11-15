@@ -5,8 +5,8 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.BottomBar.Buttons;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 using osuTK;
 using osuTK.Graphics;
 

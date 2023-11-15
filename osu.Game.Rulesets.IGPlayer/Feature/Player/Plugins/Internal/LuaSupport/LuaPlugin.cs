@@ -11,10 +11,10 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Cursor;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input.Bindings;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport.LuaFunctions;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport
 {

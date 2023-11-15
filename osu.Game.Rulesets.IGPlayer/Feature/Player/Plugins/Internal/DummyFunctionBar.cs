@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal
 {

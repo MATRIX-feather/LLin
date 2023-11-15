@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using osu.Framework.Graphics;
 
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins
 {
     public interface IFunctionBarProvider : IDrawable
     {

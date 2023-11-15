@@ -2,6 +2,7 @@
 
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types
 {

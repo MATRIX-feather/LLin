@@ -7,11 +7,11 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
 
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces
 {
     /// <summary>
     /// LLin播放器通用接口

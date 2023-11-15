@@ -16,6 +16,7 @@ using osu.Game.Database;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.DBus;

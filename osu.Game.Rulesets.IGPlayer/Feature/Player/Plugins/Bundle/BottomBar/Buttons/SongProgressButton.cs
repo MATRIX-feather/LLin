@@ -2,8 +2,8 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.BottomBar.Buttons
 {

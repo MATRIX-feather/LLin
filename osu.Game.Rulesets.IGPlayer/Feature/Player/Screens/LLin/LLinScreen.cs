@@ -34,6 +34,8 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Tabs;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Input;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.FallbackFunctionBar;

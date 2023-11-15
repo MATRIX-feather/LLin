@@ -5,7 +5,7 @@ using osu.Framework.Localisation;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
 using osuTK;
 
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Types
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins
 {
     public interface IFunctionProvider
     {
