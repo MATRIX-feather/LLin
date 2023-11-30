@@ -424,10 +424,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 
             if (isInGame())
             {
-                var scoreInfo = playerScreen!.Score.ScoreInfo.DeepClone();
+                var scoreInfo = playerScreen!.Score?.ScoreInfo.DeepClone();
 
+                //scoreInfo in EndlessPlayer would be null for somehow
                 if (scoreInfo == null)
-                    throw new NullDependencyException("Null ScoreInfo!");
+                    return;
 
                 playerScreen!.GameplayState.ScoreProcessor.PopulateScore(scoreInfo);
 
