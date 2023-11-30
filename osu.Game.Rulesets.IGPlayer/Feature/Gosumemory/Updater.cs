@@ -15,6 +15,7 @@ using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Overlays;
+using osu.Game.Overlays.SkinEditor;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Consts;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Gameplay;
@@ -358,7 +359,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                     this.playerScreen = player;
                     dataRoot.MenuValues.OsuState = OsuStates.PLAYING;
 
-                    player.DimmableStoryboard.Add(healthProcessorAccessor = new HealthProcessorAccessor());
+                    player.DimmableStoryboard?.Add(healthProcessorAccessor = new HealthProcessorAccessor());
                     break;
 
                 default:
@@ -367,7 +368,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             }
 
             dataRoot.GameplayValues.Name = playerName = (playerScreen != null)
-                ? playerScreen.Score.ScoreInfo.User.Username
+                ? (playerScreen.Score?.ScoreInfo?.User.Username ?? "???")
                 : (resultsScreen != null ? (resultsScreen.SelectedScore.Value?.User.Username ?? "???") : api.LocalUser.Value.Username);
         }
 
@@ -424,6 +425,10 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             if (isInGame())
             {
                 var scoreInfo = playerScreen!.Score.ScoreInfo.DeepClone();
+
+                if (scoreInfo == null)
+                    throw new NullDependencyException("Null ScoreInfo!");
+
                 playerScreen!.GameplayState.ScoreProcessor.PopulateScore(scoreInfo);
 
                 obj.GameplayValues.FromScore(scoreInfo);
