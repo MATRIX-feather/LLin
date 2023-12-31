@@ -38,7 +38,6 @@ public partial class TestScenePlayerScreen : OsuTestScene
 
         var dialog = new DialogOverlay
         {
-            RelativeSizeAxes = Axes.Both
         };
 
         cacheAndAdd(dialog);

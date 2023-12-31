@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                 {
                     new Header(label)
                     {
-                        Action = expanded.Toggle
+                        //Action = expanded.Toggle
                     },
                     new DropdownContent
                     {

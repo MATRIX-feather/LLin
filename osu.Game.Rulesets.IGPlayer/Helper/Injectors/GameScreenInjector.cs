@@ -6,9 +6,9 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
+using osu.Game.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osu.Game.Screens;
 using osu.Game.Screens.Menu;
@@ -122,7 +122,7 @@ public partial class GameScreenInjector : AbstractInjector
 
             var targetParent = target.Parent as FlowContainerWithOrigin;
             Logger.Log($"Parent is {target.Parent}");
-            targetParent!.Add(new MainMenuButton("LLin播放器", "button-generic-select", FontAwesome.Solid.Play, new Color4(0, 86, 73, 255), pushPlayerScreen)
+            targetParent!.Add(new MainMenuButton("LLin播放器", "button-generic-select", OsuIcon.Play, new Color4(0, 86, 73, 255), pushPlayerScreen)
             {
                 Anchor = Anchor.CentreLeft,
                 Origin = Anchor.CentreLeft,
