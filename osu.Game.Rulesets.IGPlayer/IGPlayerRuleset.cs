@@ -33,6 +33,8 @@ namespace osu.Game.Rulesets.IGPlayer
 
         public override string ShortName => "igplayerruleset";
 
+        public override string PlayingVerb => "正在听歌";
+
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods) =>
             new DrawableIGPlayerRuleset(this, beatmap, mods);
 

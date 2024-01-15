@@ -47,7 +47,6 @@ using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Screens;
 using osu.Game.Screens.Play;
-using osu.Game.Users;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
@@ -209,7 +208,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
             updateTrackAdjustments();
             updateBackground(beatmap);
 
-            activity.Value = new InPlayerUserActivity(beatmap.BeatmapInfo, Ruleset.Value);
+            Activity.Value = new InPlayerUserActivity(beatmap.BeatmapInfo, Ruleset.Value);
             onBeatmapChangedAction?.Invoke(beatmap);
         }
 
@@ -602,8 +601,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 
         public float BottomBarHeight => currentFunctionBar.GetSafeAreaPadding();
 
-        private readonly Bindable<UserActivity> activity = new Bindable<UserActivity>();
-
         private readonly Container backgroundLayer;
         private readonly Container foregroundLayer;
         private readonly Container overlayLayer;
@@ -634,8 +631,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 
         public LLinScreen()
         {
-            Activity.BindTo(activity);
-
             InternalChildren = new Drawable[]
             {
                 tracker,
