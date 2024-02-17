@@ -208,7 +208,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
             updateTrackAdjustments();
             updateBackground(beatmap);
 
-            Activity.Value = new InPlayerUserActivity(beatmap.BeatmapInfo, Ruleset.Value);
+            //Acivity.Value = new InPlayerUserActivity(beatmap.BeatmapInfo, Ruleset.Value);
             onBeatmapChangedAction?.Invoke(beatmap);
         }
 
