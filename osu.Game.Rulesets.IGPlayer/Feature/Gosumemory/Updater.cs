@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Extensions;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
@@ -15,7 +14,6 @@ using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Overlays;
-using osu.Game.Overlays.SkinEditor;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Consts;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Gameplay;
@@ -147,7 +145,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
         private ScoreManager scoreManager { get; set; } = null!;
 
         [Resolved]
-        private ScorePerformanceCache scorePerformanceCache { get; set; } = null!;
+        private BeatmapDifficultyCache beatmapDifficultyCache { get; set; } = null!;
 
         private CancellationTokenSource? overallPPCancellationTokenSource;
 
@@ -337,15 +335,32 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                         }
                         else
                         {
+                            scorePPCalcTokenSource?.Cancel();
                             scorePPCalcTokenSource = new CancellationTokenSource();
-                            scorePerformanceCache.CalculatePerformanceAsync(score, scorePPCalcTokenSource.Token)
-                                                 .ContinueWith(t =>
-                                                 {
-                                                     if (screenStack?.CurrentScreen != results) return;
 
-                                                     double? total = t.GetResultSafely<PerformanceAttributes?>()?.Total;
-                                                     dataRoot.GameplayValues.pp.Current = (int?)total ?? 0;
-                                                 });
+                            if (score.BeatmapInfo == null)
+                            {
+                                Logger.Log("score.BeatmapInfo is null?! Not updating pp to gosu...");
+                            }
+                            else
+                            {
+                                // 参考了 osu.Game.Screens.Ranking.Expanded.Statistics.PerformanceStatistic
+                                Task.Run(async () =>
+                                {
+                                    var scorePPCalculator = score.Ruleset.CreateInstance().CreatePerformanceCalculator();
+                                    var starDiff = await beatmapDifficultyCache.GetDifficultyAsync(score.BeatmapInfo, score.Ruleset, score.Mods).ConfigureAwait(false);
+
+                                    double pp = 0d;
+
+                                    if (starDiff?.Attributes != null && scorePPCalculator != null)
+                                    {
+                                        var result = await scorePPCalculator.CalculateAsync(score, starDiff.Value.Attributes, scorePPCalcTokenSource.Token).ConfigureAwait(false);
+                                        pp = result.Total;
+                                    }
+
+                                    this.Schedule(() => dataRoot.GameplayValues.pp.Current = (int)Math.Floor(pp));
+                                }, scorePPCalcTokenSource.Token);
+                            }
                         }
 
                         dataRoot.MenuValues.Mods.UpdateFrom(score.Mods.Where(m => m.Acronym != "CL").ToArray());

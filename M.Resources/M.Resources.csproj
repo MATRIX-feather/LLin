@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Authors> </Authors>
         <Copyright> </Copyright>
         <PackageProjectUrl>https://github.com/MATRIX-feather/osu</PackageProjectUrl>
@@ -16,6 +16,6 @@
     <EmbeddedResource Include="Documents\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework"/>
+    <PackageReference Include="ppy.osu.Framework" Version="2024.205.0" />
   </ItemGroup>
 </Project>
