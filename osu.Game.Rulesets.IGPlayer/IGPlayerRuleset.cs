@@ -85,43 +85,15 @@ namespace osu.Game.Rulesets.IGPlayer
             new KeyBinding(InputKey.Escape, IGAction.Back)
         };
 
-        public override Drawable CreateIcon() => new Icon(ShortName[0])
+        public override Drawable CreateIcon() => new Icon()
         {
-            RelativeSizeAxes = Axes.Both
         };
 
         public partial class Icon : CompositeDrawable
         {
-            public Icon(char c)
+            public Icon()
             {
                 RelativeSizeAxes = Axes.Both;
-
-                InternalChildren = new Drawable[]
-                {
-                    new Circle
-                    {
-                        Size = new Vector2(1),
-                        Colour = Color4.White,
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        RelativeSizeAxes = Axes.Both,
-                        Child = new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.Black.Opacity(0.001f)
-                        },
-                        BorderColour = Color4.White,
-                        BorderThickness = 3
-                    },
-                    new SpriteIcon
-                    {
-                        Size = new Vector2(0.4f),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                        Icon = FontAwesome.Solid.Lemon,
-                        RelativeSizeAxes = Axes.Both,
-                    }
-                };
             }
 
             [BackgroundDependencyLoader(permitNulls: true)]
@@ -129,8 +101,36 @@ namespace osu.Game.Rulesets.IGPlayer
             {
                 try
                 {
+                    Size = new Vector2(20);
+                    InternalChildren = new Drawable[]
+                    {
+                        new Circle
+                        {
+                            Size = new Vector2(1),
+                            Colour = Color4.White,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Black.Opacity(0.001f)
+                            },
+                            BorderColour = Color4.White,
+                            BorderThickness = 3
+                        },
+                        new SpriteIcon
+                        {
+                            Size = new Vector2(0.4f),
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Icon = FontAwesome.Solid.Lemon,
+                            RelativeSizeAxes = Axes.Both,
+                        }
+                    };
+
                     Logger.Log("[IGPlayer] Injecting dependencies...");
-                    Logger.Log($"Deps: Game = {game} :: Storage = {storage} :: Importer = {beatmapImporter} :: IAPIProvider = {api}");
+                    Logger.Log($"Deps: Game = '{game}' :: Storage = '{storage}' :: Importer = '{beatmapImporter}' :: IAPIProvider = '{api}'");
 
                     if (OsuGameInjector.InjectDependencies(storage, game, this.Scheduler)) return;
 
