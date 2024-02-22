@@ -117,6 +117,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                     Name = StpStrings.VisualizerLayoutType,
                     Bindable = config.GetBindable<VisualizerLayout>(SandboxRulesetSetting.VisualizerLayout)
                 },
+                new BooleanSettingsEntry
+                {
+                    Name = "旋转唱片",
+                    Bindable = config.GetBindable<bool>(SandboxRulesetSetting.SpinningCoverAndVisualizer)
+                },
                 new SeparatorSettingsEntry
                 {
                     Name = "Type A设置"

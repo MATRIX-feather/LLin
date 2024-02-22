@@ -46,7 +46,7 @@ public partial class OsuGameInjector : AbstractInjector
 
         if (depMgr == null)
         {
-            Logger.Log($"{Constants.LOG_PREFIX} DependencyContainer not found");
+            Logger.Log($"{Constants.LOG_PREFIX} DependencyContainer not found", level: LogLevel.Error);
             return false;
         }
 

@@ -26,6 +26,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
         private readonly Bindable<CircularBarType> type = new Bindable<CircularBarType>(CircularBarType.Basic);
         private readonly Bindable<bool> symmetry = new Bindable<bool>(true);
         private readonly Bindable<int> smoothness = new Bindable<int>();
+        private readonly Bindable<bool> spinningVisualizer = new Bindable<bool>();
 
         [BackgroundDependencyLoader]
         private void load()
@@ -43,6 +44,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
             config?.BindWith(SandboxRulesetSetting.MultiplierA, multiplier);
             config?.BindWith(SandboxRulesetSetting.Symmetry, symmetry);
             config?.BindWith(SandboxRulesetSetting.SmoothnessA, smoothness);
+            config?.BindWith(SandboxRulesetSetting.SpinningCoverAndVisualizer, spinningVisualizer);
         }
 
         protected override void LoadComplete()
@@ -54,6 +56,17 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
             visuals.BindValueChanged(_ => updateVisuals());
             symmetry.BindValueChanged(_ => updateVisuals());
             type.BindValueChanged(_ => updateVisuals(), true);
+
+            spinningVisualizer.BindValueChanged(v =>
+            {
+                if (v.NewValue)
+                {
+                    float rotation = this.Rotation;
+                    this.RotateTo(rotation).Then().RotateTo(360 + rotation, 30000).Loop();
+                }
+                else
+                    this.RotateTo(0, 1500, Easing.OutBack);
+            }, true);
         }
 
         private void updateVisuals()

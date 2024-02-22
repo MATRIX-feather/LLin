@@ -27,6 +27,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
         private BeatmapBackground background;
         private BeatmapName name;
 
+        private Container bgContainerWrapper;
+
         public UpdateableBeatmapBackground()
         {
             AddRangeInternal(new Drawable[]
@@ -37,12 +39,19 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                     Masking = true,
                     Children = new Drawable[]
                     {
-                        backgroundContainer = new Container
+                        bgContainerWrapper = new Container
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Size = new Vector2(1.2f),
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
+                            Child =
+                                backgroundContainer = new Container
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Size = new Vector2(1.2f),
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                },
                         },
                         nameContainer = new Container
                         {
@@ -56,9 +65,28 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
             });
         }
 
+        private readonly BindableBool spinningWrapper = new BindableBool();
+
+        [BackgroundDependencyLoader]
+        private void load(SandboxRulesetConfigManager rulesetConfigManager)
+        {
+            rulesetConfigManager.BindWith(SandboxRulesetSetting.SpinningCoverAndVisualizer, spinningWrapper);
+            spinningWrapper.BindValueChanged(v =>
+            {
+                if (v.NewValue)
+                {
+                    float rotation = bgContainerWrapper.Rotation;
+                    bgContainerWrapper.RotateTo(rotation).Then().RotateTo(360 + rotation, 30000).Loop();
+                }
+                else
+                    bgContainerWrapper.RotateTo(0, 1500, Easing.OutBack);
+            }, true);
+        }
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
+
             intensityController.Intensity.BindValueChanged(intensity =>
             {
                 var adjustedIntensity = intensity.NewValue / 150;

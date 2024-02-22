@@ -54,6 +54,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
             //mfosu
             SetDefault(SandboxRulesetSetting.EnableRulesetPanel, true);
             SetDefault(SandboxRulesetSetting.IdleAlpha, 1f, 0, 1);
+            SetDefault(SandboxRulesetSetting.SpinningCoverAndVisualizer, false);
         }
 
         public SandboxRulesetConfigManager(Storage storage)
@@ -107,7 +108,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
 
         //mfosu
         EnableRulesetPanel,
-        IdleAlpha
+        IdleAlpha,
+        SpinningCoverAndVisualizer
     }
 
     public enum VisualizerLayout
