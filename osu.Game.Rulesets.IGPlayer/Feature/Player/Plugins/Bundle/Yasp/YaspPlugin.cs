@@ -105,6 +105,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp
             currentContent?.Expire();
 
             currentContent = content;
+            content.Alpha = 0.01f;
+            content.Hide();
 
             if (!Enabled.Value) return true;
 

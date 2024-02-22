@@ -6,7 +6,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
@@ -37,6 +36,19 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
             : meta.Source;
 
         cover?.Refresh(useUserAvatar.Value, beatmap);
+        flowContainer?.FadeIn(300, Easing.OutQuint);
+    }
+
+    public override void Show()
+    {
+        this.flowContainer?.FadeIn(300, Easing.OutQuint).ScaleTo(1, 1500, Easing.OutBack);
+        base.Show();
+    }
+
+    public override void Hide()
+    {
+        this.flowContainer?.FadeOut(300, Easing.OutQuint).ScaleTo(0.8f, 300, Easing.OutQuint);
+        this.Delay(300).FadeOut();
     }
 
     private readonly BindableBool useUserAvatar = new BindableBool();
@@ -66,12 +78,12 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
     };
 
     private AvatarOrBeatmapCover? cover;
+    private FillFlowContainer? flowContainer;
 
     [BackgroundDependencyLoader]
     private void load(YaspPlugin plugin, FrameworkConfigManager frameworkConfig)
     {
         var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
-        Logger.Log($"{config}");
         config.BindWith(YaspSettings.CoverIIUseUserAvatar, useUserAvatar);
         frameworkConfig.BindWith(FrameworkSetting.ShowUnicode, displayUnicode);
 
@@ -80,8 +92,10 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
         AutoSizeAxes = Axes.Both;
 
         int squareLength = 168;
-        var container = new FillFlowContainer
+        flowContainer = new FillFlowContainer
         {
+            Alpha = 0,
+            Scale = new Vector2(0.8f),
             AutoSizeAxes = Axes.X,
             AutoSizeDuration = 300,
             AutoSizeEasing = Easing.OutQuint,
@@ -148,7 +162,7 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
             }
         };
 
-        this.AddInternal(container);
+        this.AddInternal(flowContainer);
         useUserAvatar.BindValueChanged(v =>
         {
             Refresh(this.currentBeatmap);
