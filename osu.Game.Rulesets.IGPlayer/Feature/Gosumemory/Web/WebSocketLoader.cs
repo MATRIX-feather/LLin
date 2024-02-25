@@ -10,14 +10,20 @@ using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 {
-    public partial class WsLoader : CompositeDrawable
+    public partial class WebSocketLoader : CompositeDrawable
     {
         public readonly DataRoot DataRoot = new DataRoot();
+
+        public WebSocketLoader()
+        {
+            AlwaysPresent = true;
+        }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            Schedule(() => startServer());
+            Logger.Log("WS LOAD!");
+            Schedule(startServer);
         }
 
         public void Restart()

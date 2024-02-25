@@ -129,7 +129,7 @@ namespace osu.Game.Rulesets.IGPlayer
                         }
                     };
 
-                    Logger.Log("[IGPlayer] Injecting dependencies...");
+                    Logger.Log("[IGPlayer] Injecting dependencies.d..");
                     Logger.Log($"Deps: Game = '{game}' :: Storage = '{storage}' :: Importer = '{beatmapImporter}' :: IAPIProvider = '{api}'");
 
                     if (OsuGameInjector.InjectDependencies(storage, game, this.Scheduler)) return;

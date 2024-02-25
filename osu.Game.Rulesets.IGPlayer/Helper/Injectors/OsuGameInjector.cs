@@ -32,7 +32,7 @@ public partial class OsuGameInjector : AbstractInjector
 
     public static bool InjectDependencies(Storage storage, OsuGame gameInstance, Scheduler scheduler)
     {
-        int sessionHashCode = gameInstance.GetHashCode();
+        int sessionHashCode = gameInstance.Toolbar.GetHashCode();
 
         if (currentSessionHash == sessionHashCode)
         {

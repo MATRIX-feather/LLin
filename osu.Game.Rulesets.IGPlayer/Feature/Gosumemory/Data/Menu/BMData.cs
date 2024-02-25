@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using osu.Framework.Graphics.Audio;
 using osu.Game.Beatmaps;
@@ -53,12 +54,24 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
             this.MetaData.Mapper = metadata.Author.Username;
             this.MetaData.DiffName = beatmap.BeatmapInfo.DifficultyName;
 
+            //todo: 适应Mod变更
             var diffInf = beatmap.BeatmapInfo.Difficulty;
             this.Stats.AR = diffInf.ApproachRate;
             this.Stats.CS = diffInf.CircleSize;
             this.Stats.HP = diffInf.DrainRate;
             this.Stats.OD = diffInf.OverallDifficulty;
             this.Stats.SR = (float)beatmap.BeatmapInfo.StarRating;
+
+            this.Stats.BPM.Max = (int)Math.Round(beatmap.Beatmap.ControlPointInfo.BPMMaximum);
+            this.Stats.BPM.Max = (int)Math.Round(beatmap.Beatmap.ControlPointInfo.BPMMinimum);
+
+            this.Path.AudioPath = "~ NOT IMPLEMENTED ~";
+            this.Path.BackgroundPath = "~ NOT IMPLEMENTED ~";
+            this.Path.BeatmapFile = "~ NOT IMPLEMENTED ~";
+            this.Path.BgPath = "~ NOT IMPLEMENTED ~";
+            this.Path.BeatmapFolder = "~ NOT IMPLEMENTED ~";
+
+            this.Stats.MaxCombo = -1;
 
             short rankingStatus;
 

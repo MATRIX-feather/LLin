@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2024.221.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IGPlayerLoader\IGPlayerLoader.csproj" />

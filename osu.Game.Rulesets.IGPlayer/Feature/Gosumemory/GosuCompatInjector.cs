@@ -1,6 +1,7 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Logging;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web;
 using osuTK;
 
@@ -8,7 +9,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 {
     public partial class GosuCompatInjector : Component
     {
-        public static Updater? Updater { get; private set; }
+        public TrackerHub? Updater { get; private set; }
 
         private Container getContainerFromGame(string containerName, OsuGame game)
         {
@@ -33,38 +34,46 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
 
         private void initializeUpdater()
         {
+            if (game == null)
+            {
+                Logger.Log("OsuGame is null, returning...");
+                return;
+            }
+
             var children = new Drawable[]
             {
-                handler = new WsLoader
+                handler = new WebSocketLoader
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre
                 },
-                Updater = new Updater(handler)
+                Updater = new TrackerHub(handler)
             };
 
-            if (game != null)
-            {
-                var container = this.getContainerFromGame("mfosu Gosumemory compat container", game);
+            var container = this.getContainerFromGame("mfosu Gosumemory compat container", game);
+            container.AddRange(children);
 
-                if (container.Children.Count == 0)
-                    container.AddRange(children);
-            }
+            Logger.Log("Added gosu compat!");
         }
 
         [BackgroundDependencyLoader]
         private void load(OsuGame? game)
         {
+            Logger.Log("Gosu compat injector!");
+
+            AlwaysPresent = true;
+
             this.Anchor = Anchor.Centre;
             this.Origin = Anchor.Centre;
 
             this.RelativeSizeAxes = Axes.Both;
             this.Size = new Vector2(0.6f);
 
+            Logger.Log($"Updater is {Updater}");
             if (Updater == null)
                 initializeUpdater();
         }
 
-        private WsLoader? handler;
+        private WebSocketLoader? handler;
     }
 }
