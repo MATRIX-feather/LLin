@@ -184,6 +184,7 @@ public partial class ScreenTracker : AbstractTracker
 
         dataRoot.MenuValues.OsuState = OsuStates.IDLE;
         this.resultsScreen = results;
+        Hub.GetDataRoot().MenuValues.OsuState = OsuStates.PLAYING;
 
         if (score == null) return;
 

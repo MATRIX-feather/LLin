@@ -150,6 +150,7 @@ public partial class BeatmapTracker : AbstractTracker
 
             dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = defaultVal;
             dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = defaultVal;
+            updateStatics();
             return;
         }
 
@@ -175,18 +176,22 @@ public partial class BeatmapTracker : AbstractTracker
                 //Logger.Log("~~~BOARDCAST IS " + boardcast);
                 dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = boardcast;
                 dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = boardcast;
-
-                try
-                {
-                    var server = Hub.GetWsLoader()?.Server;
-                    server?.RemoveStaticContent(staticRoot());
-                    server?.AddStaticContent(staticRoot(), "/Songs");
-                }
-                catch (Exception e)
-                {
-                    Logging.LogError(e, "Unable to add cache");
-                }
+                updateStatics();
             });
         });
+    }
+
+    private void updateStatics()
+    {
+        try
+        {
+            var server = Hub.GetWsLoader()?.Server;
+            server?.RemoveStaticContent(staticRoot());
+            server?.AddStaticContent(staticRoot(), "/Songs");
+        }
+        catch (Exception e)
+        {
+            Logging.LogError(e, "Unable to add cache");
+        }
     }
 }
