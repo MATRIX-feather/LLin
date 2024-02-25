@@ -65,9 +65,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
             this.Stats.BPM.Max = (int)Math.Round(beatmap.Beatmap.ControlPointInfo.BPMMaximum);
             this.Stats.BPM.Max = (int)Math.Round(beatmap.Beatmap.ControlPointInfo.BPMMinimum);
 
-            this.Path.AudioPath = "~ NOT IMPLEMENTED ~";
+            this.Path.AudioPath = "~ UNKNOWN ~";
             this.Path.BackgroundPath = "~ UNKNOWN ~";
-            this.Path.BeatmapFile = "~ NOT IMPLEMENTED ~";
+            this.Path.BeatmapFile = "~ UNKNOWN ~";
             this.Path.BgPath = "~ UNKNOWN ~";
             this.Path.BeatmapFolder = "~ NOT IMPLEMENTED ~";
 

@@ -39,17 +39,23 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
         return storage.GetFullPath(".");
     }
 
-    public Task<string?> ExportSingleTask(BeatmapSetInfo setInfo, string targetFile, string? desti)
+    public enum OperationIfExists
     {
-        string? val = ExportFileSingle(setInfo, targetFile, desti);
+        OVERWRITE,
+        KEEP
+    }
+
+    public Task<string?> ExportSingleTask(BeatmapSetInfo setInfo, string targetFile, string? desti, OperationIfExists operationIfExists = OperationIfExists.KEEP)
+    {
+        string? val = ExportFileSingle(setInfo, targetFile, desti, operationIfExists);
         return Task.FromResult(val);
     }
 
-    public string? ExportFileSingle(BeatmapSetInfo setInfo, string targetFile, string? desti)
+    public string? ExportFileSingle(BeatmapSetInfo setInfo, string targetFile, string? desti, OperationIfExists operationIfExists = OperationIfExists.KEEP)
     {
         try
         {
-            string? path = exportFileSingle(setInfo, targetFile, desti);
+            string? path = exportFileSingle(setInfo, targetFile, desti, operationIfExists);
             return path;
         }
         catch (Exception e)
@@ -60,6 +66,16 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
         }
     }
 
+    public string? GetRealmedPath(BeatmapSetInfo setInfo, string targetFile)
+    {
+        RealmNamedFileUsage? realmNamedFileUsage = setInfo.Files.FirstOrDefault(fileUsage => fileUsage.Filename.Equals(targetFile));
+
+        if (realmNamedFileUsage == null)
+            return null;
+
+        return getRealmedFileName(realmNamedFileUsage.File.Hash);
+    }
+
     /// <summary>
     ///
     /// </summary>
@@ -67,8 +83,10 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
     /// <param name="targetFile"></param>
     /// <param name="desti"></param>
     /// <returns>The final location of the exported file.</returns>
-    private string? exportFileSingle(BeatmapSetInfo setInfo, string targetFile, string? desti)
+    private string? exportFileSingle(BeatmapSetInfo setInfo, string targetFile, string? desti, OperationIfExists operationIfExists = OperationIfExists.KEEP)
     {
+        if (string.IsNullOrEmpty(targetFile)) return null;
+
         RealmNamedFileUsage? realmNamedFileUsage = setInfo.Files.FirstOrDefault(fileUsage => fileUsage.Filename.Equals(targetFile));
 
         if (realmNamedFileUsage == null)
@@ -99,9 +117,21 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
 
             if (File.Exists(desti))
             {
-                //File.Delete(desti);
+                switch (operationIfExists)
+                {
+                    case OperationIfExists.OVERWRITE:
+                        File.Delete(desti);
+                        break;
+
+                    case OperationIfExists.KEEP:
+                        return desti;
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(operationIfExists), operationIfExists, null);
+                }
+
                 //Logger.Log("File already exists! Skipping...");
-                return desti;
+                //return desti;
             }
 
             File.Copy(path, desti);

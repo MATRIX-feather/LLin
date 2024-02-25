@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
@@ -38,6 +39,23 @@ public partial class BeatmapTracker : AbstractTracker
 
         directAccessor = new GosuRealmDirectAccessor(realmAccess);
         AddInternal(directAccessor);
+
+        try
+        {
+            var staticRoot = this.staticRoot();
+
+            if (Path.Exists(staticRoot))
+                Directory.Delete(staticRoot, true);
+        }
+        catch (Exception e)
+        {
+            Logger.Log("Error occurred while clearing cache directory, but it's not a big deal.");
+        }
+    }
+
+    private string filesRoot()
+    {
+        return storage.GetFullPath("files");
     }
 
     private string staticRoot()
@@ -137,48 +155,106 @@ public partial class BeatmapTracker : AbstractTracker
     [Resolved]
     private Storage storage { get; set; } = null!;
 
-    // From LegacyExporter in OsuGame
+    private CancellationTokenSource fileExportCancellationTokenSource;
+
     private void updateFileSupporters(BeatmapSetInfo setInfo, WorkingBeatmap beatmap)
     {
         if (directAccessor == null)
             return;
 
-        if (beatmap.Metadata.BackgroundFile == null)
-        {
-            var dataRoot = Hub.GetDataRoot();
-            string defaultVal = "_default.png";
-
-            dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = defaultVal;
-            dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = defaultVal;
-            updateStatics();
-            return;
-        }
-
         string root = staticRoot();
+
+        // Cancel previous update process
+        fileExportCancellationTokenSource?.Cancel();
+        fileExportCancellationTokenSource = new CancellationTokenSource();
 
         Task.Run(async () =>
         {
-            var extensionName = "";
-            var rawNameSplit = beatmap.Metadata.BackgroundFile.Split('.');
-            extensionName = rawNameSplit.Length >= 2 ? rawNameSplit[^1] : "";
+            await Task.Run(() => ensureCacheNotTooMany(root)).ConfigureAwait(false);
 
-            string? final = await directAccessor.ExportSingleTask(setInfo, beatmap.Metadata.BackgroundFile, $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{beatmap.Metadata.BackgroundFile.GetHashCode()}.{extensionName}")
-                                                .ConfigureAwait(false);
+            // Background
+            string backgroundExt = "";
+            string[] rawNameSplit = beatmap.Metadata.BackgroundFile?.Split('.') ?? new string[]{};
+            backgroundExt = rawNameSplit.Length >= 2 ? rawNameSplit[^1] : "";
 
-            if (final == null) return;
+            string backgroundDesti = "_default.png";
+            if (beatmap.Metadata.BackgroundFile != null) //Yes, this can be null
+                backgroundDesti = $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{beatmap.Metadata.BackgroundFile.GetHashCode()}.{backgroundExt}";
 
+            string? backgroundFinal = await directAccessor.ExportSingleTask(
+                setInfo,
+                beatmap.Metadata.BackgroundFile ?? "",
+                backgroundDesti).ConfigureAwait(false);
+
+            // .osu File
+            string osuFileDesti = "_default.osz";
+            if (beatmap.BeatmapInfo.File?.Filename != null)
+                osuFileDesti = $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{beatmap.BeatmapInfo.File.GetHashCode()}.osu";
+
+            string? osuFileFinal = await directAccessor.ExportSingleTask(
+                setInfo,
+                beatmap.BeatmapInfo.File?.Filename ?? "",
+                osuFileDesti).ConfigureAwait(false);
+
+            // Audio file
+            string audioFileDesti = "_default.mp3";
+
+            if (beatmap.BeatmapInfo.BeatmapSet?.Metadata.AudioFile != null)
+            {
+                var audioNameSpilt = beatmap.BeatmapInfo.BeatmapSet.Metadata.AudioFile.Split(".");
+                string audioExtName = audioNameSpilt.Length >= 2 ? audioNameSpilt[^1] : "audio";
+                audioFileDesti = $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{beatmap.BeatmapInfo.BeatmapSet.Metadata.AudioFile.GetHashCode()}.{audioExtName}";
+            }
+
+            string? audioFinal = await directAccessor.ExportSingleTask(
+                setInfo,
+                beatmap.BeatmapInfo.BeatmapSet?.Metadata.AudioFile ?? "",
+                audioFileDesti).ConfigureAwait(false);
+
+            // Await for statics refresh
+            await Task.Run(updateStatics).ConfigureAwait(false);
+
+            // Update!
             this.Schedule(() =>
             {
                 //Logger.Log("~~~PUSH TO GOSU!");
                 var dataRoot = Hub.GetDataRoot();
 
-                string boardcast = final.Replace(root, "").Replace("/", "");
-                //Logger.Log("~~~BOARDCAST IS " + boardcast);
-                dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = boardcast;
-                dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = boardcast;
-                updateStatics();
+                if (backgroundFinal != null)
+                {
+                    string boardcast = backgroundFinal.Replace(root, "").Replace("/", "");
+                    //Logger.Log("~~~BOARDCAST IS " + boardcast);
+                    dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = boardcast;
+                    dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = boardcast;
+                }
+
+                if (osuFileFinal != null)
+                    dataRoot.MenuValues.GosuBeatmapInfo.Path.BeatmapFile = osuFileFinal.Replace(root, "").Replace("/", "");
+
+                if (audioFinal != null)
+                    dataRoot.MenuValues.GosuBeatmapInfo.Path.AudioPath = audioFinal.Replace(root, "").Replace("/", "");
             });
-        });
+        }, fileExportCancellationTokenSource.Token);
+    }
+
+    private void ensureCacheNotTooMany(string cachePath)
+    {
+        if (!Path.Exists(cachePath)) return;
+
+        int fileCount = Directory.GetFiles(cachePath, "*", SearchOption.TopDirectoryOnly).Length;
+
+        // 30 beatmaps
+        if (fileCount <= 90) return;
+
+        try
+        {
+            Directory.Delete(cachePath, true);
+            Directory.CreateDirectory(cachePath);
+        }
+        catch (Exception e)
+        {
+            Logger.Log("Error occurred while clearing gosu cache... Not a big deal, maybe?");
+        }
     }
 
     private void updateStatics()
