@@ -49,8 +49,8 @@ public partial class ScreenTracker : AbstractTracker
     [Resolved]
     private IAPIProvider api { get; set; } = null!;
 
-    private static bool warningPrinted;
-    private static OsuScreenStack? screenStack;
+    private bool warningPrinted;
+    private OsuScreenStack? screenStack;
 
     protected OsuScreenStack? getScreenStack()
     {
@@ -135,7 +135,7 @@ public partial class ScreenTracker : AbstractTracker
     {
         scorePPCalcTokenSource?.Cancel();
 
-        Logger.Log($"🦢 Screen Switch! {prevScreen} -> {nextScreen}");
+        Logger.Log($"🦢 Screen Swwwwwwitch! {prevScreen} -> {nextScreen}");
 
         this.playerScreen = null;
         this.resultsScreen = null;
