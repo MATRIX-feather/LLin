@@ -28,18 +28,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
         public void Restart()
         {
-            if (server != null)
+            if (Server != null)
             {
-                server.Stop();
-                server.Dispose();
-                server = null;
-            }
-
-            if (httpServer != null)
-            {
-                httpServer.Stop();
-                httpServer.Dispose();
-                httpServer = null;
+                Server.Stop();
+                Server.Dispose();
+                Server = null;
             }
 
             startServer();
@@ -47,9 +40,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
         public void Boardcast(string text)
         {
-            if (server == null) throw new NullDependencyException("Server not initialized");
+            if (Server == null) throw new NullDependencyException("Server not initialized");
 
-            server.MulticastText(text);
+            Server.MulticastText(text);
         }
 
         private void startServer()
@@ -61,12 +54,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
                 var ip = IPAddress.Loopback;
                 int port = 24050;
 
-                this.server = new GosuServer(ip, port);
+                this.Server = new GosuServer(ip, port);
 
-                server.Start();
+                Server.Start();
 
                 Logger.Log("Done!");
-                Logger.Log($"WS Server opened at http://{server.Address}:{server.Port}");
+                Logger.Log($"WS Server opened at http://{Server.Address}:{Server.Port}");
             }
             catch (Exception e)
             {
@@ -77,16 +70,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
         protected override void Dispose(bool isDisposing)
         {
-            server?.Dispose();
-            httpServer?.Dispose();
+            Server?.Dispose();
 
             base.Dispose(isDisposing);
         }
 
-        private GosuServer? server;
-        private HttpServer? httpServer;
+        public GosuServer? Server;
 
-        private partial class GosuServer : WsServer
+        public partial class GosuServer : WsServer
         {
             public GosuServer(IPAddress address, int port)
                 : base(address, port)

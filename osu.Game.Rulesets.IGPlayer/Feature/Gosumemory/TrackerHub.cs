@@ -31,6 +31,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             return wsLoader.DataRoot;
         }
 
+        public WebSocketLoader? GetWsLoader()
+        {
+            return wsLoader;
+        }
+
         private readonly List<AbstractTracker> trackers = new List<AbstractTracker>();
 
         [BackgroundDependencyLoader]
