@@ -15,11 +15,15 @@ public partial class AbstractTracker : CompositeDrawable
         this.Hub = hub;
         AlwaysPresent = true;
 
+#if DEBUG
+
         InternalChild = new OsuSpriteText
         {
             Text = $"{this}",
             Margin = new MarginPadding(30)
         };
+
+#endif
     }
 
     [BackgroundDependencyLoader]
