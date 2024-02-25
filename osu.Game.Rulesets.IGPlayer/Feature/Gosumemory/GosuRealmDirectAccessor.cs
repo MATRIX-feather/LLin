@@ -39,6 +39,12 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
         return storage.GetFullPath(".");
     }
 
+    public Task<string?> ExportSingleTask(BeatmapSetInfo setInfo, string targetFile, string? desti)
+    {
+        string? val = ExportFileSingle(setInfo, targetFile, desti);
+        return Task.FromResult(val);
+    }
+
     public string? ExportFileSingle(BeatmapSetInfo setInfo, string targetFile, string? desti)
     {
         try
@@ -89,12 +95,13 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
             if (!parent.Exists)
                 parent.Create();
 
-            Logger.Log($"Trying copy {path} to {desti}");
+            //Logger.Log($"Trying copy {path} to {desti}");
 
             if (File.Exists(desti))
             {
-                File.Delete(desti);
-                Logger.Log("File already exists! Replacing...");
+                //File.Delete(desti);
+                //Logger.Log("File already exists! Skipping...");
+                return desti;
             }
 
             File.Copy(path, desti);
@@ -111,16 +118,7 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
     {
         string str = Path.Combine(hash[..1], hash[..2], hash);
 
-        Logger.Log("File is located at " + str);
+        //Logger.Log("File is located at " + str);
         return str;
-    }
-
-    private void buildTree()
-    {
-        var allBeatmaps = realm.All<BeatmapSetInfo>();
-
-        foreach (BeatmapSetInfo setInfo in allBeatmaps)
-        {
-        }
     }
 }

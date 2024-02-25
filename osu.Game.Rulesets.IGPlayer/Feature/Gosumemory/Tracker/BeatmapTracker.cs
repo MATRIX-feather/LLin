@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
@@ -43,7 +42,19 @@ public partial class BeatmapTracker : AbstractTracker
 
     private string staticRoot()
     {
-        return storage.GetFullPath("static", true);
+        string? path = storage.GetFullPath("gosu_statics", true);
+
+        try
+        {
+            if (!Path.Exists(path))
+                Directory.CreateDirectory(path);
+        }
+        catch (Exception e)
+        {
+            Logging.LogError(e, "Unable to create statics directory");
+        }
+
+        return path;
     }
 
     protected override void LoadComplete()
@@ -101,7 +112,7 @@ public partial class BeatmapTracker : AbstractTracker
     {
         Hub.GetDataRoot().UpdateBeatmap(newBeatmap);
 
-        Logger.Log($"~BACKGROUND IS {newBeatmap.Metadata.BackgroundFile}");
+        //Logger.Log($"~BACKGROUND IS {newBeatmap.Metadata.BackgroundFile}");
         updateFileSupporters(newBeatmap.BeatmapSetInfo, newBeatmap);
 
         this.onModsChanged(this.mods.Value);
@@ -132,30 +143,46 @@ public partial class BeatmapTracker : AbstractTracker
         if (directAccessor == null)
             return;
 
+        if (beatmap.Metadata.BackgroundFile == null)
+        {
+            var dataRoot = Hub.GetDataRoot();
+            string defaultVal = "_default.png";
+
+            dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = defaultVal;
+            dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = defaultVal;
+            return;
+        }
+
         string root = staticRoot();
 
-        if (directAccessor == null) return;
-
-        string? final = directAccessor.ExportFileSingle(setInfo, beatmap.Metadata.BackgroundFile, $"{root}/cover_{beatmap.GetHashCode()}");
-
-        if (final == null) return;
-
-        Logger.Log("~~~PUSH TO GOSU!");
-        var dataRoot = Hub.GetDataRoot();
-
-        string boardcast = final.Replace(root, "").Replace("/", "");
-        Logger.Log("~~~BOARDCAST IS " + boardcast);
-        dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = boardcast;
-        dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = boardcast;
-
-        try
+        Task.Run(async () =>
         {
-            var server = Hub.GetWsLoader()?.Server;
-            server?.AddStaticContent(staticRoot(), "/Songs");
-        }
-        catch (Exception e)
-        {
-            Logging.LogError(e, "Unable to add cache");
-        }
+            string? final = await directAccessor.ExportSingleTask(setInfo, beatmap.Metadata.BackgroundFile, $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{beatmap.Metadata.BackgroundFile.GetHashCode()}")
+                                                .ConfigureAwait(false);
+
+            if (final == null) return;
+
+            this.Schedule(() =>
+            {
+                //Logger.Log("~~~PUSH TO GOSU!");
+                var dataRoot = Hub.GetDataRoot();
+
+                string boardcast = final.Replace(root, "").Replace("/", "");
+                //Logger.Log("~~~BOARDCAST IS " + boardcast);
+                dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = boardcast;
+                dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = boardcast;
+
+                try
+                {
+                    var server = Hub.GetWsLoader()?.Server;
+                    server?.RemoveStaticContent(staticRoot());
+                    server?.AddStaticContent(staticRoot(), "/Songs");
+                }
+                catch (Exception e)
+                {
+                    Logging.LogError(e, "Unable to add cache");
+                }
+            });
+        });
     }
 }
