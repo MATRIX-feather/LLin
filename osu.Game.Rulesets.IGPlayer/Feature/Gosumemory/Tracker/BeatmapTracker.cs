@@ -157,7 +157,11 @@ public partial class BeatmapTracker : AbstractTracker
 
         Task.Run(async () =>
         {
-            string? final = await directAccessor.ExportSingleTask(setInfo, beatmap.Metadata.BackgroundFile, $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{beatmap.Metadata.BackgroundFile.GetHashCode()}")
+            var extensionName = "";
+            var rawNameSplit = beatmap.Metadata.BackgroundFile.Split('.');
+            extensionName = rawNameSplit.Length >= 2 ? rawNameSplit[^1] : "";
+
+            string? final = await directAccessor.ExportSingleTask(setInfo, beatmap.Metadata.BackgroundFile, $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{beatmap.Metadata.BackgroundFile.GetHashCode()}.{extensionName}")
                                                 .ConfigureAwait(false);
 
             if (final == null) return;
