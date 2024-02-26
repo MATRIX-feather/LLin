@@ -2,6 +2,7 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.Containers;
 using osu.Game.Online;
@@ -32,27 +33,37 @@ public partial class AccelDownloadButton : HeaderDownloadButton
         try
         {
             var thisAsHeaderButton = (this as HeaderDownloadButton);
-            var baseButton = (HeaderButton) thisAsHeaderButton.FindInstance(typeof(HeaderButton));
-            var downloadTracker = (BeatmapDownloadTracker)thisAsHeaderButton.FindInstance(typeof(BeatmapDownloadTracker));
-            var shakeContainer = (ShakeContainer)thisAsHeaderButton.FindInstance(typeof(ShakeContainer));
+            var baseButton = (HeaderButton?)thisAsHeaderButton.FindInstance(typeof(HeaderButton));
+            var downloadTracker = (BeatmapDownloadTracker?)thisAsHeaderButton.FindInstance(typeof(BeatmapDownloadTracker));
+            var shakeContainer = (ShakeContainer?)thisAsHeaderButton.FindInstance(typeof(ShakeContainer));
             var beatmaps = PreviewTrackInjector.AccelBeatmapModelDownloader;
+
+            if (baseButton == null || downloadTracker == null || shakeContainer == null)
+            {
+                Logger.Log("Invalid layout! Can't display accel button...");
+                this.FadeOut();
+                return;
+            }
 
             baseButton.BackgroundColour = Color4.Teal;
 
-            baseButton.Action = () =>
+            if (beatmaps != null)
             {
-                try
+                baseButton.Action = () =>
                 {
-                    if (downloadTracker.State.Value != DownloadState.NotDownloaded)
-                        shakeContainer.Shake();
-                    else
-                        beatmaps.Download(this.beatmapSet, this.noVideo);
-                }
-                catch (Exception e)
-                {
-                    Logging.LogError(e, "无法启动加速下载");
-                }
-            };
+                    try
+                    {
+                        if (downloadTracker.State.Value != DownloadState.NotDownloaded)
+                            shakeContainer.Shake();
+                        else
+                            beatmaps.Download(this.beatmapSet, this.noVideo);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.LogError(e, "无法启动加速下载");
+                    }
+                };
+            }
 
             this.tracker = new AccelBeatmapDownloadTracker(this.beatmapSet);
             tracker.State.BindValueChanged(v =>
@@ -73,5 +84,5 @@ public partial class AccelDownloadButton : HeaderDownloadButton
         }
     }
 
-    private DownloadTracker<IBeatmapSetInfo> tracker;
+    private DownloadTracker<IBeatmapSetInfo>? tracker;
 }

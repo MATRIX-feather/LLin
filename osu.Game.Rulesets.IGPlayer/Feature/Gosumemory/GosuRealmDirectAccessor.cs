@@ -9,7 +9,6 @@ using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Models;
-using Realms;
 using File = System.IO.File;
 using Path = System.IO.Path;
 
@@ -18,12 +17,10 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory;
 public partial class GosuRealmDirectAccessor : CompositeDrawable
 {
     private readonly RealmAccess realmAccess;
-    private readonly Realm realm;
 
     public GosuRealmDirectAccessor(RealmAccess realmAccess)
     {
         this.realmAccess = realmAccess;
-        this.realm = realm;
     }
 
     [Resolved]
