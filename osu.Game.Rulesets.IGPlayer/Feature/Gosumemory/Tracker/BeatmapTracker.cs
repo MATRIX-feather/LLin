@@ -90,6 +90,9 @@ public partial class BeatmapTracker : AbstractTracker
         }, true);
     }
 
+    [Resolved]
+    private Bindable<RulesetInfo> globalRuleset { get; set; } = null!;
+
     private void onModsChanged(IReadOnlyList<Mod> mods)
     {
         var currentWorking = beatmap.Value;
@@ -110,9 +113,20 @@ public partial class BeatmapTracker : AbstractTracker
             }
         }
 
-        Ruleset ruleset = currentWorking.BeatmapInfo.Ruleset.CreateInstance();
+        Ruleset ruleset = currentWorking.BeatmapInfo.Ruleset.Available
+            ? currentWorking.BeatmapInfo.Ruleset.CreateInstance()
+            : globalRuleset.Value.CreateInstance();
 
-        var adjusted = ruleset.GetRateAdjustedDisplayDifficulty(difficulty, timeRate);
+        BeatmapDifficulty adjusted = difficulty;
+
+        try
+        {
+            adjusted = ruleset.GetRateAdjustedDisplayDifficulty(difficulty, timeRate);
+        }
+        catch (Exception)
+        {
+            Logging.Log("Can't get adjusted difficulty, using original one...");
+        }
 
         var dataRoot = Hub.GetDataRoot();
 

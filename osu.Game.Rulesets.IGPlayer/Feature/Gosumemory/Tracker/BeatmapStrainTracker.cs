@@ -81,6 +81,9 @@ public partial class BeatmapStrainTracker : AbstractTracker
             });
     }
 
+    [Resolved]
+    private Bindable<RulesetInfo> globalRuleset { get; set; } = null!;
+
     private Task<float[]> updateStrain(WorkingBeatmap workingBeatmap)
     {
         try
@@ -117,13 +120,17 @@ public partial class BeatmapStrainTracker : AbstractTracker
             targetSegments = Math.Min(maximumSegments, targetSegments);
             if (targetSegments <= 0) targetSegments = 1;
 
+            var rulesetInstance = workingBeatmap.BeatmapInfo.Ruleset.Available
+                ? workingBeatmap.BeatmapInfo.Ruleset.CreateInstance()
+                : globalRuleset.Value.CreateInstance();
+
             // 尝试自动转谱
-            var converter = workingBeatmap.BeatmapInfo.Ruleset.CreateInstance().CreateBeatmapConverter(workingBeatmap.Beatmap);
+            var converter = rulesetInstance.CreateBeatmapConverter(workingBeatmap.Beatmap);
             IBeatmap? beatmap = null;
 
             //Logging.Log($"Track length: {length} ~ Segments {targetSegments} ~ Conv? {converter.CanConvert()} ~ Loaded? {workingBeatmap.Track.IsLoaded} ~ Track? {workingBeatmap.Track}");
             if (converter.CanConvert()) beatmap = converter.Convert();
-            var hitObjects = beatmap?.HitObjects ?? new HitObject[] { };
+            var hitObjects = beatmap?.HitObjects ?? Array.Empty<HitObject>();
 
             //获取每段的音频跨度
             double audioStep = length / targetSegments;
