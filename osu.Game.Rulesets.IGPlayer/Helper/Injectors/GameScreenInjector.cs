@@ -20,9 +20,9 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 
 public partial class GameScreenInjector : AbstractInjector
 {
-    private static OsuScreenStack? screenStack;
+    private OsuScreenStack? screenStack;
 
-    private static readonly object injectLock = new object();
+    private readonly object injectLock = new object();
 
     [Resolved]
     private OsuGame game { get; set; } = null!;
@@ -122,7 +122,7 @@ public partial class GameScreenInjector : AbstractInjector
 
             var targetParent = target.Parent as FlowContainerWithOrigin;
             Logging.Log($"Parent is {target.Parent}");
-            targetParent!.Add(new MainMenuButton("LLin播放器", "button-generic-select", OsuIcon.Play, new Color4(0, 86, 73, 255), pushPlayerScreen)
+            targetParent!.Add(new MainMenuButton("Hikariii播放器", "button-generic-select", OsuIcon.Play, new Color4(0, 86, 73, 255), pushPlayerScreen)
             {
                 Anchor = Anchor.CentreLeft,
                 Origin = Anchor.CentreLeft,
@@ -168,7 +168,8 @@ public partial class GameScreenInjector : AbstractInjector
         {
             if (screenStack!.CurrentScreen != playSongSelect) return;
 
-            const BindingFlags flag = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.SetField;
+            const BindingFlags flag = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.GetField | BindingFlags.GetProperty | BindingFlags.SetProperty
+                                      | BindingFlags.SetField;
 
             if (playSongSelect.GetType().GetProperties(flag)
                               .FirstOrDefault(f => f.PropertyType == typeof(Footer))?.GetValue(playSongSelect) is not Footer footer)
@@ -198,9 +199,16 @@ public partial class GameScreenInjector : AbstractInjector
             Alpha = 0;
             SelectedColour = new Color4(0, 86, 73, 255);
             DeselectedColour = SelectedColour.Opacity(0.5f);
-            Text = @"在LLin中打开";
+            Text = @"在Hikariii中打开";
+        }
+
+        protected override void UpdateAfterChildren()
+        {
+            base.UpdateAfterChildren();
+
+            ButtonContentContainer.Margin = new MarginPadding { Horizontal = (100 - TextContainer.Width) / 2 };
         }
     }
-
-    #endregion
 }
+
+#endregion
