@@ -103,7 +103,7 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
 
             if (parent == null)
             {
-                Logger.Log($"{path} is filesystem root... It should'n be!");
+                Logger.Log($"{path} is filesystem root... It shouldn't be!");
                 return null;
             }
 
