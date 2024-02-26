@@ -145,7 +145,10 @@ public partial class BeatmapTracker : AbstractTracker
         this.starDifficulty.BindValueChanged(e =>
         {
             double newVal = e.NewValue?.Stars ?? -1d;
-            Hub.GetDataRoot().MenuValues.GosuBeatmapInfo.Stats.SR = (float)newVal;
+
+            var dataRoot = Hub.GetDataRoot();
+            dataRoot.MenuValues.GosuBeatmapInfo.Stats.SR = (float)newVal;
+            dataRoot.MenuValues.GosuBeatmapInfo.Stats.MaxCombo = e.NewValue?.MaxCombo ?? -1;
         }, true);
     }
 
