@@ -82,6 +82,7 @@ public partial class BeatmapTracker : AbstractTracker
         this.beatmap.BindValueChanged(e =>
         {
             this.onBeatmapChanged(e.NewValue);
+            ((Bindable<IReadOnlyList<Mod>>)mods).TriggerChange();
         }, true);
 
         this.mods.BindValueChanged(e =>
@@ -116,6 +117,9 @@ public partial class BeatmapTracker : AbstractTracker
 
         var dataRoot = Hub.GetDataRoot();
 
+        dataRoot.MenuValues.GosuBeatmapInfo.Stats.BPM.Max = (int)Math.Round(beatmap.Value.Beatmap.ControlPointInfo.BPMMaximum * timeRate);
+        dataRoot.MenuValues.GosuBeatmapInfo.Stats.BPM.Min = (int)Math.Round(beatmap.Value.Beatmap.ControlPointInfo.BPMMinimum * timeRate);
+
         dataRoot.MenuValues.GosuBeatmapInfo.Stats.AR = adjusted.ApproachRate;
         dataRoot.MenuValues.GosuBeatmapInfo.Stats.CS = adjusted.CircleSize;
         dataRoot.MenuValues.GosuBeatmapInfo.Stats.HP = adjusted.DrainRate;
@@ -128,7 +132,7 @@ public partial class BeatmapTracker : AbstractTracker
 
     private void onBeatmapChanged(WorkingBeatmap newBeatmap)
     {
-        Hub.GetDataRoot().UpdateBeatmap(newBeatmap);
+        Hub.GetDataRoot().UpdateMetadata(newBeatmap);
 
         //Logger.Log($"~BACKGROUND IS {newBeatmap.Metadata.BackgroundFile}");
         updateFileSupporters(newBeatmap.BeatmapSetInfo, newBeatmap);
@@ -144,11 +148,11 @@ public partial class BeatmapTracker : AbstractTracker
         this.starDifficulty = beatmapDifficultyCache.GetBindableDifficulty(newBeatmap.BeatmapInfo, cancellationTokenSource.Token);
         this.starDifficulty.BindValueChanged(e =>
         {
-            double newVal = e.NewValue?.Stars ?? -1d;
+            double newVal = e.NewValue?.Stars ?? 0d;
 
             var dataRoot = Hub.GetDataRoot();
             dataRoot.MenuValues.GosuBeatmapInfo.Stats.SR = (float)newVal;
-            dataRoot.MenuValues.GosuBeatmapInfo.Stats.MaxCombo = e.NewValue?.MaxCombo ?? -1;
+            dataRoot.MenuValues.GosuBeatmapInfo.Stats.MaxCombo = e.NewValue?.MaxCombo ?? 0;
         }, true);
     }
 

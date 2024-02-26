@@ -1,4 +1,3 @@
-using System;
 using Newtonsoft.Json;
 using osu.Framework.Graphics.Audio;
 using osu.Game.Beatmaps;
@@ -38,7 +37,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
             this.Time.TrackProgress = (int)track.CurrentTime;
         }
 
-        public void UpdateBeatmap(WorkingBeatmap beatmap)
+        public void UpdateMetadata(WorkingBeatmap beatmap)
         {
             this.BeatmapOnlineId = beatmap.BeatmapInfo.OnlineID;
             this.MD5 = beatmap.BeatmapInfo.MD5Hash;
@@ -54,24 +53,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
             this.MetaData.Mapper = metadata.Author.Username;
             this.MetaData.DiffName = beatmap.BeatmapInfo.DifficultyName;
 
-            //todo: 适应Mod变更
-            var diffInf = beatmap.BeatmapInfo.Difficulty;
-            this.Stats.AR = diffInf.ApproachRate;
-            this.Stats.CS = diffInf.CircleSize;
-            this.Stats.HP = diffInf.DrainRate;
-            this.Stats.OD = diffInf.OverallDifficulty;
-            this.Stats.SR = (float)beatmap.BeatmapInfo.StarRating;
-
-            this.Stats.BPM.Max = (int)Math.Round(beatmap.Beatmap.ControlPointInfo.BPMMaximum);
-            this.Stats.BPM.Max = (int)Math.Round(beatmap.Beatmap.ControlPointInfo.BPMMinimum);
-
-            this.Path.AudioPath = "~ UNKNOWN ~";
-            this.Path.BackgroundPath = "~ UNKNOWN ~";
-            this.Path.BeatmapFile = "~ UNKNOWN ~";
-            this.Path.BgPath = "~ UNKNOWN ~";
-            this.Path.BeatmapFolder = "~ NOT IMPLEMENTED ~";
-
-            this.Stats.MaxCombo = -1;
+            this.Path.AudioPath ??= "~ UNKNOWN ~";
+            this.Path.BackgroundPath ??= "~ UNKNOWN ~";
+            this.Path.BeatmapFile ??= "~ UNKNOWN ~";
+            this.Path.BgPath ??= "~ UNKNOWN ~";
+            this.Path.BeatmapFolder ??= "~ NOT IMPLEMENTED ~";
 
             short rankingStatus;
 
@@ -110,19 +96,19 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
     public struct GosuPath
     {
         [JsonProperty("full")]
-        public string BackgroundPath;
+        public string? BackgroundPath;
 
         [JsonProperty("folder")]
-        public string BeatmapFolder;
+        public string? BeatmapFolder;
 
         [JsonProperty("file")]
-        public string BeatmapFile;
+        public string? BeatmapFile;
 
         [JsonProperty("bg")]
-        public string BgPath;
+        public string? BgPath;
 
         [JsonProperty("audio")]
-        public string AudioPath;
+        public string? AudioPath;
     }
 
     public struct GosuTimeInfo

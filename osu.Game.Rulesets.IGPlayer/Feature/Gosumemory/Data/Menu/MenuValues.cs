@@ -38,9 +38,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
             this.GosuBeatmapInfo.UpdateTrack(track);
         }
 
-        public void UpdateBeatmap(WorkingBeatmap beatmap)
+        public void UpdateMetadata(WorkingBeatmap beatmap)
         {
-            this.GosuBeatmapInfo.UpdateBeatmap(beatmap);
+            this.GosuBeatmapInfo.UpdateMetadata(beatmap);
         }
     }
 }

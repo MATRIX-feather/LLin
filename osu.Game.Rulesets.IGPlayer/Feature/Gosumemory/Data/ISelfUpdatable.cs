@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data
 {
     public interface ISelfUpdatableFromBeatmap
     {
-        public void UpdateBeatmap(WorkingBeatmap working);
+        public void UpdateMetadata(WorkingBeatmap working);
     }
 
     public interface ISelfUpdatableFromAudio

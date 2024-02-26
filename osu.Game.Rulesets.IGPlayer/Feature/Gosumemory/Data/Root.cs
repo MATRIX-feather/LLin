@@ -30,13 +30,19 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data
         [JsonProperty("tourney")]
         public TourneyValues TourneyValues = new TourneyValues();
 
+        public DataRoot()
+        {
+            SettingsValues.Folders = new string[] { "~ NOT IMPLEMENTED ~" };
+            SettingsValues.ShowInterface = true;
+        }
+
         public void ApplyMods(IList<Mod> mods)
         {
         }
 
-        public void UpdateBeatmap(WorkingBeatmap workingBeatmap)
+        public void UpdateMetadata(WorkingBeatmap workingBeatmap)
         {
-            MenuValues.UpdateBeatmap(workingBeatmap);
+            MenuValues.UpdateMetadata(workingBeatmap);
         }
 
         public void UpdateTrack(DrawableTrack track)
