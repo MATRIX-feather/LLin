@@ -96,7 +96,7 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Configuration
             SetDefault(MSetting.MprisUpdateInterval, 500d, 100d, 1000d);
 
             //Gosu
-            SetDefault(MSetting.GosuMaximumCacheSize, 300, 100, 4096);
+            SetDefault(MSetting.GosuMaximumCacheSize, 600, 100, 4096);
 
             //排行榜
             //SetDefault(MSetting.InGameLeaderboardState, LeaderboardState.Fold);
