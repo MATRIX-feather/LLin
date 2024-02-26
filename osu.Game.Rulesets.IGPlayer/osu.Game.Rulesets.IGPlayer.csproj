@@ -27,5 +27,6 @@
   <ItemGroup>
     <Folder Include="Helper" />
     <Folder Include="Rs" />
+    <Folder Include="Settings" />
   </ItemGroup>
 </Project>

@@ -15,11 +15,13 @@ using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Online.API;
+using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
 using osu.Game.Rulesets.IGPlayer.Rs.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Rs.Mods;
 using osu.Game.Rulesets.IGPlayer.Rs.UI;
+using osu.Game.Rulesets.IGPlayer.Settings.Mf;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.UI;
 using osuTK;
@@ -34,6 +36,11 @@ namespace osu.Game.Rulesets.IGPlayer
         public override string ShortName => "igplayerruleset";
 
         public override string PlayingVerb => "正在听歌";
+
+        public override RulesetSettingsSubsection? CreateSettings()
+        {
+            return new MfMainSection(this);
+        }
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods) =>
             new DrawableIGPlayerRuleset(this, beatmap, mods);
