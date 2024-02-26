@@ -38,7 +38,7 @@ public partial class ScreenTracker : AbstractTracker
 
         if (screenStack == null && !warningPrinted)
         {
-            Logger.Log("无法定位到OsuScreenStack, 一些功能可能不会正常运作", level: LogLevel.Important);
+            Logging.Log("无法定位到OsuScreenStack, 一些功能可能不会正常运作", level: LogLevel.Important);
             warningPrinted = true;
         }
     }
@@ -135,8 +135,6 @@ public partial class ScreenTracker : AbstractTracker
     {
         scorePPCalcTokenSource?.Cancel();
 
-        Logger.Log($"🦢 Screen Swwwwwwitch! {prevScreen} -> {nextScreen}");
-
         this.playerScreen = null;
         this.resultsScreen = null;
 
@@ -211,7 +209,7 @@ public partial class ScreenTracker : AbstractTracker
             }
             else
             {
-                Logger.Log("score.BeatmapInfo is null?! Not updating pp to gosu...");
+                Logging.Log("score.BeatmapInfo is null?! Not updating pp to gosu...");
             }
         }
     }
@@ -234,7 +232,7 @@ public partial class ScreenTracker : AbstractTracker
         this.playerScreen = player;
         Hub.GetDataRoot().MenuValues.OsuState = OsuStates.PLAYING;
 
-        Logger.Log("PLAYER!");
+        Logging.Log("PLAYER!");
 
         player.DimmableStoryboard?.Add(healthProcessorAccessor = new HealthProcessorAccessor());
     }

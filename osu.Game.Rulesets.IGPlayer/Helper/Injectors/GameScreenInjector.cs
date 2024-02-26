@@ -69,7 +69,7 @@ public partial class GameScreenInjector : AbstractInjector
 
     private void onScreenSwitch(IScreen lastscreen, IScreen newscreen)
     {
-        Logger.Log($"🦢 Screen Changed! {lastscreen} -> {newscreen}", level: LogLevel.Debug);
+        Logging.Log($"🦢 Screen Changed! {lastscreen} -> {newscreen}", level: LogLevel.Debug);
 
         if (lastscreen == currentPlaySongSelect && newscreen is MainMenu)
             currentPlaySongSelect = null;
@@ -107,7 +107,7 @@ public partial class GameScreenInjector : AbstractInjector
             if (menu.GetType().GetFields(flag)
                     .FirstOrDefault(f => f.FieldType == typeof(ButtonSystem))?.GetValue(menu) is not ButtonSystem buttonSystem)
             {
-                Logger.Log("无法向主界面添加入口, 因为没有找到ButtonSystem", level: LogLevel.Important);
+                Logging.Log("无法向主界面添加入口, 因为没有找到ButtonSystem", level: LogLevel.Important);
                 return;
             }
 
@@ -116,12 +116,12 @@ public partial class GameScreenInjector : AbstractInjector
 
             if (target == null)
             {
-                Logger.Log("无法向主界面添加入口, 因为没有找到游玩按钮", level: LogLevel.Important);
+                Logging.Log("无法向主界面添加入口, 因为没有找到游玩按钮", level: LogLevel.Important);
                 return;
             }
 
             var targetParent = target.Parent as FlowContainerWithOrigin;
-            Logger.Log($"Parent is {target.Parent}");
+            Logging.Log($"Parent is {target.Parent}");
             targetParent!.Add(new MainMenuButton("LLin播放器", "button-generic-select", OsuIcon.Play, new Color4(0, 86, 73, 255), pushPlayerScreen)
             {
                 Anchor = Anchor.CentreLeft,
@@ -173,7 +173,7 @@ public partial class GameScreenInjector : AbstractInjector
             if (playSongSelect.GetType().GetProperties(flag)
                               .FirstOrDefault(f => f.PropertyType == typeof(Footer))?.GetValue(playSongSelect) is not Footer footer)
             {
-                Logger.Log("没有找到Footer", level: LogLevel.Important);
+                Logging.Log("没有找到Footer", level: LogLevel.Important);
                 return;
             }
 

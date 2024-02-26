@@ -2,7 +2,6 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.Containers;
 using osu.Game.Online;
@@ -40,7 +39,7 @@ public partial class AccelDownloadButton : HeaderDownloadButton
 
             if (baseButton == null || downloadTracker == null || shakeContainer == null)
             {
-                Logger.Log("Invalid layout! Can't display accel button...");
+                Logging.Log("Invalid layout! Can't display accel button...");
                 this.FadeOut();
                 return;
             }

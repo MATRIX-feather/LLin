@@ -1,7 +1,6 @@
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Logging;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web;
 using osuTK;
 
@@ -36,7 +35,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
         {
             if (game == null)
             {
-                Logger.Log("OsuGame is null, returning...");
+                Logging.Log("OsuGame is null, returning...");
                 return;
             }
 
@@ -53,13 +52,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             var container = this.getContainerFromGame("mfosu Gosumemory compat container", game);
             container.AddRange(children);
 
-            Logger.Log("Added gosu compat!");
+            Logging.Log("Added gosu compat!");
         }
 
         [BackgroundDependencyLoader]
         private void load(OsuGame? game)
         {
-            Logger.Log("Gosu compat injector!");
+            Logging.Log("Gosu compat injector!");
 
             AlwaysPresent = true;
 
@@ -69,7 +68,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             this.RelativeSizeAxes = Axes.Both;
             this.Size = new Vector2(0.6f);
 
-            Logger.Log($"Updater is {Updater}");
+            Logging.Log($"Updater is {Updater}");
             if (Updater == null)
                 initializeUpdater();
         }

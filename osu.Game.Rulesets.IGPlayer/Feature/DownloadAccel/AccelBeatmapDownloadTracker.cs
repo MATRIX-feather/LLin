@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using osu.Framework.Allocation;
-using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Online;
 using osu.Game.Online.API;
@@ -20,7 +19,7 @@ public partial class AccelBeatmapDownloadTracker : BeatmapDownloadTracker
 
     protected override void LoadComplete()
     {
-        Logger.Log($"Deps: {TrackedItem}");
+        Logging.Log($"Deps: {TrackedItem}");
         base.LoadComplete();
 
         var accelDownloader = PreviewTrackInjector.AccelBeatmapModelDownloader;
@@ -45,7 +44,7 @@ public partial class AccelBeatmapDownloadTracker : BeatmapDownloadTracker
 
         try
         {
-            //Logger.Log($"Invoking Base Method! {method}", level: LogLevel.Important);
+            //Logging.Log($"Invoking Base Method! {method}", level: LogLevel.Important);
             method.Invoke(this, new object?[]{ obj });
         }
         catch (Exception e)

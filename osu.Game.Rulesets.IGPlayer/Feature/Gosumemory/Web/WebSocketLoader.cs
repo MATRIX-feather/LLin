@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
         [BackgroundDependencyLoader]
         private void load()
         {
-            Logger.Log("WS LOAD!");
+            Logging.Log("WS LOAD!");
             Schedule(startServer);
         }
 
@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
         private void startServer()
         {
-            Logger.Log("Initializing WebSocket Server...");
+            Logging.Log("Initializing WebSocket Server...");
 
             try
             {
@@ -58,13 +58,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
                 Server.Start();
 
-                Logger.Log("Done!");
-                Logger.Log($"WS Server opened at http://{Server.Address}:{Server.Port}");
+                Logging.Log("Done!");
+                Logging.Log($"WS Server opened at http://{Server.Address}:{Server.Port}");
             }
             catch (Exception e)
             {
-                Logger.Log($"无法启动WebSocket服务器: {e}", level: LogLevel.Important);
-                Logger.Log(e.ToString());
+                Logging.Log($"无法启动WebSocket服务器: {e}", level: LogLevel.Important);
+                Logging.Log(e.ToString());
             }
         }
 
@@ -88,7 +88,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
             protected override void OnError(SocketError error)
             {
-                Logger.Log($"Chat WebSocket server caught an error with code {error}");
+                Logging.Log($"Chat WebSocket server caught an error with code {error}");
             }
         }
 
@@ -101,33 +101,33 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
             public override void OnWsConnected(HttpRequest request)
             {
-                Logger.Log($"Chat WebSocket session with Id {Id} connected!");
+                Logging.Log($"Chat WebSocket session with Id {Id} connected!");
             }
 
             public override void OnWsDisconnected()
             {
-                Logger.Log($"Chat WebSocket session with Id {Id} disconnected!");
+                Logging.Log($"Chat WebSocket session with Id {Id} disconnected!");
             }
 
             public override void OnWsReceived(byte[] buffer, long offset, long size)
             {
                 string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-                Logger.Log("WebSocket Incoming: " + message);
+                Logging.Log("WebSocket Incoming: " + message);
             }
 
             public override void OnWsError(string error)
             {
-                Logger.Log("WS ERRORED: " + error);
+                Logging.Log("WS ERRORED: " + error);
             }
 
             public override void OnWsError(SocketError error)
             {
-                Logger.Log("WS ERRORED: " + error);
+                Logging.Log("WS ERRORED: " + error);
             }
 
             protected override void OnError(SocketError error)
             {
-                Logger.Log($"Chat WebSocket session caught an error with code {error}");
+                Logging.Log($"Chat WebSocket session caught an error with code {error}");
             }
         }
     }

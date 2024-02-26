@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using osu.Framework;
 using osu.Framework.IO.Stores;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
@@ -85,7 +84,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
                     //获取完整路径
                     var fullPath = customStorage.GetFullPath(assembly);
 
-                    //Logger.Log($"加载 {fullPath}");
+                    //Logging.Log($"加载 {fullPath}");
                     loadAssembly(Assembly.LoadFrom(fullPath));
                 }
             }
@@ -112,16 +111,16 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    //Logger.Log($"case: 尝试加载 {type}");
+                    //Logging.Log($"case: 尝试加载 {type}");
 
                     if (type.IsSubclassOf(typeof(LLinPluginProvider)))
                     {
                         loadedAssemblies[assembly] = type;
-                        //Logger.Log($"{type}是插件Provider");
+                        //Logging.Log($"{type}是插件Provider");
                         addMvisPlugin(type, assembly.FullName);
                     }
 
-                    //Logger.Log($"{type}不是任何一个SubClass");
+                    //Logging.Log($"{type}不是任何一个SubClass");
                 }
 
                 //添加store
@@ -140,11 +139,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
         /// <param name="fullName">与pluginType对应的Assembly的fullName</param>
         private void addMvisPlugin(Type pluginType, string? fullName)
         {
-            //Logger.Log($"载入 {fullName}");
+            //Logging.Log($"载入 {fullName}");
 
             if (fullName == null)
             {
-                Logger.Log($"插件{pluginType}的FullName为null，将不会加载");
+                Logging.Log($"插件{pluginType}的FullName为null，将不会加载");
                 return;
             }
 
@@ -152,7 +151,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
             {
                 var providerInstance = (LLinPluginProvider)Activator.CreateInstance(pluginType)!;
                 LoadedPluginProviders.Add(providerInstance);
-                //Logger.Log($"[OK] 载入 {fullName}");
+                //Logging.Log($"[OK] 载入 {fullName}");
             }
             catch (Exception e)
             {

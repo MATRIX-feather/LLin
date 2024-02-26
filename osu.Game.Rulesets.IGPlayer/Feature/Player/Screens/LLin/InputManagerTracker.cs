@@ -4,7 +4,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input;
-using osu.Framework.Logging;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
@@ -26,9 +25,9 @@ public partial class InputManagerTracker : CompositeDrawable
     {
         Drawable? newDrawable = e.NewValue;
 
-        Logger.Log($"🦢 Adding {newDrawable} to List {focusHistory.Count}");
+        Logging.Log($"🦢 Adding {newDrawable} to List {focusHistory.Count}");
         focusHistory.Add(newDrawable);
-        Logger.Log($"🦢 New Count: {focusHistory.Count}");
+        Logging.Log($"🦢 New Count: {focusHistory.Count}");
 
         if (focusHistory.Count > 3)
             focusHistory.RemoveAt(0);
@@ -39,17 +38,17 @@ public partial class InputManagerTracker : CompositeDrawable
     public bool ShouldBlockFirstInput()
     {
         var count = focusHistory.Count;
-        //Logger.Log($"🦢 List size: {focusHistory.Count}");
+        //Logging.Log($"🦢 List size: {focusHistory.Count}");
 
         var index = count - 1;
 
         return count switch
         {
             >= 3 =>
-                //Logger.Log($"🦢 Last 3 History: {focusHistory[index]} -->> {focusHistory[index - 1]} -->> {focusHistory[index - 2]}");
+                //Logging.Log($"🦢 Last 3 History: {focusHistory[index]} -->> {focusHistory[index - 1]} -->> {focusHistory[index - 2]}");
                 focusHistory[index] != null && focusHistory[index - 2] is LLinScreen,
             >= 2 =>
-                //Logger.Log($"🦢 Last 3 History: {focusHistory[index]} -->> {focusHistory[index - 1]}");
+                //Logging.Log($"🦢 Last 3 History: {focusHistory[index]} -->> {focusHistory[index - 1]}");
                 focusHistory[index] != null && focusHistory[index - 1] is LLinScreen,
             _ => false
         };

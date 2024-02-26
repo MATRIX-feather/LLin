@@ -8,7 +8,6 @@ using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osu.Game.Beatmaps.Drawables;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
@@ -195,7 +194,7 @@ public partial class AccelOptionContainer : Container
 
     private void OnStateChanged(ValueChangedEvent<DownloadState> v)
     {
-        Logger.Log($"State changed! {v.OldValue} -> {v.NewValue}");
+        Logging.Log($"State changed! {v.OldValue} -> {v.NewValue}");
 
         switch (v.NewValue)
         {

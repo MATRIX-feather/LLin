@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using osu.Framework.Logging;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Extensions
 {
@@ -130,8 +129,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Extensions
                             {
                                 errors.Add($"处理器 \"{handler.HandlerName}\" 产生了异常: {e.Message}");
 
-                                Logger.Log($"处理器 \"{handler.HandlerName}\" 产生了异常: {e.Message}");
-                                Logger.Log(e.StackTrace);
+                                Logging.Log($"处理器 \"{handler.HandlerName}\" 产生了异常: {e.Message}");
+                                Logging.Log(e.StackTrace);
                                 return false;
                             }
                         }

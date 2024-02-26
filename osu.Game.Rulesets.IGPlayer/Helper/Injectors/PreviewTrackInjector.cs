@@ -4,7 +4,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Development;
 using osu.Framework.Graphics;
-using osu.Framework.Logging;
 using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
@@ -60,7 +59,7 @@ public partial class PreviewTrackInjector : AbstractInjector
                     Text = msg
                 });
 
-                Logger.Log($"[{Constants.LOG_PREFIX}] {msg}");
+                Logging.Log(msg);
                 return;
             }
 
@@ -72,7 +71,7 @@ public partial class PreviewTrackInjector : AbstractInjector
                     Text = msg
                 });
 
-                Logger.Log($"[{Constants.LOG_PREFIX}] {msg}");
+                Logging.Log(msg);
                 return;
             }
 
@@ -184,7 +183,7 @@ public partial class PreviewTrackInjector : AbstractInjector
 
     private void onPreviewTrackChanged(ValueChangedEvent<PreviewTrackManager.TrackManagerPreviewTrack> e)
     {
-        Logger.Log($"🦢🦢 Preview track changed! {e.OldValue} -> {e.NewValue}");
+        Logging.Log($"🦢🦢 Preview track changed! {e.OldValue} -> {e.NewValue}");
         PreviewTrackManager.TrackManagerPreviewTrack? track = e.NewValue;
         prevContainer?.Hide();
         prevContainer?.Expire();

@@ -28,24 +28,24 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard.St
         [BackgroundDependencyLoader]
         private void load()
         {
-            //Logger.Log($"{id} - 创建{working}的故事版", LoggingTarget.Performance);
+            //Logging.Log($"{id} - 创建{working}的故事版", LoggingTarget.Performance);
 
             drawableStoryboard = working.Storyboard.CreateDrawable();
             drawableStoryboard.Clock = RunningClock;
 
-            //Logger.Log($"{id} - 加载{working}", LoggingTarget.Performance);
+            //Logging.Log($"{id} - 加载{working}", LoggingTarget.Performance);
             LoadComponent(drawableStoryboard);
-            //Logger.Log($"{id} - 添加...", LoggingTarget.Performance);
+            //Logging.Log($"{id} - 添加...", LoggingTarget.Performance);
             Add(drawableStoryboard);
 
-            //Logger.Log($"{id} - 完成", LoggingTarget.Performance);
+            //Logging.Log($"{id} - 完成", LoggingTarget.Performance);
         }
 
         public Drawable StoryboardProxy() => drawableStoryboard.OverlayLayer.CreateProxy();
 
         protected override void Dispose(bool isDisposing)
         {
-            //Logger.Log($"{id} - 处理", LoggingTarget.Performance);
+            //Logging.Log($"{id} - 处理", LoggingTarget.Performance);
             drawableStoryboard?.Dispose();
             base.Dispose(isDisposing);
         }

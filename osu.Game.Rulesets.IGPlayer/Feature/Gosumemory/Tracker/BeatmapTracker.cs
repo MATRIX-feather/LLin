@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
@@ -49,7 +48,7 @@ public partial class BeatmapTracker : AbstractTracker
         }
         catch (Exception e)
         {
-            Logger.Log("Error occurred while clearing cache directory, but it's not a big deal.");
+            Logging.Log("Error occurred while clearing cache directory, but it's not a big deal.");
         }
     }
 
@@ -134,7 +133,7 @@ public partial class BeatmapTracker : AbstractTracker
     {
         Hub.GetDataRoot().UpdateMetadata(newBeatmap);
 
-        //Logger.Log($"~BACKGROUND IS {newBeatmap.Metadata.BackgroundFile}");
+        //Logging.Log($"~BACKGROUND IS {newBeatmap.Metadata.BackgroundFile}");
         updateFileSupporters(newBeatmap.BeatmapSetInfo, newBeatmap);
 
         this.onModsChanged(this.mods.Value);
@@ -224,13 +223,13 @@ public partial class BeatmapTracker : AbstractTracker
             // Update!
             this.Schedule(() =>
             {
-                //Logger.Log("~~~PUSH TO GOSU!");
+                //Logging.Log("~~~PUSH TO GOSU!");
                 var dataRoot = Hub.GetDataRoot();
 
                 if (backgroundFinal != null)
                 {
                     string boardcast = backgroundFinal.Replace(root, "").Replace("/", "");
-                    //Logger.Log("~~~BOARDCAST IS " + boardcast);
+                    //Logging.Log("~~~BOARDCAST IS " + boardcast);
                     dataRoot.MenuValues.GosuBeatmapInfo.Path.BackgroundPath = boardcast;
                     dataRoot.MenuValues.GosuBeatmapInfo.Path.BgPath = boardcast;
                 }
@@ -260,7 +259,7 @@ public partial class BeatmapTracker : AbstractTracker
         }
         catch (Exception e)
         {
-            Logger.Log("Error occurred while clearing gosu cache... Not a big deal, maybe?");
+            Logging.Log("Error occurred while clearing gosu cache... Not a big deal, maybe?");
         }
     }
 

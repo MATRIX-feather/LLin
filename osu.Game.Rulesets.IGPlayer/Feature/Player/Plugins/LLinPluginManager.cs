@@ -88,7 +88,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
         internal SettingsEntry[]? GetSettingsFor(LLinPlugin pl)
         {
             if (!entryMap.ContainsKey(pl.GetType()))
-                Logger.Log($"entryMap中没有和{pl}有关的数据。");
+                Logging.Log($"entryMap中没有和{pl}有关的数据。");
 
             return entryMap.ContainsKey(pl.GetType()) ? entryMap[pl.GetType()] : null;
         }
@@ -113,9 +113,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
             if (pl == null || avaliablePlugins.Contains(pl)) return false;
 
             if (pl.Version < MinimumPluginVersion)
-                Logger.Log($"插件 \"{pl.Name}\" 是为旧版本的mf-osu打造的, 继续使用可能会导致意外情况的发生!", LoggingTarget.Runtime, LogLevel.Important);
+                Logging.Log($"插件 \"{pl.Name}\" 是为旧版本的mf-osu打造的, 继续使用可能会导致意外情况的发生!", LoggingTarget.Runtime, LogLevel.Important);
             else if (pl.Version > PluginVersion)
-                Logger.Log($"插件 \"{pl.Name}\" 是为更高版本的mf-osu打造的, 继续使用可能会导致意外情况的发生!", LoggingTarget.Runtime, LogLevel.Important);
+                Logging.Log($"插件 \"{pl.Name}\" 是为更高版本的mf-osu打造的, 继续使用可能会导致意外情况的发生!", LoggingTarget.Runtime, LogLevel.Important);
 
             avaliablePlugins.Add(pl);
             OnPluginAdd?.Invoke(pl);
@@ -201,7 +201,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
             if (!success)
             {
                 activePlugins.Add(pl);
-                Logger.Log($"卸载插件\"${pl.Name}\"失败");
+                Logging.Log($"卸载插件\"${pl.Name}\"失败");
             }
 
             return success;
@@ -381,9 +381,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
                 }
                 catch (Exception e)
                 {
-                    Logger.Log($"Unable to update settings for plugin {pl}");
-                    Logger.Log(e.Message);
-                    Logger.Log(e.StackTrace);
+                    Logging.Log($"Unable to update settings for plugin {pl}");
+                    Logging.Log(e.Message);
+                    Logging.Log(e.StackTrace);
                 }
             }
         }

@@ -6,7 +6,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.IO.Network;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Online.API;
@@ -118,8 +117,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
                 }
                 catch (Exception e)
                 {
-                    Logger.Log("无法更新用户定义：" + e.Message);
-                    Logger.Log(e.StackTrace);
+                    Logging.Log("无法更新用户定义：" + e.Message);
+                    Logging.Log(e.StackTrace);
 
                     this.Schedule(() => onFail?.Invoke(e));
                 }
@@ -178,16 +177,16 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
                 foreach (string a in mapping.MatchingArtist)
                     artistString += $"\"{a}\", ";
 
-                Logger.Log($"{mapping}包含的数据：");
-                Logger.Log($"|------对应网易云ID：{mapping.TargetNeteaseID}");
-                Logger.Log($"|------对应标题：{titleString}");
-                Logger.Log($"|------标题匹配模式：{mapping.TitleMatchMode}");
-                Logger.Log($"|------艺术家：{artistString}");
-                Logger.Log($"|------艺术家匹配模式：{mapping.ArtistMatchMode}");
-                Logger.Log($"|------谱面：");
+                Logging.Log($"{mapping}包含的数据：");
+                Logging.Log($"|------对应网易云ID：{mapping.TargetNeteaseID}");
+                Logging.Log($"|------对应标题：{titleString}");
+                Logging.Log($"|------标题匹配模式：{mapping.TitleMatchMode}");
+                Logging.Log($"|------艺术家：{artistString}");
+                Logging.Log($"|------艺术家匹配模式：{mapping.ArtistMatchMode}");
+                Logging.Log($"|------谱面：");
 
                 foreach (int oid in mapping.Beatmaps)
-                    Logger.Log($"|------------{oid}");
+                    Logging.Log($"|------------{oid}");
             }
         }
     }

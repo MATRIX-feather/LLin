@@ -8,7 +8,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Collections;
@@ -307,7 +306,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
 
                 if (currentSet == null)
                 {
-                    Logger.Log($"{hash}解析到的谱面是null，将不会继续处理此Hash");
+                    Logging.Log($"{hash}解析到的谱面是null，将不会继续处理此Hash");
                     continue;
                 }
 

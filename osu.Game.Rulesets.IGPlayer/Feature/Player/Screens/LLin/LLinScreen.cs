@@ -153,7 +153,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
             //切换并设置当前控制插件IsCurrent为true
             audioControlPlugin = newControlPlugin;
             newControlPlugin.IsCurrent = true;
-            //Logger.Log($"更改控制插件到{audioControlProvider}");
+            //Logging.Log($"更改控制插件到{audioControlProvider}");
         }
 
         private readonly LLinModRateAdjust modRateAdjust = new LLinModRateAdjust();
@@ -547,7 +547,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 
             if (target.State == ProgressNotificationState.Cancelled)
             {
-                Logger.Log($"{sender} 的一项任务已经被您下达取消命令, 但似乎他们并没有这么做", level: LogLevel.Important);
+                Logging.Log($"{sender} 的一项任务已经被您下达取消命令, 但似乎他们并没有这么做", level: LogLevel.Important);
                 notificationDictionary.Remove(targetID);
             }
 
@@ -892,9 +892,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                 }
                 catch (Exception e)
                 {
-                    Logger.Log($"在添加 {pl.Name} 时出现问题, 请联系你的插件提供方: {e.Message}", level: LogLevel.Important);
-                    Logger.Log(e.Message);
-                    Logger.Log(e.StackTrace);
+                    Logging.Log($"在添加 {pl.Name} 时出现问题, 请联系你的插件提供方: {e.Message}", level: LogLevel.Important);
+                    Logging.Log(e.Message);
+                    Logging.Log(e.StackTrace);
                 }
             }
         }
@@ -1250,7 +1250,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 
             //添加新的功能条
             overlayLayer.Add((Drawable)newProvider);
-            //Logger.Log($"更改底栏到{newProvider}");
+            //Logging.Log($"更改底栏到{newProvider}");
         }
 
         private void onFunctionBarDisable() => changeFunctionBarProvider(null);

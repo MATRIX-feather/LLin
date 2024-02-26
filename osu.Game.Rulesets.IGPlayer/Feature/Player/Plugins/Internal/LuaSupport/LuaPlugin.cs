@@ -109,7 +109,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport
             catch (Exception e)
             {
                 Log($"Unable to initialize Lua: {e} -> {e.Message} :: {e.InnerException}", LogLevel.Error);
-                Logger.Log(e.StackTrace);
+                Logging.Log(e.StackTrace);
 
                 if (e.InnerException is Exception innerException)
                 {
@@ -128,7 +128,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport
                 catch (Exception e)
                 {
                     Log($"Unable to execute command: {e.Message} -> {e}", LogLevel.Error);
-                    Logger.Log(e.StackTrace);
+                    Logging.Log(e.StackTrace);
 
                     if (e.InnerException is Exception innerException)
                         Log($"\n\nAnd probably caused by: {innerException.Message} -> {innerException}", LogLevel.Error);
@@ -179,7 +179,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.LuaSupport
         {
             if (text == null) return;
 
-            Logger.Log(text);
+            Logging.Log(text);
 
             loggingTextFlow.Add(new OutputLine(text, level == LogLevel.Error, newSegment));
             haveUnreadMessage = true;

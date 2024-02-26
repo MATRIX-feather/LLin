@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                 //可能存在一行歌词多个时间，所以先创建列表
                 List<Lyric> lyrics = new List<Lyric>();
 
-                //Logger.Log($"处理歌词: {lyricString}");
+                //Logging.Log($"处理歌词: {lyricString}");
 
                 bool propertyDetected = false;
                 string propertyName = string.Empty;
@@ -87,14 +87,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                     if (propertyDetected) propertyName = propertyName + c;
                     else lyricContent = lyricContent + c;
 
-                    //Logger.Log($"原始歌词: propertyName: {propertyName} | lyricContent: {lyricContent}");
+                    //Logging.Log($"原始歌词: propertyName: {propertyName} | lyricContent: {lyricContent}");
                 }
 
                 //最后，设置歌词内容并添加到result
                 foreach (var lyric in lyrics)
                 {
                     lyric.Content = lyricContent;
-                    //Logger.Log($"添加歌词: {lyric}");
+                    //Logging.Log($"添加歌词: {lyric}");
 
                     result.Add(lyric);
                 }
@@ -111,7 +111,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
 
                     IList<int> times = new List<int>();
 
-                    //Logger.Log($"处理翻译歌词: {tlyricString}");
+                    //Logging.Log($"处理翻译歌词: {tlyricString}");
 
                     //处理属性
                     foreach (char c in tlyricString)
@@ -158,7 +158,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                         foreach (var lrc in result.FindAll(l => l.Time == time))
                         {
                             lrc.TranslatedString = lyricContent;
-                            //Logger.Log($"设置歌词歌词: {lrc}");
+                            //Logging.Log($"设置歌词歌词: {lrc}");
                         }
                     }
                 }

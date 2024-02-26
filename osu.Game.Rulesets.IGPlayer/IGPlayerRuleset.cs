@@ -129,12 +129,12 @@ namespace osu.Game.Rulesets.IGPlayer
                         }
                     };
 
-                    Logger.Log("[IGPlayer] Injecting dependencies.d..");
-                    Logger.Log($"Deps: Game = '{game}' :: Storage = '{storage}' :: Importer = '{beatmapImporter}' :: IAPIProvider = '{api}'");
+                    Logging.Log("Injecting dependencies...");
+                    Logging.Log($"Deps: Game = '{game}' :: Storage = '{storage}' :: Importer = '{beatmapImporter}' :: IAPIProvider = '{api}'");
 
                     if (OsuGameInjector.InjectDependencies(storage, game, this.Scheduler)) return;
 
-                    Logger.Log("[IGPlayer] Inject failed!", level: LogLevel.Error);
+                    Logging.Log("Inject failed!", level: LogLevel.Error);
                     return;
                 }
                 catch (Exception e)

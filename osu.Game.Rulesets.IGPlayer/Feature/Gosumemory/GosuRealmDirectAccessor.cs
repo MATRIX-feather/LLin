@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
@@ -58,7 +57,7 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
         catch (Exception e)
         {
             Logging.LogError(e, "Error occurred while reading file.");
-            Logger.Log(e.ToString());
+            Logging.Log(e.ToString());
             return null;
         }
     }
@@ -88,7 +87,7 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
 
         if (realmNamedFileUsage == null)
         {
-            Logger.Log($"File not found for '{targetFile}'");
+            Logging.Log($"File not found for '{targetFile}'");
             return null;
         }
 
@@ -103,14 +102,14 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
 
             if (parent == null)
             {
-                Logger.Log($"{path} is filesystem root... It shouldn't be!");
+                Logging.Log($"{path} is filesystem root... It shouldn't be!");
                 return null;
             }
 
             if (!parent.Exists)
                 parent.Create();
 
-            //Logger.Log($"Trying copy {path} to {desti}");
+            //Logging.Log($"Trying copy {path} to {desti}");
 
             if (File.Exists(desti))
             {
@@ -127,7 +126,7 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
                         throw new ArgumentOutOfRangeException(nameof(operationIfExists), operationIfExists, null);
                 }
 
-                //Logger.Log("File already exists! Skipping...");
+                //Logging.Log("File already exists! Skipping...");
                 //return desti;
             }
 
@@ -145,7 +144,7 @@ public partial class GosuRealmDirectAccessor : CompositeDrawable
     {
         string str = Path.Combine(hash[..1], hash[..2], hash);
 
-        //Logger.Log("File is located at " + str);
+        //Logging.Log("File is located at " + str);
         return str;
     }
 }

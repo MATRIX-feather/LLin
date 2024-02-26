@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics
                 }
             };
 
-            if (resizeWidth != -1) Logger.Log("resizeWidth已废弃", level: LogLevel.Important);
+            if (resizeWidth != -1) Logging.Log("resizeWidth已废弃", level: LogLevel.Important);
         }
 
         private DependencyContainer dependencies;

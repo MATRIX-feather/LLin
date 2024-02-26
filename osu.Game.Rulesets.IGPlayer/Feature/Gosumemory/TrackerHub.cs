@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
         [BackgroundDependencyLoader]
         private void load()
         {
-            Logger.Log("Gosumemoty Compat!");
+            Logging.Log("Gosumemoty Compat!");
 
             this.Clock = new FramedClock(null, false);
 
@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                         NullValueHandling = NullValueHandling.Include
                     });
 
-                    Logger.Log(str);
+                    Logging.Log(str);
                 }
             });
 #endif
@@ -156,8 +156,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
             }
             catch (Exception e)
             {
-                Logger.Log($"Unable to update osu status to WebSocket: {e.Message}", level: LogLevel.Important);
-                Logger.Log(e.ToString());
+                Logging.Log($"Unable to update osu status to WebSocket: {e.Message}", level: LogLevel.Important);
+                Logging.Log(e.ToString());
             }
         }
     }

@@ -8,7 +8,6 @@ using System.Threading;
 using Newtonsoft.Json;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
@@ -193,7 +192,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
                     if (searchRequest != null && searchRequest == currentSearchRequest)
                         setState(SearchState.FuzzySearching);
 
-                    //Logger.Log("精准搜索失败, 将尝试只搜索标题...");
+                    //Logging.Log("精准搜索失败, 将尝试只搜索标题...");
                     Search(searchMeta);
                 }
                 else
@@ -209,7 +208,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
 
             float similiarPrecentage = meta.GetSimiliarPrecentage();
 
-            Logger.Log($"Beatmap: '{meta.SourceBeatmap?.Metadata.GetTitle() ?? "???"}' <-> '{meta.GetNeteaseTitle()}' -> {similiarPrecentage} <-> {meta.TitleSimiliarThreshold}");
+            Logging.Log($"Beatmap: '{meta.SourceBeatmap?.Metadata.GetTitle() ?? "???"}' <-> '{meta.GetNeteaseTitle()}' -> {similiarPrecentage} <-> {meta.TitleSimiliarThreshold}");
 
             if (similiarPrecentage >= meta.TitleSimiliarThreshold)
             {
@@ -235,11 +234,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
             }
             else
             {
-                //Logger.Log("标题匹配失败, 将不会继续搜索歌词...");
+                //Logging.Log("标题匹配失败, 将不会继续搜索歌词...");
                 this.setState(SearchState.Fail);
 
-                Logger.Log($"对 {meta.SourceBeatmap?.Metadata.GetTitle() ?? "未知谱面"} 的标题匹配失败：");
-                Logger.Log($"Beatmap: '{meta.SourceBeatmap?.Metadata.GetTitle() ?? "???"}' <-> '{meta.GetNeteaseTitle()}' -> {similiarPrecentage} < {meta.TitleSimiliarThreshold}");
+                Logging.Log($"对 {meta.SourceBeatmap?.Metadata.GetTitle() ?? "未知谱面"} 的标题匹配失败：");
+                Logging.Log($"Beatmap: '{meta.SourceBeatmap?.Metadata.GetTitle() ?? "???"}' <-> '{meta.GetNeteaseTitle()}' -> {similiarPrecentage} < {meta.TitleSimiliarThreshold}");
 
                 meta.OnFail?.Invoke("标题匹配失败, 将不会继续搜索歌词...");
             }

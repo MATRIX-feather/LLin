@@ -1,6 +1,5 @@
 using System;
 using osu.Framework.Allocation;
-using osu.Framework.Logging;
 using osu.Game.Utils;
 
 namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
@@ -28,6 +27,6 @@ public partial class SentryLoggerDisabler : AbstractInjector
         if (val is not SentryLogger sentryLogger) throw new NullDependencyException($"获取的对象不是SentryLogger: {val}");
 
         sentryLogger.Dispose();
-        Logger.Log($"[{Constants.LOG_PREFIX}] 成功禁用SentryLogger!");
+        Logging.Log("成功禁用SentryLogger!");
     }
 }

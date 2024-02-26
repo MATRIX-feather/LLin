@@ -96,7 +96,7 @@ public partial class BeatmapStrainTracker : AbstractTracker
                 {
                     Hub.GetDataRoot().MenuValues.pp.Strains = new[] { 0f };
 
-                    Logger.Log("谱面音频在10秒内都没有加载，将放弃计算物件分布...", level: LogLevel.Important);
+                    Logging.Log("谱面音频在10秒内都没有加载，将放弃计算物件分布...", level: LogLevel.Important);
                     return Task.FromResult(new[] { 0f });
                 }
 
@@ -121,7 +121,7 @@ public partial class BeatmapStrainTracker : AbstractTracker
             var converter = workingBeatmap.BeatmapInfo.Ruleset.CreateInstance().CreateBeatmapConverter(workingBeatmap.Beatmap);
             IBeatmap? beatmap = null;
 
-            //Logger.Log($"Track length: {length} ~ Segments {targetSegments} ~ Conv? {converter.CanConvert()} ~ Loaded? {workingBeatmap.Track.IsLoaded} ~ Track? {workingBeatmap.Track}");
+            //Logging.Log($"Track length: {length} ~ Segments {targetSegments} ~ Conv? {converter.CanConvert()} ~ Loaded? {workingBeatmap.Track.IsLoaded} ~ Track? {workingBeatmap.Track}");
             if (converter.CanConvert()) beatmap = converter.Convert();
             var hitObjects = beatmap?.HitObjects ?? new HitObject[] { };
 

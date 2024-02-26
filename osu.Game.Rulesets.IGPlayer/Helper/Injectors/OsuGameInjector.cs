@@ -36,7 +36,7 @@ public partial class OsuGameInjector : AbstractInjector
 
         if (currentSessionHash == sessionHashCode)
         {
-            Logger.Log($"[{Constants.LOG_PREFIX}] Duplicate dependency inject call for current session, skipping...");
+            Logging.Log($"Duplicate dependency inject call for current session, skipping...");
             return true;
         }
 
@@ -46,7 +46,7 @@ public partial class OsuGameInjector : AbstractInjector
 
         if (depMgr == null)
         {
-            Logger.Log($"{Constants.LOG_PREFIX} DependencyContainer not found", level: LogLevel.Error);
+            Logging.Log($"DependencyContainer not found", level: LogLevel.Error);
             return false;
         }
 
@@ -99,7 +99,7 @@ public partial class OsuGameInjector : AbstractInjector
         catch (Exception e)
         {
             Logging.LogError(e, "注入游戏时出现错误，一些功能可能不会正常工作！");
-            Logger.Log(e.Message, level: LogLevel.Important);
+            Logging.Log(e.Message, level: LogLevel.Important);
             return false;
         }
 
