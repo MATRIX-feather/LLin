@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.IGPlayer;
 
 public class Logging
 {
-    public static readonly string LOG_PREFIX = "IGPlayer";
+    public static readonly string LOG_PREFIX = "Hikariii";
 
     public static void Log(string message, LoggingTarget loggingTarget = LoggingTarget.Runtime, LogLevel level = LogLevel.Verbose)
     {

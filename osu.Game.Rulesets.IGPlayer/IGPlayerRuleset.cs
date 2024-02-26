@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.IGPlayer
 {
     public partial class IGPlayerRuleset : Ruleset
     {
-        public override string Description => "下载加速&音乐播放器&Gosu支持";
+        public override string Description => "Hikariii (下载加速&音乐播放器&Gosu支持)";
 
         public override string ShortName => "igplayerruleset";
 
@@ -94,6 +94,7 @@ namespace osu.Game.Rulesets.IGPlayer
             public Icon()
             {
                 RelativeSizeAxes = Axes.Both;
+                Masking = false;
             }
 
             [BackgroundDependencyLoader(permitNulls: true)]
@@ -114,17 +115,17 @@ namespace osu.Game.Rulesets.IGPlayer
                             Child = new Box
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Colour = Color4.Black.Opacity(0.001f)
+                                Colour = Color4.Black.Opacity(0)
                             },
                             BorderColour = Color4.White,
-                            BorderThickness = 3
+                            BorderThickness = 45
                         },
                         new SpriteIcon
                         {
-                            Size = new Vector2(0.4f),
+                            Size = new Vector2(0.6f),
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
-                            Icon = FontAwesome.Solid.Lemon,
+                            Icon = FontAwesome.Solid.YinYang,
                             RelativeSizeAxes = Axes.Both,
                         }
                     };
