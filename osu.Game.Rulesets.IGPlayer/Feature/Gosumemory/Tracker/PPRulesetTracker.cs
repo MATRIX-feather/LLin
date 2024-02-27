@@ -95,7 +95,7 @@ public partial class PPRulesetTracker : AbstractTracker
 
                         var dataRoot = Hub.GetDataRoot();
                         dataRoot.GameplayValues.pp.MaxThisPlay = dataRoot.GameplayValues.pp.PPIfFc = result.MaxPP;
-                        dataRoot.MenuValues.pp.PPPerfect = result.MaxPP;
+                        dataRoot.MenuValues.PP.PPPerfect = result.MaxPP;
                     });
                 });
         }, true);

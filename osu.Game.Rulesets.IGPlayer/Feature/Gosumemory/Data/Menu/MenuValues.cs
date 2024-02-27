@@ -31,7 +31,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
         public MenuModsData Mods;
 
         [JsonProperty("pp")]
-        public MenuPPData pp;
+        public MenuPPData PP;
 
         public void UpdateTrack(DrawableTrack track)
         {

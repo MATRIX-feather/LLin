@@ -17,6 +17,7 @@ using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Extensions;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 using osu.Game.Screens;
+using osu.Game.Screens.Edit;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Play.HUD;
 using osu.Game.Screens.Ranking;
@@ -160,6 +161,10 @@ public partial class ScreenTracker : AbstractTracker
 
             case Screens.Play.Player player:
                 this.onPlayerScreen(player);
+                break;
+
+            case Editor:
+                dataRoot.MenuValues.OsuState = OsuStates.EDITOR;
                 break;
 
             default:
