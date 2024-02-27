@@ -1,6 +1,8 @@
+using System.IO;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Platform;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web;
 using osuTK;
 
@@ -35,7 +37,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
         {
             if (game == null)
             {
-                Logging.Log("OsuGame is null, returning...");
+                Logging.Log("OsuGame is null, skipping gosu compat...");
                 return;
             }
 
@@ -49,10 +51,47 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
                 Updater = new TrackerHub(handler)
             };
 
+            handler.OnServerStart += setupGosuStatics;
+
             var container = this.getContainerFromGame("mfosu Gosumemory compat container", game);
             container.AddRange(children);
 
-            Logging.Log("Added gosu compat!");
+            Logging.Log("Done initialize gosu compat!");
+        }
+
+        [Resolved]
+        private Storage globalStorage { get; set; } = null!;
+
+        private void setupGosuStatics(WebSocketLoader.GosuServer server)
+        {
+            Logging.Log("Setting up statics...");
+
+            var staticsStorage = globalStorage.GetStorageForDirectory("gosu_statics");
+            string? staticPath = staticsStorage.GetFullPath(".");
+
+            if (staticPath == null || !Directory.Exists(staticPath))
+            {
+                Logging.Log("Null static path or it doesn't exists!");
+                return;
+            }
+
+            server.SetStorage(globalStorage);
+
+            DirectoryInfo dirInfo = new DirectoryInfo(staticPath);
+
+            if (!dirInfo.Exists)
+            {
+                var newDirInfo = Directory.CreateDirectory(staticPath);
+
+                if (!newDirInfo.Exists)
+                {
+                    Logging.Log("Unable to create statics directory, skipping...");
+                    return;
+                }
+            }
+
+            server.AddStaticContent(staticPath);
+            Logging.Log("Done setting up static content!");
         }
 
         [BackgroundDependencyLoader]

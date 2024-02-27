@@ -1,11 +1,13 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
+using System.Runtime.CompilerServices;
 using NetCoreServer;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
+using osu.Framework.Platform;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
@@ -28,13 +30,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
         public void Restart()
         {
-            if (Server != null)
-            {
-                Server.Stop();
-                Server.Dispose();
-                Server = null;
-            }
-
+            stopServer();
             startServer();
         }
 
@@ -43,6 +39,26 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
             if (Server == null) throw new NullDependencyException("Server not initialized");
 
             Server.MulticastText(text);
+        }
+
+        private void stopServer()
+        {
+            if (Server == null) return;
+
+            Server.Stop();
+            Server.Dispose();
+
+            try
+            {
+                OnServerStop?.Invoke(Server);
+            }
+            catch (Exception e)
+            {
+                Logging.Log($"Error occurred calling OnServerStop: {e.Message}");
+                Logging.Log(e.StackTrace ?? "<No stacktrace>");
+            }
+
+            Server = null;
         }
 
         private void startServer()
@@ -58,6 +74,16 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
 
                 Server.Start();
 
+                try
+                {
+                    OnServerStart?.Invoke(Server);
+                }
+                catch (Exception e)
+                {
+                    Logging.Log($"Error occurred calling OnServerStart: {e.Message}");
+                    Logging.Log(e.StackTrace ?? "<No stacktrace>");
+                }
+
                 Logging.Log("Done!");
                 Logging.Log($"WS Server opened at http://{Server.Address}:{Server.Port}");
             }
@@ -68,9 +94,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
             }
         }
 
+        public Action<GosuServer>? OnServerStart;
+        public Action<GosuServer>? OnServerStop;
+
         protected override void Dispose(bool isDisposing)
         {
-            Server?.Dispose();
+            stopServer();
 
             base.Dispose(isDisposing);
         }
@@ -84,50 +113,57 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web
             {
             }
 
+            private Storage? storage;
+
+            public void SetStorage(Storage storage)
+            {
+                this.storage = storage;
+            }
+
+            public Storage? GetStorage()
+            {
+                return this.storage;
+            }
+
             protected override TcpSession CreateSession() { return new GosuSession(this); }
 
             protected override void OnError(SocketError error)
             {
                 Logging.Log($"Chat WebSocket server caught an error with code {error}");
             }
-        }
 
-        private partial class GosuSession : WsSession
-        {
-            public GosuSession(NetCoreServer.WsServer server)
-                : base(server)
+            public void AddCustomHandler(string path, string urlPath, FileCache.InsertHandler handler)
             {
+                TimeSpan timeout = TimeSpan.FromMilliseconds(100);
+                this.Cache.InsertPath(path, urlPath, "*.*", timeout, handler);
             }
 
-            public override void OnWsConnected(HttpRequest request)
+            /**
+             * From decompiled HttpServer#AddStaticContent(...)
+             */
+            public new void AddStaticContent(string path, string prefix = "/", string filter = "*.*", TimeSpan? timeout = null)
             {
-                Logging.Log($"Chat WebSocket session with Id {Id} connected!");
-            }
+                timeout ??= TimeSpan.FromHours(1.0);
 
-            public override void OnWsDisconnected()
-            {
-                Logging.Log($"Chat WebSocket session with Id {Id} disconnected!");
-            }
+                this.Cache.InsertPath(path, prefix, filter, timeout.Value, handler);
 
-            public override void OnWsReceived(byte[] buffer, long offset, long size)
-            {
-                string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-                Logging.Log("WebSocket Incoming: " + message);
-            }
+                static bool handler(FileCache cache, string key, byte[] value, TimeSpan timespan)
+                {
+                    var response = new HttpResponse();
+                    response.SetBegin(200);
+                    response.SetContentType(Path.GetExtension(key));
 
-            public override void OnWsError(string error)
-            {
-                Logging.Log("WS ERRORED: " + error);
-            }
+                    var interpolatedStringHandler = new DefaultInterpolatedStringHandler(8, 1);
+                    interpolatedStringHandler.AppendLiteral("max-age=");
+                    interpolatedStringHandler.AppendFormatted(timespan.Seconds);
 
-            public override void OnWsError(SocketError error)
-            {
-                Logging.Log("WS ERRORED: " + error);
-            }
+                    string stringAndClear = interpolatedStringHandler.ToStringAndClear();
+                    response.SetHeader("Cache-Control", stringAndClear);
+                    response.SetHeader("Access-Control-Allow-Origin", "*");
+                    response.SetBody(value);
 
-            protected override void OnError(SocketError error)
-            {
-                Logging.Log($"Chat WebSocket session caught an error with code {error}");
+                    return cache.Add(key, response.Cache.Data, timespan);
+                }
             }
         }
     }
