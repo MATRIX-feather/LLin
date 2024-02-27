@@ -62,7 +62,7 @@ public partial class BeatmapStrainTracker : AbstractTracker
         ppStrainCancellationTokenSource?.Cancel();
         ppStrainCancellationTokenSource = new CancellationTokenSource();
 
-        Task.Run(async () => await updateStrain(workingBeatmap), ppStrainCancellationTokenSource.Token)
+        Task.Run(async () => await updateStrain(workingBeatmap, Hub.GetDataRoot().MenuValues.PP.Strains), ppStrainCancellationTokenSource.Token)
             .ContinueWith(task =>
             {
                 if (!task.IsCompleted) return;
@@ -84,8 +84,10 @@ public partial class BeatmapStrainTracker : AbstractTracker
     [Resolved]
     private Bindable<RulesetInfo> globalRuleset { get; set; } = null!;
 
-    private Task<float[]> updateStrain(WorkingBeatmap workingBeatmap)
+    private Task<float[]> updateStrain(WorkingBeatmap workingBeatmap, float[]? defaultVal = null)
     {
+        defaultVal ??= new[] { 0f };
+
         try
         {
             double length = workingBeatmap.Track.Length;
@@ -97,14 +99,12 @@ public partial class BeatmapStrainTracker : AbstractTracker
                 //todo: 没有音频的时候使用谱面长度来计算并更新分布和进度
                 if (Clock.CurrentTime - invokeTime >= 10 * 1000)
                 {
-                    Hub.GetDataRoot().MenuValues.PP.Strains = new[] { 0f };
-
                     Logging.Log("谱面音频在10秒内都没有加载，将放弃计算物件分布...", level: LogLevel.Important);
                     return Task.FromResult(new[] { 0f });
                 }
 
                 scheduleStrainComputes = true;
-                return Task.FromResult(new [] { 0f });
+                return Task.FromResult(defaultVal);
             }
 
             scheduleStrainComputes = false;
