@@ -10,6 +10,7 @@ namespace osu.Game.Rulesets.IGPlayer.Settings.Mf
         public MfMainSection(Ruleset ruleset)
             : base(ruleset)
         {
+            Add(new GosuSection());
             Add(new MfMvisPluginSection());
             //Add(new LinuxSection());
         }
