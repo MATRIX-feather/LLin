@@ -185,6 +185,10 @@ public partial class BeatmapTracker : AbstractTracker
         {
             await Task.Run(() => ensureCacheNotTooLarge(root)).ConfigureAwait(false);
 
+            string prefix = beatmap.BeatmapInfo.OnlineID != -1
+                ? $"{beatmap.BeatmapInfo.OnlineID}"
+                : $"L_{beatmap.BeatmapInfo.MD5Hash[..(Math.Min(8, beatmap.BeatmapInfo.MD5Hash.Length))]}";
+
             // Background
             string backgroundExt = "";
             string[] rawNameSplit = beatmap.Metadata.BackgroundFile?.Split('.') ?? new string[]{};
@@ -192,7 +196,7 @@ public partial class BeatmapTracker : AbstractTracker
 
             string backgroundDesti = "_default.png";
             if (beatmap.Metadata.BackgroundFile != null) //Yes, this can be null
-                backgroundDesti = $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{genGuidFrom(beatmap.Metadata.BackgroundFile)}.{backgroundExt}";
+                backgroundDesti = $"{root}/{prefix}_{genGuidFrom(beatmap.Metadata.BackgroundFile)}.{backgroundExt}";
 
             string? backgroundFinal = await directAccessor.ExportSingleTask(
                 setInfo,
@@ -202,7 +206,7 @@ public partial class BeatmapTracker : AbstractTracker
             // .osu File
             string osuFileDesti = "_default.osz";
             if (beatmap.BeatmapInfo.File?.Filename != null)
-                osuFileDesti = $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{genGuidFrom(beatmap.BeatmapInfo.File.Filename)}.osu";
+                osuFileDesti = $"{root}/{prefix}_{genGuidFrom(beatmap.BeatmapInfo.File.Filename)}.osu";
 
             string? osuFileFinal = await directAccessor.ExportSingleTask(
                 setInfo,
@@ -212,11 +216,12 @@ public partial class BeatmapTracker : AbstractTracker
             // Audio file
             string audioFileDesti = "_default.mp3";
 
-            if (beatmap.BeatmapInfo.BeatmapSet?.Metadata.AudioFile != null)
+            if (beatmap.Metadata?.AudioFile != null)
             {
-                var audioNameSpilt = beatmap.BeatmapInfo.BeatmapSet.Metadata.AudioFile.Split(".");
+                string[] audioNameSpilt = beatmap.Metadata.AudioFile.Split(".");
                 string audioExtName = audioNameSpilt.Length >= 2 ? audioNameSpilt[^1] : "audio";
-                audioFileDesti = $"{root}/{beatmap.BeatmapSetInfo.OnlineID}_{genGuidFrom(beatmap.BeatmapInfo.BeatmapSet.Metadata.AudioFile)}.{audioExtName}";
+
+                audioFileDesti = $"{root}/{prefix}_{genGuidFrom(beatmap.Metadata.AudioFile)}.{audioExtName}";
             }
 
             string? audioFinal = await directAccessor.ExportSingleTask(
