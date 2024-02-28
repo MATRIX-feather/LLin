@@ -14,13 +14,19 @@ using osu.Game.Online.API;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Consts;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Gameplay;
 using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Extensions;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.SongSelect;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Scoring;
 using osu.Game.Screens;
 using osu.Game.Screens.Edit;
+using osu.Game.Screens.OnlinePlay;
+using osu.Game.Screens.OnlinePlay.Multiplayer;
+using osu.Game.Screens.OnlinePlay.Playlists;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Play.HUD;
 using osu.Game.Screens.Ranking;
+using osu.Game.Screens.Select;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Tracker;
 
@@ -100,6 +106,24 @@ public partial class ScreenTracker : AbstractTracker
     {
         base.UpdateValues();
 
+        var dataRoot = Hub.GetDataRoot();
+
+        if (currentOnlinePlay != null)
+        {
+            //Logging.Log("Current subScreen is " + currentOnlinePlay.CurrentSubScreen.GetType());
+
+            dataRoot.MenuValues.OsuState = currentOnlinePlay.CurrentSubScreen switch
+            {
+                //歌单模式房间屏幕
+                PlaylistsLoungeSubScreen => OsuStates.PLAYLISTS_ROOM,
+
+                //多人游戏房间屏幕
+                MultiplayerMatchSubScreen => OsuStates.MULTIPLAYER_ROOM,
+
+                _ => dataRoot.MenuValues.OsuState
+            };
+        }
+
         if (!isInGame())
         {
             if (inGamePPCounter == null) return;
@@ -118,7 +142,6 @@ public partial class ScreenTracker : AbstractTracker
 
         playerScreen!.GameplayState.ScoreProcessor.PopulateScore(scoreInfo);
 
-        var dataRoot = Hub.GetDataRoot();
         dataRoot.GameplayValues.FromScore(scoreInfo);
 
         if (inGamePPCounter == null)
@@ -132,12 +155,15 @@ public partial class ScreenTracker : AbstractTracker
         dataRoot.GameplayValues.pp.Current = this.performanceThisRun;
     }
 
+    private OnlinePlayScreen? currentOnlinePlay;
+
     private void onScreenSwitch(IScreen prevScreen, IScreen nextScreen)
     {
         scorePPCalcTokenSource?.Cancel();
 
         this.playerScreen = null;
         this.resultsScreen = null;
+        this.currentOnlinePlay = null;
 
         //updateCancellationTokenSource?.Cancel();
 
@@ -167,8 +193,30 @@ public partial class ScreenTracker : AbstractTracker
                 dataRoot.MenuValues.OsuState = OsuStates.EDITOR;
                 break;
 
+            case PlaySongSelect:
+                dataRoot.MenuValues.OsuState = OsuStates.SOLO_SONG_SELECT;
+                break;
+
+            case Playlists playlists:
+                this.currentOnlinePlay = playlists;
+                dataRoot.MenuValues.OsuState = OsuStates.PLAYLISTS_LOUNGE;
+                break;
+
+            case Multiplayer multiplayer:
+                this.currentOnlinePlay = multiplayer;
+                dataRoot.MenuValues.OsuState = OsuStates.MULTIPLAYER_LOUNGE;
+                break;
+
+            case LLinScreen:
+                dataRoot.MenuValues.OsuState = OsuStates.HIKARIII_PLAYER;
+                break;
+
+            case LLinSongSelect:
+                dataRoot.MenuValues.OsuState = OsuStates.HIKARIII_SONG_SELECT;
+                break;
+
             default:
-                dataRoot.MenuValues.OsuState = OsuStates.IDLE;
+                dataRoot.MenuValues.OsuState = OsuStates.DEFAULT_IDLE;
                 break;
         }
 
@@ -185,9 +233,8 @@ public partial class ScreenTracker : AbstractTracker
         var score = results.SelectedScore.Value;
         var dataRoot = Hub.GetDataRoot();
 
-        dataRoot.MenuValues.OsuState = OsuStates.IDLE;
+        dataRoot.MenuValues.OsuState = OsuStates.RESULTS;
         this.resultsScreen = results;
-        Hub.GetDataRoot().MenuValues.OsuState = OsuStates.PLAYING;
 
         if (score == null) return;
 
