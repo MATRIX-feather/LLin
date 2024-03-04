@@ -12,18 +12,14 @@ using Tmds.DBus;
 
 namespace M.DBus;
 
+#nullable enable
+
 public partial class DBusMgrNew : CompositeDrawable
 {
     private Connection? currentConnection;
     public ConnectionState ConnectionState { get; private set; } = ConnectionState.Disconnected;
 
-    private string targetUrl = Address.Session;
-
-    public string TargetURL
-    {
-        get => targetUrl;
-        set => targetUrl = value;
-    }
+    public string TargetUrl { get; set; } = Address.Session;
 
     public DBusMgrNew()
     {
@@ -46,7 +42,7 @@ public partial class DBusMgrNew : CompositeDrawable
         Disconnect();
 
         this.cancellationTokenSource = new CancellationTokenSource();
-        currentConnection = new Connection(new ClientConnectionOptions(TargetURL)
+        currentConnection = new Connection(new ClientConnectionOptions(TargetUrl)
         {
             AutoConnect = false
         });
@@ -63,7 +59,7 @@ public partial class DBusMgrNew : CompositeDrawable
             if (currentConnection == null)
                 throw new NullDependencyException("Called StartConnect but DBusConnection is not ready!");
 
-            this.currentConnection = new Connection(TargetURL);
+            this.currentConnection = new Connection(TargetUrl);
             this.ConnectionState = ConnectionState.Connecting;
 
             // Await for connection to finish

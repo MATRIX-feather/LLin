@@ -1,5 +1,7 @@
 using Tmds.DBus;
 
+#nullable enable
+
 namespace M.DBus
 {
     public interface IMDBusObject : IDBusObject
