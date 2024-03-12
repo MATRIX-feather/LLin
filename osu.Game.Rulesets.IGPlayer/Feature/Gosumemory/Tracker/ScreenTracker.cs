@@ -349,10 +349,14 @@ public partial class ScreenTracker : AbstractTracker
             this.scoreProcessor = scoreProcessor;
         }
 
-        private readonly PerformancePointsCounter counter = new PerformancePointsCounter
+        private readonly PerformancePointsCounter counter = new PPCounter
         {
             AlwaysPresent = true
         };
+
+        private partial class PPCounter : PerformancePointsCounter
+        {
+        }
 
         [BackgroundDependencyLoader]
         private void load(OsuGame game)
