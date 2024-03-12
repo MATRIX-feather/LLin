@@ -71,7 +71,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
             base.Update();
 
             var track = Beatmap.Value?.Track;
-            progress.Current.Value = (track == null || track.Length == 0) ? 0 : (track.CurrentTime / track.Length);
+            progress.Progress = (track == null || track.Length == 0) ? 0 : (track.CurrentTime / track.Length);
         }
     }
 }
