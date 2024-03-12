@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using M.DBus.Tray;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
@@ -894,16 +893,10 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                 {
                     Logging.Log($"在添加 {pl.Name} 时出现问题, 请联系你的插件提供方: {e.Message}", level: LogLevel.Important);
                     Logging.Log(e.Message);
-                    Logging.Log(e.StackTrace);
+                    Logging.Log(e.StackTrace ?? "<No stacktrace>");
                 }
             }
         }
-
-        private readonly SimpleEntry dbusEntry = new SimpleEntry
-        {
-            Label = "LLin - 插件",
-            Enabled = false
-        };
 
         public override bool RequestsFocus => true;
 
@@ -918,11 +911,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                 inputHandler.BlockNextAction = blockInput;
 
             this.focusNum++;
-            var focusNum = this.focusNum;
+            int focusNum = this.focusNum;
             this.Delay(2).Schedule(() =>
             {
                 if (this.focusNum != focusNum) return;
-                inputHandler.BlockNextAction = false;
+
+                if (inputHandler != null)
+                    inputHandler.BlockNextAction = false;
             });
 
             base.OnFocus(e);
@@ -1000,9 +995,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
             this.AddInternal(rsInput);
             rsInput.Add(rsInputHandler);
             this.inputHandler = rsInputHandler;
-
-            //添加DBusEntry
-            pluginManager.AddDBusMenuEntry(dbusEntry);
 
             //当插件卸载时调用onPluginUnload
             pluginManager.OnPluginUnLoad += onPluginUnLoad;
@@ -1093,8 +1085,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
             Exiting?.Invoke();
 
             pluginManager.OnPluginUnLoad -= onPluginUnLoad;
-
-            pluginManager.RemoveDBusMenuEntry(dbusEntry);
 
             if (autoVsync.Value)
             {

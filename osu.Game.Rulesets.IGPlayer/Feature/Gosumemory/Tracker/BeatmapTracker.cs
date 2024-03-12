@@ -282,6 +282,8 @@ public partial class BeatmapTracker : AbstractTracker
         catch (Exception e)
         {
             Logging.Log("Error occurred while clearing gosu cache... Not a big deal, maybe?");
+            Logging.Log(e.Message);
+            Logging.Log(e.StackTrace ?? "<No stacktrace>");
         }
     }
 

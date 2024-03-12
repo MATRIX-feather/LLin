@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
-using M.DBus;
-using M.DBus.Services.Notifications;
-using M.DBus.Tray;
 using Newtonsoft.Json;
 using osu.Framework;
 using osu.Framework.Allocation;
@@ -58,9 +55,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
 
         [Resolved]
         private Storage storage { get; set; } = null!;
-
-        [Resolved(canBeNull: true)]
-        private IDBusManagerContainer<IMDBusObject>? dBusManagerContainer { get; set; }
 
         public readonly IProvideAudioControlPlugin DefaultAudioController = new OsuMusicControllerWrapper();
 
@@ -228,36 +222,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
         public IPluginConfigManager GetConfigManager(LLinPlugin pl) =>
             configManagers.GetOrAdd(pl.GetType(), _ => pl.CreateConfigManager(storage));
 
-        public void RegisterDBusObject(IMDBusObject target)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.Add(target);
-        }
-
-        public void UnRegisterDBusObject(IMDBusObject target)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.Remove(target);
-        }
-
-        public void AddDBusMenuEntry(SimpleEntry entry)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.AddTrayEntry(entry);
-        }
-
-        public void RemoveDBusMenuEntry(SimpleEntry entry)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.RemoveTrayEntry(entry);
-        }
-
-        public void PostSystemNotification(SystemNotification notification)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.PostSystemNotification(notification);
-        }
-
         public List<LLinPlugin> GetActivePlugins() => activePlugins.ToList();
 
         /// <summary>
@@ -372,18 +336,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins
             {
                 try
                 {
-                    var oldEntries = pl.GetSettingEntries();
-
-                    if (oldEntries != null)
-                        entryMap[pl.GetType()] = oldEntries;
-                    else
-                        entryMap[pl.GetType()] = pl.GetSettingEntries(GetConfigManager(pl));
+                    entryMap[pl.GetType()] = pl.GetSettingEntries(GetConfigManager(pl));
                 }
                 catch (Exception e)
                 {
                     Logging.Log($"Unable to update settings for plugin {pl}");
                     Logging.Log(e.Message);
-                    Logging.Log(e.StackTrace);
+                    Logging.Log(e.StackTrace ?? "<No stacktrace>");
                 }
             }
         }

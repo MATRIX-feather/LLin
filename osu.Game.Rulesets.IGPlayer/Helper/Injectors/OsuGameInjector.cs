@@ -52,11 +52,11 @@ public partial class OsuGameInjector : AbstractInjector
 
         try
         {
-            var plMgr = new LLinPluginManager();
-
+            Logging.Log("Add rs store");
             // Add Resource store
             gameInstance.Resources.AddStore(new DllResourceStore(typeof(IGPlayerRuleset).Assembly));
 
+            Logging.Log("Try MResources");
             try
             {
                 //Load MResources
@@ -67,24 +67,29 @@ public partial class OsuGameInjector : AbstractInjector
                 Logging.LogError(e, "无法装载M.Resources, 一些意外情况可能发生！");
             }
 
+            Logging.Log("Feature Manager");
             var featureManager = new FeatureManager();
 
+            Logging.Log("Cache MConfig");
             depMgr.CacheAs(typeof(MConfigManager), new MConfigManager(storage));
-            depMgr.Cache(plMgr);
+
+            Logging.Log("Cache feature");
             depMgr.Cache(featureManager);
 
+            Logging.Log("Add delayed 1");
             scheduler.AddDelayed(() =>
             {
                 try
                 {
+                    Logging.Log("Add instance to game");
                     gameInstance.Add(featureManager);
-                    gameInstance.Add(plMgr);
                 }
                 catch (Exception e)
                 {
-                    Logging.LogError(e, "未能初始化插件管理器, 可能是因为DBus集成没有安装?");
+                    Logging.LogError(e, "未能初始化功能管理器！");
                 }
 
+                Logging.Log("Add range");
                 gameInstance.AddRange(new Drawable[]
                 {
                     new SentryLoggerDisabler(gameInstance),
@@ -95,11 +100,32 @@ public partial class OsuGameInjector : AbstractInjector
                 if (featureManager.CanUseGlazerMemory.Value)
                     gameInstance.Add(new GosuCompatInjector());
             }, 1);
+
+            Logging.Log("Add delayed 2");
+            scheduler.AddDelayed(() =>
+            {
+                LLinPluginManager? plMgr = null;
+
+                try
+                {
+                    plMgr = new LLinPluginManager();
+                    depMgr.Cache(plMgr);
+                    gameInstance.Add(plMgr);
+                }
+                catch (Exception e)
+                {
+                    plMgr = null;
+                    Logging.LogError(e, "未能初始化插件管理器, 可能是因为DBus集成没有安装?");
+                }
+
+            }, 1);
         }
         catch (Exception e)
         {
             Logging.LogError(e, "注入游戏时出现错误，一些功能可能不会正常工作！");
             Logging.Log(e.Message, level: LogLevel.Important);
+            Logging.Log(e.StackTrace ?? "<Null Stacktrace>");
+
             return false;
         }
 

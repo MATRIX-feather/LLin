@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using M.DBus.Tray;
-using M.DBus.Utils.Canonical.DBusMenuFlags;
-using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -18,7 +15,6 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Config;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.DBus;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Sidebar;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Utils;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Config;
@@ -48,15 +44,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
         public int CurrentPosition
         {
             get => currentPosition;
-            set
-            {
-                currentPosition = value;
-
-                if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-                {
-                    dBusObject.Position = value;
-                }
-            }
+            set => currentPosition = value;
         }
 
         private int currentPosition = -1;
@@ -92,14 +80,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
 
         private bool trackChangedAfterDisable = true;
 
-        private readonly CollectionDBusObject dBusObject = new CollectionDBusObject();
-
-        private readonly SimpleEntry trayEntry = new SimpleEntry
-        {
-            Label = "收藏夹（未选择任何收藏夹）",
-            ChildrenDisplay = ChildrenDisplayType.Submenu
-        };
-
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -111,12 +91,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
                 if (!IsCurrent) trackChangedAfterDisable = true;
             });
 
-            PluginManager!.RegisterDBusObject(dBusObject);
-
             if (LLin != null)
             {
                 LLin.Resuming += UpdateBeatmaps;
-                LLin.Exiting += onMvisExiting;
             }
 
             realmSubscription = realm.RegisterForNotifications(r => r.All<BeatmapCollection>().OrderBy(c => c.Name), onCollectionChange);
@@ -126,16 +103,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
         {
             base.LoadComplete();
             CurrentCollection.BindValueChanged(OnCollectionChanged);
-        }
-
-        private void onMvisExiting()
-        {
-            PluginManager!.UnRegisterDBusObject(dBusObject);
-
-            if (!Disabled.Value)
-                PluginManager.RemoveDBusMenuEntry(trayEntry);
-
-            resetDBusMessage();
         }
 
         public void Play(WorkingBeatmap b) => changeBeatmap(b);
@@ -175,31 +142,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
         {
             this.MoveToX(-10, 300, Easing.OutQuint).FadeOut(300, Easing.OutQuint);
 
-            resetDBusMessage();
-            PluginManager!.RemoveDBusMenuEntry(trayEntry);
-
             return base.Disable();
-        }
-
-        public override bool Enable()
-        {
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-            {
-                dBusObject!.Position = currentPosition;
-                dBusObject.CollectionName = CurrentCollection.Value?.Name ?? "-";
-                PluginManager!.AddDBusMenuEntry(trayEntry);
-            }
-
-            return base.Enable();
-        }
-
-        private void resetDBusMessage()
-        {
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-            {
-                dBusObject!.Position = -1;
-                dBusObject.CollectionName = string.Empty;
-            }
         }
 
         public bool Seek(double position)
@@ -293,7 +236,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
         {
             //清理现有的谱面列表
             beatmapList.Clear();
-            trayEntry.Children.Clear();
 
             if (collection?.BeatmapMD5Hashes == null) return;
 
@@ -313,52 +255,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
                 //进行比对，如果beatmapList中不存在，则添加。
                 if (!beatmapList.Contains(currentSet))
                     beatmapList.Add(currentSet);
-
-                if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-                {
-                    var subEntry = new SimpleEntry
-                    {
-                        Label = item!.BeatmapSet?.Metadata.GetDisplayTitleRomanisable().GetPreferred(true) ?? item.ToString(),
-                        OnActive = () =>
-                        {
-                            Schedule(() => Play(beatmaps.GetWorkingBeatmap(item.AsBeatmapInfo())));
-                        }
-                    };
-
-                    if (trayEntry.Children.All(s => s.Label != subEntry.Label))
-                        trayEntry.Children.Add(subEntry);
-                }
             }
 
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-                dBusObject.CollectionName = collection.Name;
-
             updateCurrentPosition(true);
-            trayEntry.Label = $"收藏夹（{collection.Name}）";
         }
-
-        private SimpleEntry? currentSubEntry;
 
         private void updateCurrentPosition(bool triggerDBusSubmenu = false)
         {
             CurrentPosition = beatmapList.IndexOf(b.Value.BeatmapSetInfo);
-
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-            {
-                if (currentSubEntry != null)
-                    currentSubEntry.ToggleState = 0;
-
-                var targetEntry = trayEntry.Children.FirstOrDefault(s =>
-                    s.Label == b.Value.BeatmapSetInfo.Metadata.GetDisplayTitleRomanisable().GetPreferred(true));
-
-                if (targetEntry != null)
-                    targetEntry.ToggleState = 1;
-
-                currentSubEntry = targetEntry;
-
-                if (triggerDBusSubmenu)
-                    trayEntry.TriggerPropertyChangedEvent();
-            }
         }
 
         public void UpdateBeatmaps() => updateBeatmaps(CurrentCollection.Value);
