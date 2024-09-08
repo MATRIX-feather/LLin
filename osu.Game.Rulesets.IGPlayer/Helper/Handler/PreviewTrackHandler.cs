@@ -22,9 +22,9 @@ using osu.Game.Tests.Visual;
 using osuTK;
 using Realms;
 
-namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
-public partial class PreviewTrackInjector : AbstractInjector
+public partial class PreviewTrackHandler : AbstractInjector
 {
     private readonly object injectLock = new();
 

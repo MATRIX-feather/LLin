@@ -2,31 +2,31 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
-public static class InjectorExtension
+public static class HandlerExtension
 {
-    private static readonly BindingFlags instanceFlag = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.GetField;
+    private const BindingFlags instance_flag = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.GetField;
 
-    private static FieldInfo? FindFieldInstanceInBaseType(Type baseType, Type type)
+    private static FieldInfo? findFieldInstanceInBaseType(Type baseType, Type type)
     {
-        var field = baseType.GetFields(instanceFlag)
+        var field = baseType.GetFields(instance_flag)
                             .FirstOrDefault(f => f.FieldType == type);
 
         if (field == null && baseType.BaseType != null)
-            field = FindFieldInstanceInBaseType(baseType.BaseType, type);
+            field = findFieldInstanceInBaseType(baseType.BaseType, type);
 
         return field;
     }
 
     public static FieldInfo? FindFieldInstance(this object obj, Type type)
     {
-        var field = obj.GetType().GetFields(instanceFlag)
+        var field = obj.GetType().GetFields(instance_flag)
                        .FirstOrDefault(f => f.FieldType == type);
 
         var baseType = obj.GetType().BaseType;
         if (baseType != null && field == null)
-            field = FindFieldInstanceInBaseType(baseType, type);
+            field = findFieldInstanceInBaseType(baseType, type);
 
         return field;
     }

@@ -4,7 +4,7 @@ using osu.Framework.Allocation;
 using osu.Game.Beatmaps;
 using osu.Game.Online;
 using osu.Game.Online.API;
-using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel;
 
@@ -22,7 +22,7 @@ public partial class AccelBeatmapDownloadTracker : BeatmapDownloadTracker
         Logging.Log($"Deps: {TrackedItem}");
         base.LoadComplete();
 
-        var accelDownloader = PreviewTrackInjector.AccelBeatmapModelDownloader;
+        var accelDownloader = PreviewTrackHandler.AccelBeatmapModelDownloader;
         if (accelDownloader == null) throw new NullDependencyException("Null dep");
 
         accelDownloader.DownloadBegan += this.downloadBegan;

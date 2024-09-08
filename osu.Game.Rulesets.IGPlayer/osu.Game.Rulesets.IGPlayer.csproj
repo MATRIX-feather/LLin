@@ -15,7 +15,7 @@
   <ItemGroup>
     <PackageReference Include="NetCoreServer" Version="8.0.7" />
     <PackageReference Include="NLua" Version="1.6.2" />
-    <PackageReference Include="ppy.osu.Game" Version="2024.718.1" />
+    <PackageReference Include="ppy.osu.Game" Version="2024.906.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\M.DBus\M.DBus.csproj" />

@@ -7,7 +7,7 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Online;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.BeatmapSet.Buttons;
-using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Handler;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Graphics;
@@ -35,7 +35,7 @@ public partial class AccelDownloadButton : HeaderDownloadButton
             var baseButton = (HeaderButton?)thisAsHeaderButton.FindInstance(typeof(HeaderButton));
             var downloadTracker = (BeatmapDownloadTracker?)thisAsHeaderButton.FindInstance(typeof(BeatmapDownloadTracker));
             var shakeContainer = (ShakeContainer?)thisAsHeaderButton.FindInstance(typeof(ShakeContainer));
-            var beatmaps = PreviewTrackInjector.AccelBeatmapModelDownloader;
+            var beatmaps = PreviewTrackHandler.AccelBeatmapModelDownloader;
 
             if (baseButton == null || downloadTracker == null || shakeContainer == null)
             {

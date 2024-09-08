@@ -2,7 +2,7 @@ using System;
 using osu.Framework.Allocation;
 using osu.Game.Utils;
 
-namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
 public partial class SentryLoggerDisabler : AbstractInjector
 {

@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using osu.Framework.Graphics.Containers;
 
-namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
 public abstract partial class AbstractInjector : CompositeDrawable
 {

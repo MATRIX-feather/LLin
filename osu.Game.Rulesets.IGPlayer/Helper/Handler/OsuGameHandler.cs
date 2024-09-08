@@ -11,9 +11,9 @@ using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
-namespace osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+namespace osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
-public partial class OsuGameInjector : AbstractInjector
+public partial class OsuGameHandler : AbstractInjector
 {
     /// <summary>
     /// 当前注入生效的游戏中 OsuGame 的 HashCode，-1则代表未曾注入过
@@ -93,8 +93,8 @@ public partial class OsuGameInjector : AbstractInjector
                 gameInstance.AddRange(new Drawable[]
                 {
                     new SentryLoggerDisabler(gameInstance),
-                    new GameScreenInjector(),
-                    new PreviewTrackInjector()
+                    new GameScreenHandler(),
+                    new PreviewTrackHandler()
                 });
 
                 if (featureManager.CanUseGlazerMemory.Value)

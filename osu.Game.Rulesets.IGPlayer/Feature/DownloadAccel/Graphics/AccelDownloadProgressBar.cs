@@ -4,7 +4,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Drawables;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online;
-using osu.Game.Rulesets.IGPlayer.Helper.Injectors;
+using osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.DownloadAccel.Graphics;
 
