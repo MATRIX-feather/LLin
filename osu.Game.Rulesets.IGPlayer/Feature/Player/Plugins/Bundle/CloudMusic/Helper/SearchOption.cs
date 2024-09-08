@@ -1,6 +1,6 @@
 using System;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.LyricProvider;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper
 {
@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         /// </summary>
         public WorkingBeatmap? Beatmap;
 
-        public Action<APILyricResponseRoot>? OnFinish;
+        public Action<LyricMeta>? OnFinish;
         public Action<string>? OnFail;
 
         /// <summary>
@@ -25,9 +25,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         public bool NoRetry;
 
         /// <summary>
-        /// 在发出请求前是否要尝试从本地缓存寻找和谱面ID对应的歌词文件？
+        /// 是否允许从本地文件查询？
         /// </summary>
-        public bool NoLocalFile;
+        public bool AllowLocalFile;
 
         /// <summary>
         /// 标题匹配阈值，值越高要求越严格
@@ -43,8 +43,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         /// <param name="onFail">失败时要进行的动作</param>
         /// <param name="titleSimiliarThreshold"><see cref="TitleSimiliarThreshold"/></param>
         /// <returns>通过参数构建的<see cref="SearchOption"/>></returns>
-        public static SearchOption From(WorkingBeatmap sourceBeatmap, bool noLocalFile,
-                                        Action<APILyricResponseRoot>? onFinish, Action<string> onFail,
+        public static SearchOption From(WorkingBeatmap sourceBeatmap, bool allowLocalFile,
+                                        Action<LyricMeta>? onFinish, Action<string> onFail,
                                         float titleSimiliarThreshold)
         {
             return new SearchOption
@@ -54,29 +54,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
                 OnFinish = onFinish,
                 OnFail = onFail,
 
-                NoLocalFile = noLocalFile,
+                AllowLocalFile = allowLocalFile,
 
                 TitleSimiliarThreshold = titleSimiliarThreshold
-            };
-        }
-
-        /// <summary>
-        /// 通过给定的<see cref="RequestFinishMeta"/>>构建<see cref="SearchOption"/>
-        /// <br/>
-        /// 构建时将自动设置<see cref="Beatmap"/>、<see cref="OnFinish"/>和<see cref="OnFail"/>，其他属性保持默认值
-        /// </summary>
-        /// <param name="requestFinishMeta">目标Meta</param>
-        /// <returns>通过参数构建的<see cref="SearchOption"/>></returns>
-        public static SearchOption FromRequestFinishMeta(RequestFinishMeta requestFinishMeta)
-        {
-            return new SearchOption
-            {
-                Beatmap = requestFinishMeta.SourceBeatmap,
-
-                OnFinish = requestFinishMeta.OnFinish,
-                OnFail = requestFinishMeta.OnFail,
-
-                TitleSimiliarThreshold = requestFinishMeta.TitleSimiliarThreshold
             };
         }
     }

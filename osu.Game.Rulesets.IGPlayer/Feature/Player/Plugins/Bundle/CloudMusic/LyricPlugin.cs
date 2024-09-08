@@ -15,6 +15,8 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Config;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.DBus;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.LyricProvider.Netease;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.LyricProvider.Netease.Response;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Sidebar;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.UI;
@@ -151,13 +153,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
         /// </summary>
         protected override Drawable CreateContent() => lrcLine;
 
-        public readonly LyricProcessor LyricProcessor = new LyricProcessor();
+        //public readonly LyricProcessor LyricProcessor = new LyricProcessor();
 
         private List<Lyric>? cachedLyrics;
 
         public readonly List<Lyric> EmptyLyricList = new List<Lyric>();
-
-        private APILyricResponseRoot? currentResponseRoot;
 
         [NotNull]
         public List<Lyric> Lyrics
@@ -286,7 +286,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
             else if (UserDefinitionHelper.OnlineIDHaveDefinition(CurrentWorkingBeatmap.BeatmapSetInfo.OnlineID, out neid))
                 GetLyricFor(neid);
             else
-                LyricProcessor.Search(SearchOption.From(CurrentWorkingBeatmap, noLocalFile, onLyricRequestFinished, onLyricRequestFail, TitleSimilarThreshold.Value));
+                LyricProcessor.Search(SearchOption.From(CurrentWorkingBeatmap, !noLocalFile, onLyricRequestFinished, onLyricRequestFail, TitleSimilarThreshold.Value));
         }
 
         private double targetTime => track.CurrentTime + Offset.Value;

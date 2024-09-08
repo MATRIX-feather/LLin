@@ -2,9 +2,10 @@ using System;
 using System.Linq;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
-using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.LyricProvider.Netease.Response;
 
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.LyricProvider.Netease
 {
     public struct RequestFinishMeta
     {
@@ -103,6 +104,29 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
                 Success = (responseRoot.Result?.Songs?.First().ID ?? -1) > 0,
                 SourceBeatmap = sourceBeatmap,
                 TitleSimiliarThreshold = titleSimiliarThreshold
+            };
+        }
+
+        /// <summary>
+        /// 通过给定的<see cref="RequestFinishMeta"/>>构建<see cref="SearchOption"/>
+        /// <br/>
+        /// 构建时将自动设置<see cref="Beatmap"/>、<see cref="OnFinish"/>和<see cref="OnFail"/>，其他属性保持默认值
+        /// </summary>
+        /// <param name="requestFinishMeta">目标Meta</param>
+        /// <returns>通过参数构建的<see cref="SearchOption"/>></returns>
+        public static SearchOption ToSearchOption(RequestFinishMeta requestFinishMeta)
+        {
+            return new SearchOption
+            {
+                Beatmap = requestFinishMeta.SourceBeatmap,
+
+                OnFinish = lrcInfo =>
+                {
+                    requestFinishMeta.OnFinish?.Invoke(APILyricResponseRoot.FromLyricMeta(lrcInfo));
+                },
+                OnFail = requestFinishMeta.OnFail,
+
+                TitleSimiliarThreshold = requestFinishMeta.TitleSimiliarThreshold
             };
         }
     }

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Markdig.Helpers;
 using Newtonsoft.Json;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
 
-namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc
+namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.LyricProvider.Netease.Response
 {
     public class APILyricResponseRoot : IDisposable
     {
@@ -21,20 +22,20 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
         public double LocalOffset;
 
         [JsonIgnore]
-        public List<string>? Lyrics => LyricInfo?.RawLyric?.Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
+        public List<string>? RawLyrics => LyricInfo?.RawLyric?.Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
 
         [JsonIgnore]
-        public List<string>? Tlyrics => TLyricInfo?.RawLyric?.Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
+        public List<string>? RawTranslatelyrics => TLyricInfo?.RawLyric?.Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
 
         public List<Lyric> ToLyricList()
         {
             var result = new List<Lyric>();
 
-            if (Lyrics == null) return result;
+            if (RawLyrics == null) return result;
 
             //蠢办法，但起码比之前有用(
             //先处理原始歌词信息
-            foreach (string lyricString in Lyrics)
+            foreach (string lyricString in RawLyrics)
             {
                 //创建currentLrc
                 //可能存在一行歌词多个时间，所以先创建列表
@@ -101,9 +102,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
             }
 
             //再处理翻译歌词
-            if (Tlyrics != null)
+            if (RawTranslatelyrics != null)
             {
-                foreach (string tlyricString in Tlyrics)
+                foreach (string tlyricString in RawTranslatelyrics)
                 {
                     bool propertyDetected = false;
                     string propertyName = string.Empty;
@@ -172,6 +173,26 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
         public void Dispose()
         {
             GC.SuppressFinalize(this);
+        }
+
+        public LyricMeta ToLyricInfo()
+        {
+            return new LyricMeta
+            {
+                Lyrics = this.ToLyricList(),
+                Offset = this.LocalOffset
+            };
+        }
+
+        public static APILyricResponseRoot FromLyricMeta(LyricMeta meta)
+        {
+            var response = new APILyricResponseRoot();
+            response.LocalOffset = meta.Offset;
+
+            foreach (var metaLyric in meta.Lyrics)
+            {
+                var rawStr = metaLyric.ToString();
+            }
         }
     }
 }
