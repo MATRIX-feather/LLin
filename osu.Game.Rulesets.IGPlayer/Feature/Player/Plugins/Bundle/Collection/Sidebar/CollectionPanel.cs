@@ -9,6 +9,7 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Graphics;
@@ -326,9 +327,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Si
                     collections++;
 
                     var b = beatmaps.GetWorkingBeatmap(c.Beatmaps.First().AsBeatmapInfo());
-                    string tooltip = $"{b.Metadata.ArtistUnicode}"
-                                     + " - "
-                                     + $"{b.Metadata.TitleUnicode}";
+                    LocalisableString tooltip = LocalisableString.Interpolate($"{b.Metadata.GetArtistRomanisable()} - {b.Metadata.GetTitleRomanisable()}");
 
                     if (collections <= limit)
                     {

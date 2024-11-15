@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Threading;
 using Newtonsoft.Json;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
+using osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins;
 using Component = osu.Framework.Graphics.Component;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper
@@ -22,16 +24,16 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
 
         public enum SearchState
         {
-            [Description("未找到歌曲或信息不匹配")]
+            [LocalisableDescription(typeof(CloudMusicStrings), nameof(CloudMusicStrings.SearchStateFail))]
             Fail,
 
-            [Description("搜索中")]
+            [LocalisableDescription(typeof(CloudMusicStrings), nameof(CloudMusicStrings.SearchStateSearching))]
             Searching,
 
-            [Description("模糊搜索中")]
+            [LocalisableDescription(typeof(CloudMusicStrings), nameof(CloudMusicStrings.SearchStateFuzzySearching))]
             FuzzySearching,
 
-            [Description("已就绪")]
+            [LocalisableDescription(typeof(CloudMusicStrings), nameof(CloudMusicStrings.SearchStateSuccess))]
             Success
         }
 
@@ -75,29 +77,18 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
 
             if (!searchOption.NoLocalFile)
             {
-                try
+                var localLyrics = GetLocalLyrics(beatmap);
+
+                if (localLyrics != null)
                 {
-                    string filePath = $"custom/lyrics/beatmap-{beatmap.BeatmapSetInfo.ID}.json";
-
-                    string content = File.ReadAllText(storage.GetFullPath(filePath, true));
-
-                    var deserializeObject = JsonConvert.DeserializeObject<APILyricResponseRoot>(content);
-
-                    if (deserializeObject != null)
-                    {
-                        onFinish?.Invoke(deserializeObject);
-                        setState(SearchState.Success);
-                        return;
-                    }
-                }
-                catch
-                {
-                    //忽略异常
+                    setState(SearchState.Success);
+                    onFinish?.Invoke(localLyrics);
+                    return;
                 }
             }
 
             //TODO: 实现新版网易云API的查询
-            if (true)
+            if (LyricPlugin.DisableCloudLookup)
             {
                 setState(SearchState.Success);
                 searchOption.OnFinish?.Invoke(new APILyricResponseRoot());
@@ -114,16 +105,15 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
             currentLyricRequest?.Dispose();
 
             //处理要搜索的歌名: "标题 艺术家"
-            string title = beatmap.Metadata.GetTitle();
-            string artist = searchOption.NoArtist ? string.Empty : $" {beatmap.Metadata.GetArtist()}";
-            string target = encoder.Encode($"{title}{artist}");
+            string title = searchOption.SearchMode == SearchMode.RomanisedTitle ? beatmap.Metadata.Title : beatmap.Metadata.TitleUnicode;
+            string artist = searchOption.SearchMode == SearchMode.NoArtist ? string.Empty : beatmap.Metadata.GetArtist();
+            string target = encoder.Encode($"{title} {artist}");
 
             var req = new APISearchRequest(target);
 
             req.Finished += () =>
             {
-                var meta = RequestFinishMeta.From(req.ResponseObject, beatmap, onFinish, onFail, searchOption.TitleSimiliarThreshold);
-                meta.NoRetry = searchOption.NoRetry;
+                var meta = RequestFinishMeta.From(req.ResponseObject, beatmap, onFinish, onFail, searchOption.SearchMode, searchOption.TitleSimilarThreshold);
 
                 onSongSearchRequestFinish(meta, req);
             };
@@ -147,6 +137,24 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
             currentSearchRequest = req;
         }
 
+        public APILyricResponseRoot? GetLocalLyrics(WorkingBeatmap beatmap)
+        {
+            APILyricResponseRoot? deserializedObject = null;
+
+            try
+            {
+                string path = storage.GetFullPath(lyricFilePath(beatmap), true);
+                string content = File.ReadAllText(path);
+                deserializedObject = JsonConvert.DeserializeObject<APILyricResponseRoot>(content);
+            }
+            catch
+            {
+                //忽略异常
+            }
+
+            return deserializedObject;
+        }
+
         /// <summary>
         /// 通过给定的网易云音乐ID搜索歌曲
         /// </summary>
@@ -154,7 +162,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         /// <param name="beatmap"></param>
         /// <param name="onFinish"></param>
         /// <param name="onFail"></param>
-        public void SearchByNeteaseID(int id, WorkingBeatmap beatmap, Action<APILyricResponseRoot> onFinish, Action<string> onFail)
+        public void SearchByNeteaseID(long id, WorkingBeatmap beatmap, Action<APILyricResponseRoot> onFinish, Action<string> onFail)
         {
             //处理之前的请求
             cancellationTokenSource?.Cancel();
@@ -175,11 +183,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
                 }
             };
 
-            var meta = RequestFinishMeta.From(fakeResponse, beatmap, onFinish, onFail, 0);
+            var meta = RequestFinishMeta.From(fakeResponse, beatmap, onFinish, onFail, 0, 0);
             meta.NoRetry = true;
 
             onSongSearchRequestFinish(meta, null);
         }
+
+        private static string lyricFilePath(WorkingBeatmap beatmap) => $"custom/lyrics/beatmap-{beatmap.BeatmapSetInfo.ID}.json";
 
         /// <summary>
         /// 当歌曲搜索请求完成后...
@@ -188,69 +198,79 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         /// <param name="searchRequest"></param>
         private void onSongSearchRequestFinish(RequestFinishMeta meta, APISearchRequest? searchRequest)
         {
-            if (!meta.Success)
+            var sourceBeatmap = meta.SourceBeatmap;
+            var songs = meta.SearchResponseRoot.Result?.Songs ?? [];
+
+            songs.ForEach(s => s.CalculateSimilarPercentage(sourceBeatmap));
+
+            var titleMatches = songs.Where(p => p.TitleSimilarPercentage >= meta.TitleSimilarThreshold)
+                                    .OrderByDescending(p => p.TitleSimilarPercentage);
+            var artistMatches = titleMatches.OrderByDescending(s => s.ArtistSimilarPercentage);
+            var match = artistMatches.FirstOrDefault();
+            string title = meta.SearchMode == SearchMode.RomanisedTitle ? sourceBeatmap.Metadata.Title : sourceBeatmap.Metadata.TitleUnicode;
+
+            if (match != null)
             {
-                //如果没成功，尝试使用标题重搜
-                if (meta.SourceBeatmap != null && !meta.NoRetry)
+                if (match.ArtistSimilarPercentage >= (meta.SearchMode == SearchMode.NoArtist ? 0 : meta.TitleSimilarThreshold))
                 {
-                    var searchMeta = SearchOption.FromRequestFinishMeta(meta);
-                    searchMeta.NoArtist = true;
-                    searchMeta.NoRetry = true;
-                    searchMeta.NoLocalFile = true;
-
-                    if (searchRequest != null && searchRequest == currentSearchRequest)
-                        setState(SearchState.FuzzySearching);
-
-                    //Logging.Log("精准搜索失败, 将尝试只搜索标题...");
-                    Search(searchMeta);
+                    Logging.Log($"Beatmap: '{title}' <-> '{match.Name}' -> {match.TitleSimilarPercentage} >= {meta.TitleSimilarThreshold}");
                 }
-                else
-                {
-                    if (searchRequest != null && searchRequest == currentSearchRequest)
-                        setState(SearchState.Fail);
+            }
 
-                    meta.OnFail?.Invoke("未搜索到对应歌曲!");
+            if (match == null)
+            {
+                var searchMeta = SearchOption.FromRequestFinishMeta(meta);
+
+                switch (meta.SearchMode)
+                {
+                    case SearchMode.Normal:
+                        Logging.Log("尝试使用罗马音标题搜索");
+                        searchMeta.SearchMode = SearchMode.RomanisedTitle;
+                        searchMeta.NoLocalFile = true;
+
+                        if (searchRequest != null && searchRequest == currentSearchRequest)
+                            setState(SearchState.FuzzySearching);
+
+                        Search(searchMeta);
+                        break;
+
+                    case SearchMode.RomanisedTitle:
+                        searchMeta.SearchMode = SearchMode.NoArtist;
+                        searchMeta.NoLocalFile = true;
+
+                        if (searchRequest != null && searchRequest == currentSearchRequest)
+                            setState(SearchState.FuzzySearching);
+
+                        Search(searchMeta);
+                        break;
+
+                    case SearchMode.NoArtist:
+                        meta.OnFail?.Invoke("标题匹配失败, 将不会继续搜索歌词...");
+                        setState(SearchState.Fail);
+                        break;
                 }
 
                 return;
             }
 
-            float similiarPrecentage = meta.GetSimiliarPrecentage();
-
-            Logging.Log($"Beatmap: '{meta.SourceBeatmap?.Metadata.GetTitle() ?? "???"}' <-> '{meta.GetNeteaseTitle()}' -> {similiarPrecentage} <-> {meta.TitleSimiliarThreshold}");
-
-            if (similiarPrecentage >= meta.TitleSimiliarThreshold)
+            var req = new APILyricRequest(match.ID);
+            req.Finished += () =>
             {
-                //标题匹配，发送歌词查询请求
-                var req = new APILyricRequest(meta.SongID);
-                req.Finished += () =>
-                {
-                    if (currentLyricRequest == req)
-                        setState(SearchState.Success);
+                if (currentLyricRequest == req)
+                    setState(SearchState.Success);
 
-                    meta.OnFinish?.Invoke(req.ResponseObject);
-                };
-                req.Failed += e =>
-                {
-                    if (currentLyricRequest == req)
-                        setState(SearchState.Fail);
-
-                    Logging.LogError(e, "获取歌词失败");
-                };
-                req.PerformAsync(cancellationTokenSource.Token).ConfigureAwait(false);
-
-                currentLyricRequest = req;
-            }
-            else
+                meta.OnFinish?.Invoke(req.ResponseObject);
+            };
+            req.Failed += e =>
             {
-                //Logging.Log("标题匹配失败, 将不会继续搜索歌词...");
-                this.setState(SearchState.Fail);
+                if (currentLyricRequest == req)
+                    setState(SearchState.Fail);
 
-                Logging.Log($"对 {meta.SourceBeatmap?.Metadata.GetTitle() ?? "未知谱面"} 的标题匹配失败：");
-                Logging.Log($"Beatmap: '{meta.SourceBeatmap?.Metadata.GetTitle() ?? "???"}' <-> '{meta.GetNeteaseTitle()}' -> {similiarPrecentage} < {meta.TitleSimiliarThreshold}");
+                Logging.LogError(e, "获取歌词失败");
+            };
+            req.PerformAsync(cancellationTokenSource.Token).ConfigureAwait(false);
 
-                meta.OnFail?.Invoke("标题匹配失败, 将不会继续搜索歌词...");
-            }
+            currentLyricRequest = req;
         }
 
         #endregion
@@ -260,15 +280,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         [Resolved]
         private Storage storage { get; set; } = null!;
 
-        public void WriteLrcToFile(APILyricResponseRoot? responseRoot, WorkingBeatmap working)
+        public void WriteLrcToFile(APILyricResponseRoot? responseRoot, WorkingBeatmap beatmap)
         {
             try
             {
-                string target = $"custom/lyrics/beatmap-{working.BeatmapSetInfo.ID}.json";
-
-                string serializeObject = JsonConvert.SerializeObject(responseRoot);
-
-                File.WriteAllText(storage.GetFullPath(target, true), serializeObject);
+                string serializedObject = JsonConvert.SerializeObject(responseRoot);
+                File.WriteAllText(storage.GetFullPath(lyricFilePath(beatmap), true), serializedObject);
             }
             catch (Exception e)
             {

@@ -44,5 +44,18 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
 
             return d[n, m];
         }
+
+        public static float ComputeSimilarPercentage(string s, string t)
+        {
+            string source = s.Length > t.Length ? s : t;
+            string target = s.Length > t.Length ? t : s;
+
+            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(target))
+                return 0;
+
+            int distance = Compute(source, target);
+            float percentage = 1 - (distance / (float)source.Length);
+            return Math.Abs(percentage);
+        }
     }
 }

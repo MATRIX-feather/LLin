@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp
                 },
                 new EnumSettingsEntry<PanelType>
                 {
-                    Name = "面板样式",
+                    Name = YaspStrings.PanelType,
                     Bindable = config.GetBindable<PanelType>(YaspSettings.PanelType)
                 }
             };

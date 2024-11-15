@@ -7,7 +7,7 @@ public class Logging
 {
     public static readonly string LOG_PREFIX = "Hikariii";
 
-    public static void Log(string message, LoggingTarget loggingTarget = LoggingTarget.Runtime, LogLevel level = LogLevel.Verbose)
+    public static void Log(string? message, LoggingTarget loggingTarget = LoggingTarget.Runtime, LogLevel level = LogLevel.Verbose)
     {
         Logger.Log($"[{LOG_PREFIX}] {message}", level: level, target: loggingTarget);
     }

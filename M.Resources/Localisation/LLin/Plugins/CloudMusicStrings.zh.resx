@@ -108,4 +108,19 @@
     <data name="offset_adjust_to_lyric" xml:space="preserve">
         <value>对其偏移至该歌词</value>
     </data>
+    <data name="search_state_fail" xml:space="preserve">
+        <value>未找到歌曲或信息不匹配</value>
+    </data>
+    <data name="search_state_searching" xml:space="preserve">
+        <value>搜索中</value>
+    </data>
+    <data name="search_state_fuzzy_searching" xml:space="preserve">
+        <value>模糊搜索中</value>
+    </data>
+    <data name="search_state_success" xml:space="preserve">
+        <value>已就绪</value>
+    </data>
+    <data name="search_by_id" xml:space="preserve">
+        <value>按网易云ID搜索歌词</value>
+    </data>
 </root>

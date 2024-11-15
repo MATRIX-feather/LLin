@@ -21,4 +21,7 @@
     <data name="use_avatar_for_coverii" xml:space="preserve">
         <value>(封面II) 使用头像作为封面</value>
     </data>
+    <data name="panel_type" xml:space="preserve">
+        <value>面板样式</value>
+    </data>
 </root>

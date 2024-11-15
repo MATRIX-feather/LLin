@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
 using System.Text;
 using NetCoreServer;
 
@@ -9,9 +8,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Web;
 
 public class GosuSession : WsSession
 {
-    private readonly WebSocketLoader.GosuServer gosuServer;
+    private readonly GosuServer gosuServer;
 
-    public GosuSession(WebSocketLoader.GosuServer server)
+    public GosuSession(GosuServer server)
         : base(server)
     {
         this.gosuServer = server;
@@ -31,159 +30,183 @@ public class GosuSession : WsSession
             return;
         }
 
-        if (!path.EndsWith("/ws", StringComparison.Ordinal)
-            && !path.EndsWith("/json", StringComparison.Ordinal))
+        if (path.EndsWith("/ws", StringComparison.Ordinal)
+            || path.EndsWith("/json", StringComparison.Ordinal))
         {
-            //Logging.Log("Received FILE？ request " + request.Url);
-
-            HttpResponse response = new HttpResponse();
-            response.SetBegin(200);
-
-            var interpolatedStringHandler = new DefaultInterpolatedStringHandler(8, 1);
-            string stringAndClear = interpolatedStringHandler.ToStringAndClear();
-            response.SetHeader("Cache-Control", stringAndClear)
-                    .SetHeader("Access-Control-Allow-Origin", "*");
-
-            string getLinkUrl(string link, string name) => $"<a href=\"{link}\">{name}</a>";
-
-            var storage = gosuServer.GetStorage();
-
-            // 因为不知道怎么让他显示目录所以只好自己搓了 UwU
-            string htmlCode = "<html>";
-
-            htmlCode += "<head>"
-                        + "<meta charset=\"utf-8\">"
-                        + "<meta name=\"color-scheme\" content=\"light dark\">"
-                        + "<meta name=\"google\" value=\"notranslate\">"
-                        + "</head>";
-
-            if (storage == null)
-            {
-                htmlCode += "<h1>Gosu文件服务尚未初始化完毕，请稍后再来</h1>"
-                            + "<h1>Gosu file service is not initialized yet, please come back later.</h1>";
-            }
-            else
-            {
-                string urlPath = path.StartsWith('/')
-                    ? path.Remove(0, 1) // 将其变为相对目录
-                    : path;
-
-                // storagePath始终不为空
-                if (string.IsNullOrEmpty(urlPath)) urlPath = ".";
-
-                // 将gosu_statics和urlPath混合，得到我们要的相对存储路径
-                string storagePath = Path.Combine("gosu_statics", urlPath);
-
-                // 目标存储的绝对位置
-                string targetFilePath = storage.GetFullPath(storagePath);
-
-                //Logging.Log("URLPath is " + urlPath);
-
-                // 处理Songs
-                if (urlPath.StartsWith("Songs", StringComparison.Ordinal))
-                {
-                    string[] split = urlPath.Split("/", 2);
-                    var fileResponse = new HttpResponse();
-
-                    if (split.Length < 2)
-                    {
-                        Logging.Log("Illegal argument, not processing...");
-                        fileResponse.SetBegin(400);
-                        this.SendResponse(fileResponse);
-
-                        return;
-                    }
-
-                    string fileName = split[1].Split("?", 2)[0];
-
-                    byte[] content = gosuServer.FindStaticOrAsset(fileName) ?? new byte[] { };
-
-                    if (content.Length == 0)
-                    {
-                        response.SetBegin(404);
-                        //Logging.Log("404 File Length is " + response.BodyLength);
-
-                        this.SendResponse(response);
-
-                        return;
-                    }
-
-                    fileResponse.SetBegin(200);
-                    response.SetHeader("Cache-Control", stringAndClear)
-                            .SetHeader("Access-Control-Allow-Origin", "*");
-                    response.SetBody(content);
-
-                    //Logging.Log("File Length is " + response.BodyLength);
-
-                    this.SendResponse(response);
-                    return;
-                }
-
-                // 如果要访问文件, 那么不要进行处理
-                if (File.Exists(targetFilePath))
-                {
-                    var fileResponse = new HttpResponse();
-                    byte[] content = gosuServer.FindStaticOrAsset(targetFilePath) ?? new byte[] { };
-
-                    if (content.Length == 0)
-                    {
-                        fileResponse.SetBegin(404);
-                        this.SendResponse(response);
-                        return;
-                    }
-
-                    fileResponse.SetBegin(200);
-                    response.SetHeader("Cache-Control", stringAndClear)
-                            .SetHeader("Access-Control-Allow-Origin", "*");
-                    response.SetBody(File.ReadAllBytes(targetFilePath));
-
-                    //Logging.Log("File Length is " + response.BodyLength);
-
-                    this.SendResponse(response);
-                    return;
-                }
-
-                // 只当目录存在时遍历其中的内容
-                if (Path.Exists(targetFilePath))
-                {
-                    try
-                    {
-                        // 反之，添加所有文件和目录的超链接
-                        var localStorage = storage.GetStorageForDirectory(storagePath);
-
-                        foreach (string directory in localStorage.GetDirectories("."))
-                            htmlCode += getLinkUrl($"/{urlPath}/{directory}", directory) + "<br>";
-
-                        foreach (string file in localStorage.GetFiles("."))
-                            htmlCode += getLinkUrl($"/{urlPath}/{file}", file) + "<br>";
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.Log($"Error occurred presenting directory information! {e.Message}");
-                        Logging.Log($"{e.StackTrace ?? "<No stacktrace>"}");
-                    }
-                }
-                else
-                {
-                    htmlCode += getLinkUrl("/", "[根目录]")
-                                + "<br><br>"
-                                + "404 Not Found UwU";
-                }
-            }
-
-            htmlCode += "</html>";
-
-            response.SetBody(htmlCode);
-            this.SendResponse(response);
-
-            //Logging.Log("Sending " + response.Body);
-        }
-        else
-        {
-            //Logging.Log("Received WS OR JSON request " + request.Url);
-
             base.OnReceivedRequest(request);
+            return;
         }
+
+        this.onFileRequest(path);
+    }
+
+    private HttpResponse createResponse(int code)
+    {
+        var response = new HttpResponse();
+
+        response.SetBegin(code);
+
+        response.SetHeader("Access-Control-Allow-Origin", "*")
+                .SetHeader("Cache-Control", "public, max-age=0");
+
+        return response;
+    }
+
+    private string getLinkUrl(string link, string name) => $"<a href=\"{link}\">{name}</a>";
+
+    /// <summary>
+    /// 包装给定的HTML代码
+    /// </summary>
+    /// <param name="content"></param>
+    /// <returns></returns>
+    private string wrapHtml(string content)
+    {
+        // 因为不知道怎么让他显示目录所以只好自己搓了 UwU
+        string htmlCode = "<html>";
+
+        htmlCode += "<head>"
+                    + "<meta charset=\"utf-8\">"
+                    + "<meta name=\"color-scheme\" content=\"light dark\">"
+                    + "<meta name=\"google\" value=\"notranslate\">"
+                    + "</head>";
+
+        htmlCode += content;
+
+        htmlCode += "</html>";
+        return htmlCode;
+    }
+
+    private void onFileRequest(string requestPath)
+    {
+        //response.SetHeader("Cache-Control", cache_control_str)
+        //        .SetHeader("Access-Control-Allow-Origin", "*");
+
+        var storage = gosuServer.GetStorage();
+
+        if (storage == null)
+        {
+            var notReadyResponse = createResponse(200);
+
+            string html = "<h1>Gosu文件服务尚未初始化完毕，请稍后再来</h1>"
+                          + "<h1>Gosu file service is not initialized yet, please come back later.</h1>";
+
+            notReadyResponse.SetBody(wrapHtml(html));
+
+            this.SendResponse(notReadyResponse);
+
+            return;
+        }
+
+        string urlPath = requestPath.StartsWith('/')
+            ? requestPath.Remove(0, 1) // 将其变为相对目录
+            : requestPath;
+
+        // storagePath始终不为空
+        if (string.IsNullOrEmpty(urlPath)) urlPath = ".";
+
+        //Logging.Log("URLPath is " + urlPath);
+
+        // 处理Songs
+        if (urlPath.StartsWith("Songs", StringComparison.Ordinal))
+        {
+            string[] split = urlPath.Split("/", 2);
+
+            if (split.Length < 2)
+            {
+                Logging.Log($"Illegal argument '{split}', not processing...");
+
+                var illegalArgumentResponse = createResponse(400);
+                this.SendResponse(illegalArgumentResponse);
+
+                return;
+            }
+
+            string fileName = split[1].Split("?", 2)[0];
+
+            byte[] content = gosuServer.FindStaticOrAsset(fileName) ?? [];
+
+            if (content.Length == 0)
+            {
+                var nullFileResponse = createResponse(404);
+                nullFileResponse.SetBegin(404);
+                this.SendResponse(nullFileResponse);
+
+                return;
+            }
+
+            HttpResponse fileResponse = createResponse(200);
+            fileResponse.SetBody(content);
+
+            this.SendResponse(fileResponse);
+            return;
+        }
+
+        // 将gosu_statics和urlPath混合，得到我们要的相对存储路径
+        string storagePath = Path.Combine("gosu_statics", urlPath);
+
+        // 目标存储的绝对位置
+        string targetFilePath = storage.GetFullPath(storagePath);
+
+        // Direct access to file
+        // 如果要访问文件, 那么不要进行处理
+        if (File.Exists(targetFilePath))
+        {
+            byte[] content = gosuServer.FindStaticOrAsset(targetFilePath) ?? new byte[] { };
+
+            if (content.Length == 0)
+            {
+                var nullFileResponse = createResponse(404);
+                this.SendResponse(nullFileResponse);
+
+                return;
+            }
+
+            var fileResponse = new HttpResponse(200);
+            fileResponse.SetHeader("Content-Type", MimeTypeMap.GetMimeType(targetFilePath))
+                        .SetBody(File.ReadAllBytes(targetFilePath));
+
+            this.SendResponse(fileResponse);
+            return;
+        }
+
+        // 文件不存在，是否目录存在？
+        if (Path.Exists(targetFilePath))
+        {
+            try
+            {
+                string html = "";
+
+                // 反之，添加所有文件和目录的超链接
+                var localStorage = storage.GetStorageForDirectory(storagePath);
+
+                foreach (string directory in localStorage.GetDirectories("."))
+                    html += getLinkUrl($"/{urlPath}/{directory}", directory) + "<br>";
+
+                foreach (string file in localStorage.GetFiles("."))
+                    html += getLinkUrl($"/{urlPath}/{file}", file) + "<br>";
+
+                var response = createResponse(200);
+                response.SetBody(wrapHtml(html));
+
+                this.SendResponse(response);
+                return;
+            }
+            catch (Exception e)
+            {
+                Logging.Log($"Error occurred presenting directory information! {e.Message}");
+                Logging.Log($"{e.StackTrace ?? "<No stacktrace>"}");
+            }
+        }
+
+        string notFoundHtml = getLinkUrl("/", "[根目录]")
+                              + "<br><br>"
+                              + "404 Not Found UwU";
+
+        var notFoundResponse = new HttpResponse();
+        notFoundResponse.SetBegin(200)
+                        .SetBody(wrapHtml(notFoundHtml));
+
+        this.SendResponse(notFoundResponse);
     }
 
     public override void OnWsConnected(HttpRequest request)
@@ -193,7 +216,7 @@ public class GosuSession : WsSession
 
     public override void OnWsDisconnected()
     {
-        Logging.Log($"Chat WebSocket session with Id {Id} disconnected!");
+        Logging.Log($"WebSocket session with Id {Id} disconnected!");
     }
 
     public override void OnWsReceived(byte[] buffer, long offset, long size)

@@ -5,7 +5,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
@@ -24,7 +23,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
         private void load(YaspPlugin plugin)
         {
             var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
-            config.BindWith<float>(YaspSettings.Scale, scaleBindable);
+            config.BindWith(YaspSettings.Scale, scaleBindable);
             scaleBindable.BindValueChanged(v =>
             {
                 this.ScaleTo(v.NewValue, 300, Easing.OutQuint);
@@ -71,12 +70,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
                             new OsuSpriteText
                             {
                                 Font = OsuFont.GetFont(size: 30, weight: FontWeight.Bold),
-                                Text = new RomanisableString(beatmap?.Metadata.TitleUnicode, beatmap?.Metadata.Title)
+                                Text = beatmap.Metadata.GetTitleRomanisable()
                             },
                             new OsuSpriteText
                             {
                                 Font = OsuFont.GetFont(size: 25),
-                                Text = new RomanisableString(beatmap?.Metadata.ArtistUnicode, beatmap?.Metadata.Artist)
+                                Text = beatmap.Metadata.GetArtistRomanisable()
                             },
                             new OsuSpriteText
                             {

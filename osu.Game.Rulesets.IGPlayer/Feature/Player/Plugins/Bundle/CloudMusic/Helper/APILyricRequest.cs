@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
 {
     public class APILyricRequest : OsuJsonWebRequest<APILyricResponseRoot>
     {
-        public APILyricRequest(int id)
+        public APILyricRequest(long id)
         {
             Url = $"https://music.163.com/api/song/lyric?os=pc&id={id}&lv=-1&kv=-1&tv=-1";
         }

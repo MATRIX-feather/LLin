@@ -1,6 +1,5 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Configuration;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -25,7 +24,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
         private Container metadataContainer;
 
         private readonly Bindable<WorkingBeatmap> beatmap = new Bindable<WorkingBeatmap>();
-        private readonly Bindable<bool> displayUnicode = new BindableBool();
         private Container coverAnimContainer;
         private Box bgBox;
         private OsuSpriteText artistDisplay;
@@ -35,14 +33,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
         [Resolved]
         private IImplementLLin player { get; set; }
 
-        [Resolved]
-        private FrameworkConfigManager frameworkConfig { get; set; }
-
         [BackgroundDependencyLoader]
         private void load()
         {
-            frameworkConfig.BindWith(FrameworkSetting.ShowUnicode, displayUnicode);
-
             var shear = new Vector2(0.25f, 0);
 
             RelativeSizeAxes = Axes.Both;
@@ -122,8 +115,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
                     }
                 }
             };
-
-            displayUnicode.BindValueChanged(_ => updateMetaText(beatmap.Value?.Metadata));
         }
 
         public void Refresh(WorkingBeatmap beatmap)
@@ -156,14 +147,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels
         {
             meta ??= new BeatmapMetadata();
 
-            artistDisplay.Text = displayUnicode.Value ? meta.GetArtist() : meta.Artist;
+            artistDisplay.Text = meta.GetArtistRomanisable();
             sourceDisplay.Text = string.IsNullOrEmpty(meta.Source)
-                ? displayUnicode.Value
-                    ? meta.Title
-                    : meta.GetTitle()
+                ? meta.GetTitleRomanisable()
                 : meta.Source;
 
-            titleDisplay.Text = displayUnicode.Value ? meta.GetTitle() : meta.Title;
+            titleDisplay.Text = meta.GetTitleRomanisable();
         }
 
         public override void Hide()

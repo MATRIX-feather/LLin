@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
     public class APISearchResultInfo
     {
         [JsonProperty("songs")]
-        public IList<APISongInfo>? Songs { get; set; }
+        public List<APISongInfo>? Songs { get; set; }
 
         [JsonProperty("songCount")]
         public int SongCount { get; set; }

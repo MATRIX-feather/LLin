@@ -30,6 +30,6 @@ namespace osu.Game.Rulesets.IGPlayer.Rs.UI
 
         public override DrawableHitObject<IGPlayerHitObject> CreateDrawableRepresentation(IGPlayerHitObject h) => new DrawableIGPlayerHitObject(h);
 
-        protected override PassThroughInputManager CreateInputManager() => new IGPlayerInputManager(Ruleset?.RulesetInfo);
+        protected override PassThroughInputManager CreateInputManager() => new HikariiiPlayerInputManager(Ruleset?.RulesetInfo);
     }
 }

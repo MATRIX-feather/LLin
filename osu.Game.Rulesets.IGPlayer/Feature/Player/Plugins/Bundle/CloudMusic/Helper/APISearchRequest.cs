@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
     {
         public APISearchRequest(string target)
         {
-            Url = $"https://music.163.com/api/search/get/web?hlpretag=&hlposttag=&s={target}&type=1&total=true&limit=1";
+            Url = $"https://music.163.com/api/search/get/web?hlpretag=&hlposttag=&s={target}&type=1&total=true&limit=10";
         }
 
         protected override void ProcessResponse()

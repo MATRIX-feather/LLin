@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using M.DBus.Tray;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
@@ -28,6 +29,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
         /// 请参阅 <see cref="LLinPlugin.TargetLayer"/>
         /// </summary>
         public override TargetLayer Target => TargetLayer.Foreground;
+
+        public static bool DisableCloudLookup => false;
 
         public override IPluginConfigManager CreateConfigManager(Storage storage)
             => new LyricConfigManager(storage);
@@ -170,12 +173,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
             Lyrics = newList;
 
             if (saveToDisk)
-                WriteLyricToDisk();
+                SaveLyricConfigToDisk();
 
             CurrentStatus.Value = Status.Finish;
         }
 
-        public void GetLyricFor(int id)
+        public void GetLyricFor(long id)
         {
             CurrentStatus.Value = Status.Working;
             LyricProcessor.SearchByNeteaseID(id, CurrentWorkingBeatmap, onLyricRequestFinished, onLyricRequestFail);
@@ -185,8 +188,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
 
         public readonly BindableDouble Offset = new BindableDouble
         {
-            MaxValue = 3000,
-            MinValue = -3000
+            MaxValue = 60000,
+            MinValue = -60000
         };
 
         private readonly Bindable<bool> autoSave = new Bindable<bool>();
@@ -217,6 +220,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
         /// </summary>
         protected override bool OnContentLoaded(Drawable content) => true;
 
+        private readonly SimpleEntry lyricEntry = new SimpleEntry
+        {
+            Enabled = false
+        };
+
         [Cached]
         public UserDefinitionHelper UserDefinitionHelper { get; private set; } = new UserDefinitionHelper();
 
@@ -232,6 +240,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
             AddInternal(LyricProcessor);
             AddInternal(UserDefinitionHelper);
 
+            if (LLin != null)
+                LLin.Exiting += onMvisExiting;
+
             Offset.BindValueChanged(v =>
             {
                 if (currentResponseRoot != null)
@@ -239,7 +250,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
             });
         }
 
-        public void WriteLyricToDisk(WorkingBeatmap? currentBeatmap = null)
+        private void onMvisExiting()
+        {
+            this.SaveLyricConfigToDisk(CurrentWorkingBeatmap);
+        }
+
+        public void SaveLyricConfigToDisk(WorkingBeatmap? currentBeatmap = null)
         {
             currentBeatmap ??= CurrentWorkingBeatmap;
             LyricProcessor.WriteLrcToFile(currentResponseRoot, currentBeatmap);
@@ -258,13 +274,24 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
             Lyrics.Clear();
             currentResponseRoot = null;
             CurrentLine = null;
+            Offset.Value = 0d;
 
-            if (UserDefinitionHelper.BeatmapMetaHaveDefinition(CurrentWorkingBeatmap.BeatmapInfo, out int neid))
-                GetLyricFor(neid);
-            else if (UserDefinitionHelper.OnlineIDHaveDefinition(CurrentWorkingBeatmap.BeatmapSetInfo.OnlineID, out neid))
-                GetLyricFor(neid);
+            var localLyrics = LyricProcessor.GetLocalLyrics(CurrentWorkingBeatmap);
+
+            if (noLocalFile || localLyrics == null)
+            {
+                if (UserDefinitionHelper.BeatmapMetaHaveDefinition(CurrentWorkingBeatmap.BeatmapInfo, out long neid))
+                    GetLyricFor(neid);
+                else if (UserDefinitionHelper.OnlineIDHaveDefinition(CurrentWorkingBeatmap.BeatmapSetInfo.OnlineID, out neid))
+                    GetLyricFor(neid);
+                else
+                    LyricProcessor.Search(SearchOption.From(CurrentWorkingBeatmap, noLocalFile, onLyricRequestFinished, onLyricRequestFail, TitleSimilarThreshold.Value));
+            }
             else
-                LyricProcessor.Search(SearchOption.From(CurrentWorkingBeatmap, noLocalFile, onLyricRequestFinished, onLyricRequestFail, TitleSimilarThreshold.Value));
+            {
+                LyricProcessor.State.Value = LyricProcessor.SearchState.Success;
+                onLyricRequestFinished(localLyrics);
+            }
         }
 
         private double targetTime => track.CurrentTime + Offset.Value;
@@ -273,7 +300,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
         {
             if (Disabled.Value) return;
 
-            if (CurrentWorkingBeatmap != null) WriteLyricToDisk(CurrentWorkingBeatmap);
+            if (CurrentWorkingBeatmap != null) SaveLyricConfigToDisk(CurrentWorkingBeatmap);
 
             CurrentWorkingBeatmap = working;
             track = working.Track;
@@ -303,7 +330,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic
                 Lyrics = responseRoot.ToLyricList();
 
                 if (autoSave.Value)
-                    WriteLyricToDisk();
+                    SaveLyricConfigToDisk();
 
                 CurrentStatus.Value = Status.Finish;
             });

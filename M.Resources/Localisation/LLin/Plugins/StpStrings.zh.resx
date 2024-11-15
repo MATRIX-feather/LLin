@@ -63,4 +63,13 @@
     <data name="bars_per_visual" xml:space="preserve">
         <value>频谱密度</value>
     </data>
+    <data name="type_a_settings" xml:space="preserve">
+        <value>Type A 设置</value>
+    </data>
+    <data name="type_b_settings" xml:space="preserve">
+        <value>Type B 设置</value>
+    </data>
+    <data name="spinning_cover_and_visualizer" xml:space="preserve">
+        <value>旋转唱片</value>
+    </data>
 </root>

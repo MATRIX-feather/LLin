@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
         /// 目标歌曲的网易云ID
         /// </summary>
         [JsonProperty("Target")]
-        public int TargetNeteaseID { get; set; }
+        public long TargetNeteaseID { get; set; }
 
         /// <summary>
         /// 对应的谱面

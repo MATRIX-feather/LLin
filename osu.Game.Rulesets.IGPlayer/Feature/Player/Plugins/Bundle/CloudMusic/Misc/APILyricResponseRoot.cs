@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                 //可能存在一行歌词多个时间，所以先创建列表
                 List<Lyric> lyrics = new List<Lyric>();
 
-                //Logging.Log($"处理歌词: {lyricString}");
+                //Logger.Log($"处理歌词: {lyricString}");
 
                 bool propertyDetected = false;
                 string propertyName = string.Empty;
@@ -61,16 +61,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                         propertyDetected = false;
 
                         //处理属性
-
                         //时间
-                        string timeProperty = propertyName.Replace(":", ".");
 
                         //如果是时间属性
-                        if (timeProperty[0].IsDigit())
+                        if (propertyName[0].IsDigit())
                         {
                             lyrics.Add(new Lyric
                             {
-                                Time = timeProperty.toMS()
+                                Time = propertyName.ToMilliseconds()
                             });
                         }
 
@@ -109,7 +107,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                     string propertyName = string.Empty;
                     string lyricContent = string.Empty;
 
-                    IList<int> times = new List<int>();
+                    List<int> times = [];
 
                     //Logging.Log($"处理翻译歌词: {tlyricString}");
 
@@ -130,13 +128,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                             //处理属性
 
                             //时间
-                            string timeProperty = propertyName.Replace(":", ".");
 
                             //如果是时间属性
-                            if (timeProperty[0].IsDigit())
+                            if (propertyName[0].IsDigit())
                             {
                                 //添加当前时间到times
-                                times.Add(timeProperty.toMS());
+                                times.Add(propertyName.ToMilliseconds());
                             }
 
                             //todo: 在此放置对其他属性的处理逻辑
@@ -158,7 +155,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Mi
                         foreach (var lrc in result.FindAll(l => l.Time == time))
                         {
                             lrc.TranslatedString = lyricContent;
-                            //Logging.Log($"设置歌词歌词: {lrc}");
+                            //Logger.Log($"设置歌词: {lrc}");
                         }
                     }
                 }

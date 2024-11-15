@@ -10,11 +10,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Internal.DummyAudio
 {
     internal partial class DummyAudioPlugin : LLinPlugin
     {
-        internal DummyAudioPlugin(MConfigManager config, LLinPluginManager plmgr)
+        internal DummyAudioPlugin(MConfigManager config, LLinPluginManager pluginManager)
         {
             HideFromPluginManagement = true;
             this.config = config;
-            this.PluginManager = plmgr;
+            PluginManager = pluginManager;
 
             Name = "音频";
             Version = LLinPluginManager.LatestPluginVersion;

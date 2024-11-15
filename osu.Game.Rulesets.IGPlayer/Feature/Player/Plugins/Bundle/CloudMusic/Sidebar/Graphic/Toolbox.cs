@@ -74,18 +74,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
                             Anchor = Anchor.TopRight,
                             Origin = Anchor.TopRight
                         },
-                        //TODO: 实现新版查询后移除此文本
-                        new OsuSpriteText
-                        {
-                            Anchor = Anchor.TopRight,
-                            Origin = Anchor.TopRight,
-                            Colour = Color4.Gold,
-                            Text = "在线查询功能暂时不可用，我们正在寻找新的适配方案"
-                        },
                         buttonFillFlow = new FillFlowContainer
                         {
-                            //TODO: REMOVE THIS
-                            Scale = new Vector2(0),
                             AutoSizeAxes = Axes.Y,
                             RelativeSizeAxes = Axes.X,
                             Spacing = new Vector2(5),
@@ -124,8 +114,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
             }
         }
 
+        [Resolved]
+        private IImplementLLin llin { get; set; }
+
+        [Resolved]
+        private LyricConfigManager lcm { get; set; }
+
         [BackgroundDependencyLoader]
-        private void load(LyricConfigManager lcm, IImplementLLin llin, LyricPlugin plugin)
+        private void load(LyricPlugin plugin)
         {
             udh ??= plugin.UserDefinitionHelper;
 
@@ -133,7 +129,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
             {
                 this.Schedule(() =>
                 {
-                    statusText.Text = $"{v.NewValue.GetDescription()}";
+                    statusText.Text = v.NewValue.GetLocalisableDescription();
 
                     var color = Color4.White;
 
@@ -146,7 +142,25 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
                 });
             }, true);
 
-            //TODO: UNDO THIS
+            if (LyricPlugin.DisableCloudLookup)
+                initToolboxNoContent();
+            else
+                initToolbox();
+        }
+
+        private void initToolboxNoContent()
+        {
+            buttonFillFlow.Scale = new Vector2(0);
+
+            contentFillFlow.Add(
+                new OsuSpriteText
+                {
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Colour = Color4.Gold,
+                    Text = "在线查询功能暂时不可用，我们正在寻找新的适配方案"
+                });
+
             contentFillFlow.Add(new SettingsSlider<double>
             {
                 Anchor = Anchor.TopRight,
@@ -156,9 +170,10 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
                 RelativeSizeAxes = Axes.X,
                 Padding = new MarginPadding { Right = 10 }
             });
+        }
 
-            //TODO: UNDO THIS TOO
-            /*
+        private void initToolbox()
+        {
             contentFillFlow.AddRange(new Drawable[]
             {
                 new SettingsSlider<double>
@@ -167,6 +182,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
                     Origin = Anchor.TopRight,
                     Current = plugin.Offset,
                     LabelText = CloudMusicStrings.LocalOffset,
+                    KeyboardStep = 100,
                     RelativeSizeAxes = Axes.X,
                     Padding = new MarginPadding { Right = 10 }
                 },
@@ -175,7 +191,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
                     RelativeSizeAxes = Axes.X,
-                    PlaceholderText = "按网易云ID搜索歌词"
+                    PlaceholderText = CloudMusicStrings.SearchById
                 },
                 new FillFlowContainer
                 {
@@ -220,16 +236,14 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
                     }
                 }
             });
-            */
 
-            textBox = new OsuTextBox();
             textBox.OnCommit += (sender, isNewText) =>
             {
-                if (int.TryParse(sender.Text, out var id))
+                if (long.TryParse(sender.Text, out long id))
                     plugin.GetLyricFor(id);
                 else
                 {
-                    textBox.Text = "";
+                    textBox.Text = string.Empty;
                 }
             };
         }

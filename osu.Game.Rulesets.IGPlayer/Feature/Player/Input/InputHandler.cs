@@ -8,22 +8,33 @@ using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Input;
 
-public partial class RulesetInputHandler : CompositeDrawable, IKeyBindingHandler<IGAction>
+public partial class RulesetInputHandler : CompositeDrawable, IKeyBindingHandler<HikariiiAction>
 {
-    public RulesetInputHandler(Dictionary<IGAction, Action> keybinds, LLinScreen screen)
+    public RulesetInputHandler(Dictionary<HikariiiAction, Action> keybinds, LLinScreen screen)
     {
         this.keyBinds = keybinds;
         this.screen = screen;
     }
 
+    public bool HandleExternal(UIEvent e)
+    {
+        return this.Handle(e);
+    }
+
     private readonly LLinScreen screen;
 
-    private readonly Dictionary<IGAction, Action> keyBinds;
+    private readonly Dictionary<HikariiiAction, Action> keyBinds;
+
+    public void RegisterAction(HikariiiAction action)
+    {
+    }
 
     public bool BlockNextAction;
 
-    public bool OnPressed(KeyBindingPressEvent<IGAction> action)
+    public bool OnPressed(KeyBindingPressEvent<HikariiiAction> action)
     {
+        Logging.Log("Got event " + action + "!!!");
+
         if (BlockNextAction)
         {
             BlockNextAction = false;
@@ -39,7 +50,7 @@ public partial class RulesetInputHandler : CompositeDrawable, IKeyBindingHandler
         return target != null;
     }
 
-    public void OnReleased(KeyBindingReleaseEvent<IGAction> e)
+    public void OnReleased(KeyBindingReleaseEvent<HikariiiAction> e)
     {
     }
 }

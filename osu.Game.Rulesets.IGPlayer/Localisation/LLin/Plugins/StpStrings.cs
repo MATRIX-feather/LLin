@@ -17,6 +17,12 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins
 
         public static LocalisableString VisualizerLayoutType => new TranslatableString(getKey(@"layout_type"), @"Layout Type");
 
+        public static LocalisableString SpinningCoverAndVisualizer => new TranslatableString(getKey(@"spinning_cover_and_visualizer"), @"Spinning Cover");
+
+        public static LocalisableString TypeASettings => new TranslatableString(getKey(@"type_a_settings"), @"Type A Settings");
+
+        public static LocalisableString TypeBSettings => new TranslatableString(getKey(@"type_a_settings"), @"Type B Settings");
+
         public static LocalisableString Radius => new TranslatableString(getKey(@"radius"), @"Radius");
 
         public static LocalisableString BarType => new TranslatableString(getKey(@"bar_type"), @"Bar Type");

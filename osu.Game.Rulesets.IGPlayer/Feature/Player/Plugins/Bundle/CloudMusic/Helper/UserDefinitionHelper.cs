@@ -127,7 +127,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
 
         #endregion
 
-        public bool OnlineIDHaveDefinition(int onlineID, out int neteaseID)
+        public bool OnlineIDHaveDefinition(int onlineID, out long neteaseID)
         {
             neteaseID = -1;
 
@@ -140,7 +140,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
             return result != null;
         }
 
-        public bool BeatmapMetaHaveDefinition(BeatmapInfo bi, out int neteaseID)
+        public bool BeatmapMetaHaveDefinition(BeatmapInfo bi, out long neteaseID)
         {
             neteaseID = -1;
 

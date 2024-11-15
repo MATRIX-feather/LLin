@@ -1,6 +1,6 @@
 namespace osu.Game.Rulesets.IGPlayer;
 
-public enum IGAction
+public enum HikariiiAction
 {
     MusicPrev,
     MusicNext,
@@ -11,5 +11,7 @@ public enum IGAction
     TrackLoop,
     TogglePlayList,
     LockOverlays,
-    Back
+
+    //"Back" Action always handled by GlobalActionContainer
+    //Back
 }

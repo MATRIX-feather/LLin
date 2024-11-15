@@ -1,6 +1,5 @@
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Configuration;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
@@ -19,20 +18,18 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Yasp.Panels;
 
 public partial class CoverIIPanel : CompositeDrawable, IPanel
 {
-    private WorkingBeatmap currentBeatmap;
+    private WorkingBeatmap? currentBeatmap;
 
-    public void Refresh(WorkingBeatmap beatmap)
+    public void Refresh(WorkingBeatmap? beatmap)
     {
-        this.currentBeatmap = beatmap;
+        currentBeatmap = beatmap;
 
         var meta = beatmap?.Metadata ?? new BeatmapMetadata();
-        titleText.Text = displayUnicode.Value ? meta.GetTitle() : meta.Title;
-        artistText.Text = displayUnicode.Value ? meta.GetArtist() : meta.Artist;
+        titleText.Text = meta.GetTitleRomanisable();
+        artistText.Text = meta.GetArtistRomanisable();
 
         sourceText.Text = string.IsNullOrEmpty(meta.Source)
-            ? displayUnicode.Value
-                ? meta.Title
-                : meta.GetTitle()
+            ? meta.GetTitleRomanisable()
             : meta.Source;
 
         cover?.Refresh(useUserAvatar.Value, beatmap);
@@ -41,18 +38,17 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
 
     public override void Show()
     {
-        this.flowContainer?.FadeIn(300, Easing.OutQuint).ScaleTo(1, 1500, Easing.OutBack);
+        flowContainer?.FadeIn(300, Easing.OutQuint).ScaleTo(1, 1500, Easing.OutBack);
         base.Show();
     }
 
     public override void Hide()
     {
-        this.flowContainer?.FadeOut(300, Easing.OutQuint).ScaleTo(0.8f, 300, Easing.OutQuint);
+        flowContainer?.FadeOut(300, Easing.OutQuint).ScaleTo(0.8f, 300, Easing.OutQuint);
         this.Delay(300).FadeOut();
     }
 
     private readonly BindableBool useUserAvatar = new BindableBool();
-    private readonly BindableBool displayUnicode = new BindableBool();
 
     private readonly TruncatingSpriteText titleText = new TruncatingSpriteText
     {
@@ -81,11 +77,10 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
     private FillFlowContainer? flowContainer;
 
     [BackgroundDependencyLoader]
-    private void load(YaspPlugin plugin, FrameworkConfigManager frameworkConfig)
+    private void load(YaspPlugin plugin)
     {
         var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
         config.BindWith(YaspSettings.CoverIIUseUserAvatar, useUserAvatar);
-        frameworkConfig.BindWith(FrameworkSetting.ShowUnicode, displayUnicode);
 
         Anchor = Anchor.Centre;
         Origin = Anchor.Centre;
@@ -162,16 +157,11 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
             }
         };
 
-        this.AddInternal(flowContainer);
+        AddInternal(flowContainer);
         useUserAvatar.BindValueChanged(v =>
         {
-            Refresh(this.currentBeatmap);
+            Refresh(currentBeatmap);
         });
-
-        displayUnicode.BindValueChanged(v =>
-        {
-            Refresh(this.currentBeatmap);
-        }, true);
     }
 
     private partial class AvatarOrBeatmapCover : CompositeDrawable
@@ -185,7 +175,7 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
         [BackgroundDependencyLoader]
         private void load()
         {
-            this.Masking = true;
+            Masking = true;
         }
 
         public void Refresh(bool useUserAvatar, WorkingBeatmap? workingBeatmap)

@@ -7,9 +7,9 @@ using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.IGPlayer
 {
-    public partial class IGPlayerInputManager : RulesetInputManager<IGAction>
+    public partial class HikariiiPlayerInputManager : RulesetInputManager<HikariiiAction>
     {
-        public IGPlayerInputManager(RulesetInfo ruleset)
+        public HikariiiPlayerInputManager(RulesetInfo ruleset)
             : base(ruleset, 0, SimultaneousBindingMode.Unique)
         {
         }

@@ -165,10 +165,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
                 {
                     var track = b.Value.Track;
 
-                    track.Completed += () =>
-                    {
-                        if (IsCurrent) Schedule(() => NextTrack());
-                    };
+                    track.Completed += onTrackCompleted;
                     trackChangedAfterDisable = false;
                 }
 
@@ -181,15 +178,20 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection
             if (Disabled.Value) return;
 
             var track = b.Value.Track;
+            track.Completed -= onTrackCompleted;
 
             b.Disabled = false;
             b.Value = working;
             b.Disabled = IsCurrent;
-            track.Completed += () =>
-            {
-                if (IsCurrent) Schedule(() => NextTrack());
-            };
-            controller.Play();
+
+            // 总是重新开始播放，因为两个谱面可能使用同一个track
+            controller.Play(true);
+            controller.CurrentTrack.Completed += onTrackCompleted;
+        }
+
+        private void onTrackCompleted()
+        {
+            if (IsCurrent) Schedule(() => NextTrack());
         }
 
         /// <summary>

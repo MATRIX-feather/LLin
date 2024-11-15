@@ -71,6 +71,16 @@ namespace osu.Game.Rulesets.IGPlayer.Localisation.LLin.Plugins
         //其他
         public static LocalisableString AdjustOffsetToLyric => new TranslatableString(getKey(@"offset_adjust_to_lyric"), @"Adjust offset to lyric");
 
+        public static LocalisableString SearchStateFail => new TranslatableString(getKey(@"search_state_fail"), @"Not found or song info doesn't match");
+
+        public static LocalisableString SearchStateSearching => new TranslatableString(getKey(@"search_state_searching"), @"Searching");
+
+        public static LocalisableString SearchStateFuzzySearching => new TranslatableString(getKey(@"search_state_fuzzy_searching"), @"Fuzzy searching");
+
+        public static LocalisableString SearchStateSuccess => new TranslatableString(getKey(@"search_state_success"), @"Ready");
+
+        public static LocalisableString SearchById => new TranslatableString(getKey(@"search_by_id"), @"Search by music ID");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

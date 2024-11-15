@@ -1,5 +1,6 @@
 using System;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Misc;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Helper
@@ -17,12 +18,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         /// <summary>
         /// 是否要不带艺术家搜索？
         /// </summary>
-        public bool NoArtist;
-
-        /// <summary>
-        /// 失败后是否禁止重试？
-        /// </summary>
-        public bool NoRetry;
+        public SearchMode SearchMode;
 
         /// <summary>
         /// 在发出请求前是否要尝试从本地缓存寻找和谱面ID对应的歌词文件？
@@ -32,7 +28,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         /// <summary>
         /// 标题匹配阈值，值越高要求越严格
         /// </summary>
-        public float TitleSimiliarThreshold;
+        public float TitleSimilarThreshold;
 
         /// <summary>
         /// 通过给定的参数构建<see cref="SearchOption"/>.
@@ -41,22 +37,22 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
         /// <param name="noLocalFile"><see cref="NoLocalFile"/></param>
         /// <param name="onFinish">完成时要进行的动作</param>
         /// <param name="onFail">失败时要进行的动作</param>
-        /// <param name="titleSimiliarThreshold"><see cref="TitleSimiliarThreshold"/></param>
+        /// <param name="titleSimilarThreshold"><see cref="TitleSimilarThreshold"/></param>
         /// <returns>通过参数构建的<see cref="SearchOption"/>></returns>
         public static SearchOption From(WorkingBeatmap sourceBeatmap, bool noLocalFile,
                                         Action<APILyricResponseRoot>? onFinish, Action<string> onFail,
-                                        float titleSimiliarThreshold)
+                                        float titleSimilarThreshold)
         {
+            var title = sourceBeatmap.Metadata.GetTitle();
+
             return new SearchOption
             {
+                SearchMode = title.IsUnicode ? SearchMode.Normal : SearchMode.RomanisedTitle,
                 Beatmap = sourceBeatmap,
-
                 OnFinish = onFinish,
                 OnFail = onFail,
-
                 NoLocalFile = noLocalFile,
-
-                TitleSimiliarThreshold = titleSimiliarThreshold
+                TitleSimilarThreshold = titleSimilarThreshold
             };
         }
 
@@ -72,12 +68,17 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.He
             return new SearchOption
             {
                 Beatmap = requestFinishMeta.SourceBeatmap,
-
                 OnFinish = requestFinishMeta.OnFinish,
                 OnFail = requestFinishMeta.OnFail,
-
-                TitleSimiliarThreshold = requestFinishMeta.TitleSimiliarThreshold
+                TitleSimilarThreshold = requestFinishMeta.TitleSimilarThreshold
             };
         }
+    }
+
+    public enum SearchMode
+    {
+        Normal,
+        RomanisedTitle,
+        NoArtist,
     }
 }

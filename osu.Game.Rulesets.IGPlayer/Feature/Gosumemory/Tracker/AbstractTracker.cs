@@ -16,7 +16,6 @@ public partial class AbstractTracker : CompositeDrawable
         AlwaysPresent = true;
 
 #if DEBUG
-
         InternalChild = new OsuSpriteText
         {
             Text = $"{this}",

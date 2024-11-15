@@ -218,7 +218,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 
         private readonly Dictionary<PluginKeybind, LLinPlugin> pluginKeyBindings = new Dictionary<PluginKeybind, LLinPlugin>();
 
-        private readonly Dictionary<IGAction, Action> internalKeyBindings = new Dictionary<IGAction, Action>();
+        private readonly Dictionary<HikariiiAction, Action> internalKeyBindings = new Dictionary<HikariiiAction, Action>();
 
         public void RegisterPluginKeybind(LLinPlugin plugin, PluginKeybind keybind)
         {
@@ -246,36 +246,22 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 
         private void initInternalKeyBindings()
         {
-            internalKeyBindings[IGAction.MusicPrev] = () => prevButton.Active();
-            internalKeyBindings[IGAction.MusicNext] = () => nextButton.Active();
-            internalKeyBindings[IGAction.OpenInSongSelect] = () => soloButton.Active();
-            internalKeyBindings[IGAction.ToggleOverlayLock] = () => lockButton.Active();
-            internalKeyBindings[IGAction.TogglePluginPage] = () => pluginButton.Active();
-            internalKeyBindings[IGAction.TogglePause] = () => songProgressButton.Active();
-            internalKeyBindings[IGAction.TrackLoop] = () => loopToggleButton.Active();
-            internalKeyBindings[IGAction.TogglePlayList] = () => sidebarToggleButton.Active();
-            internalKeyBindings[IGAction.LockOverlays] = () => disableChangesButton.Active();
+            internalKeyBindings[HikariiiAction.MusicPrev] = () => prevButton.Active();
+            internalKeyBindings[HikariiiAction.MusicNext] = () => nextButton.Active();
+            internalKeyBindings[HikariiiAction.OpenInSongSelect] = () => soloButton.Active();
+            internalKeyBindings[HikariiiAction.ToggleOverlayLock] = () => lockButton.Active();
+            internalKeyBindings[HikariiiAction.TogglePluginPage] = () => pluginButton.Active();
+            internalKeyBindings[HikariiiAction.TogglePause] = () => songProgressButton.Active();
+            internalKeyBindings[HikariiiAction.TrackLoop] = () => loopToggleButton.Active();
+            internalKeyBindings[HikariiiAction.TogglePlayList] = () => sidebarToggleButton.Active();
+            internalKeyBindings[HikariiiAction.LockOverlays] = () => disableChangesButton.Active();
+        }
 
-            internalKeyBindings[IGAction.Back] = () =>
-            {
-                if (sidebar.IsPresent && sidebar.State.Value == Visibility.Visible)
-                {
-                    sidebar.Hide();
-                    return;
-                }
-
-                if (InterfacesHidden)
-                {
-                    lockButton.Bindable.Disabled = false;
-                    lockButton.Bindable.Value = false;
-                    makeActive(true);
-                }
-                else
-                {
-                    if (this.IsCurrentScreen())
-                        this.Exit();
-                }
-            };
+        protected override bool Handle(UIEvent e)
+        {
+            //if (this.inputHandler != null)
+            //    this.inputHandler.HandleExternal(e);
+            return base.Handle(e);
         }
 
         protected override bool OnMouseMove(MouseMoveEvent e)
@@ -1012,7 +998,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
             initInternalKeyBindings();
 
             var rsInputHandler = new RulesetInputHandler(internalKeyBindings, this);
-            var rsInput = new IGPlayerInputManager(IGPlayerRuleset.GetRulesetInfo()!);
+            var rsInput = new HikariiiPlayerInputManager(IGPlayerRuleset.GetRulesetInfo()!);
             this.AddInternal(rsInput);
             rsInput.Add(rsInputHandler);
             this.inputHandler = rsInputHandler;
@@ -1275,7 +1261,27 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                 case GlobalAction.MusicPrev:
                 case GlobalAction.MusicNext:
                 case GlobalAction.MusicPlay:
+                    return true;
+
                 case GlobalAction.Back:
+                    if (sidebar.IsPresent && sidebar.State.Value == Visibility.Visible)
+                    {
+                        sidebar.Hide();
+                        return true;
+                    }
+
+                    if (InterfacesHidden)
+                    {
+                        lockButton.Bindable.Disabled = false;
+                        lockButton.Bindable.Value = false;
+                        makeActive(true);
+                    }
+                    else
+                    {
+                        if (this.IsCurrentScreen())
+                            this.Exit();
+                    }
+
                     return true;
 
                 default:

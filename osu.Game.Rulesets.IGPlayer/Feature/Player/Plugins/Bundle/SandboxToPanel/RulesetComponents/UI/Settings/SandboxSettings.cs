@@ -85,6 +85,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
 
             [Cached]
             private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Purple);
+
             private readonly FillFlowContainer<SandboxSettingsSection> sectionsFlow;
 
             public SettingsContent()

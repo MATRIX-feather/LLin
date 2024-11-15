@@ -77,19 +77,18 @@ namespace osu.Game.Rulesets.IGPlayer
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new KeyBinding[]
         {
-            new KeyBinding(InputKey.Left, IGAction.MusicPrev),
-            new KeyBinding(InputKey.Right, IGAction.MusicNext),
-            new KeyBinding(InputKey.Space, IGAction.TogglePause),
+            new KeyBinding(InputKey.Left, HikariiiAction.MusicPrev),
+            new KeyBinding(InputKey.Right, HikariiiAction.MusicNext),
+            new KeyBinding(InputKey.Space, HikariiiAction.TogglePause),
 
-            new KeyBinding(InputKey.Enter, IGAction.OpenInSongSelect),
-            new KeyBinding(InputKey.Tab, IGAction.ToggleOverlayLock),
-            new KeyBinding(InputKey.L, IGAction.TrackLoop),
+            new KeyBinding(InputKey.Enter, HikariiiAction.OpenInSongSelect),
+            new KeyBinding(InputKey.Tab, HikariiiAction.ToggleOverlayLock),
+            new KeyBinding(InputKey.L, HikariiiAction.TrackLoop),
 
-            new KeyBinding(InputKey.Comma, IGAction.TogglePluginPage),
-            new KeyBinding(InputKey.Slash, IGAction.TogglePlayList),
+            new KeyBinding(InputKey.Comma, HikariiiAction.TogglePluginPage),
+            new KeyBinding(InputKey.Slash, HikariiiAction.TogglePlayList),
 
-            new KeyBinding(InputKey.H, IGAction.LockOverlays),
-            new KeyBinding(InputKey.Escape, IGAction.Back)
+            new KeyBinding(InputKey.H, HikariiiAction.LockOverlays)
         };
 
         public override Drawable CreateIcon() => new Icon()

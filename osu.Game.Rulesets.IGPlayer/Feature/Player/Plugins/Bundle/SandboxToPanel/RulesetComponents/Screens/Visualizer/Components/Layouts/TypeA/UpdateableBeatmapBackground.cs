@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -8,11 +9,12 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Effects;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
-using osu.Game.Graphics.Backgrounds;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Misc;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.MusicHelpers;
 using osuTK;
 using osuTK.Graphics;
+using BeatmapBackground = osu.Game.Graphics.Backgrounds.BeatmapBackground;
 
 namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components.Layouts.TypeA
 {
@@ -151,6 +153,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
             private readonly WorkingBeatmap beatmap;
             private TextFlowContainer artist;
             private TextFlowContainer title;
+            private FillFlowContainer fillFlow;
+            private BufferedContainer bufferedContainer;
 
             public BeatmapName(WorkingBeatmap beatmap = null)
             {
@@ -168,7 +172,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                 if (beatmap == null)
                     return;
 
-                AddInternal(new FillFlowContainer
+                fillFlow = new FillFlowContainer
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
@@ -178,21 +182,9 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                     Spacing = new Vector2(0, 10),
                     Children = new Drawable[]
                     {
-                        artist = new TextFlowContainer(t =>
-                        {
-                            t.Font = OsuFont.GetFont(size: 28, weight: FontWeight.Bold);
-                        })
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            TextAnchor = Anchor.Centre,
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Text = beatmap.Metadata.Artist
-                        },
                         title = new TextFlowContainer(t =>
                         {
-                            t.Font = OsuFont.GetFont(size: 22, weight: FontWeight.SemiBold);
+                            t.Font = OsuFont.GetFont(size: 28, weight: FontWeight.SemiBold);
                         })
                         {
                             Anchor = Anchor.Centre,
@@ -200,19 +192,52 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                             TextAnchor = Anchor.Centre,
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Text = beatmap.Metadata.Title
+                            Text = beatmap.Metadata.GetTitleRomanisable()
+                        },
+                        artist = new TextFlowContainer(t =>
+                        {
+                            t.Font = OsuFont.GetFont(size: 22, weight: FontWeight.Bold);
+                        })
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            TextAnchor = Anchor.Centre,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Text = beatmap.Metadata.GetArtistRomanisable()
                         }
                     }
-                }.WithEffect(new BlurEffect
+                };
+
+                bufferedContainer = fillFlow.WithEffect(new BlurEffect
                 {
                     Colour = Color4.Black.Opacity(0.7f),
                     DrawOriginal = true,
                     PadExtent = true,
                     Sigma = new Vector2(5)
-                }));
+                });
+
+                AddInternal(bufferedContainer);
 
                 config?.BindWith(SandboxRulesetSetting.Radius, radius);
                 config?.BindWith(SandboxRulesetSetting.TypeATextColour, colour);
+            }
+
+            protected override void UpdateAfterChildren()
+            {
+                llin_workaroundForFillflowHeight();
+
+                base.UpdateAfterChildren();
+            }
+
+            private void llin_workaroundForFillflowHeight()
+            {
+                float expectedHeight = fillFlow.Children.Sum(fillFlowChild => fillFlowChild.Height);
+                expectedHeight += fillFlow.Spacing.Y * (fillFlow.Children.Count - 1);
+
+                float diff = fillFlow.Height - expectedHeight;
+
+                bufferedContainer.Y = diff / 2;
             }
 
             protected override void LoadComplete()

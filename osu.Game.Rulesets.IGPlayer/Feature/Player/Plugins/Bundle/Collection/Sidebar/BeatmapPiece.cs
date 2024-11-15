@@ -1,5 +1,3 @@
-#nullable disable
-
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -8,7 +6,6 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
-using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
@@ -132,13 +129,13 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Si
                         {
                             new TruncatingSpriteText
                             {
-                                Text = getRomanisableStringFor(Beatmap.Metadata.TitleUnicode, Beatmap.Metadata.Title),
+                                Text = Beatmap.Metadata.GetTitleRomanisable(),
                                 Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 20),
                                 RelativeSizeAxes = Axes.X
                             },
                             new TruncatingSpriteText
                             {
-                                Text = getRomanisableStringFor(Beatmap.Metadata.ArtistUnicode, Beatmap.Metadata.Artist),
+                                Text = Beatmap.Metadata.GetArtistRomanisable(),
                                 Font = OsuFont.GetFont(weight: FontWeight.Bold),
                                 RelativeSizeAxes = Axes.X
                             }
@@ -173,14 +170,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Si
                 else
                     content.BorderColour = colourProvider.Dark1;
             }, true);
-        }
-
-        private RomanisableString getRomanisableStringFor(string original, string romanised)
-        {
-            string original1 = string.IsNullOrEmpty(original) ? romanised : original;
-            string romanised1 = string.IsNullOrEmpty(romanised) ? original : romanised;
-
-            return new RomanisableString(original, romanised1);
         }
 
         private void OnActiveChanged(ValueChangedEvent<bool> v)

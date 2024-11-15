@@ -119,12 +119,12 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                 },
                 new BooleanSettingsEntry
                 {
-                    Name = "旋转唱片",
+                    Name = StpStrings.SpinningCoverAndVisualizer,
                     Bindable = config.GetBindable<bool>(SandboxRulesetSetting.SpinningCoverAndVisualizer)
                 },
                 new SeparatorSettingsEntry
                 {
-                    Name = "Type A设置"
+                    Name = StpStrings.TypeASettings
                 },
                 new NumberSettingsEntry<int>
                 {
@@ -188,7 +188,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
                 },
                 new SeparatorSettingsEntry
                 {
-                    Name = "Type B设置"
+                    Name = StpStrings.TypeBSettings
                 },
                 new NumberSettingsEntry<int>
                 {

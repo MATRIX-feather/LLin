@@ -87,7 +87,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
 
         protected override void LoadComplete()
         {
-            saveButton.Action = () => plugin.WriteLyricToDisk();
+            saveButton.Action = () => plugin.SaveLyricConfigToDisk();
 
             plugin.CurrentStatus.BindValueChanged(v =>
             {

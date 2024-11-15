@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory
         [Resolved]
         private Storage globalStorage { get; set; } = null!;
 
-        private void setupGosuStatics(WebSocketLoader.GosuServer server)
+        private void setupGosuStatics(GosuServer server)
         {
             Logging.Log("Setting up statics...");
 

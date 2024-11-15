@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Gosumemory.Data.Menu
             var metadata = beatmap.Metadata;
             this.MetaData.Artist = metadata.GetArtist();
             this.MetaData.ArtistRomainsed = metadata.Artist;
-            this.MetaData.Title = metadata.GetTitle();
+            this.MetaData.Title = metadata.GetTitle().Title;
             this.MetaData.TitleRomainsed = metadata.Title;
             this.MetaData.Mapper = metadata.Author.Username;
             this.MetaData.DiffName = beatmap.BeatmapInfo.DifficultyName;

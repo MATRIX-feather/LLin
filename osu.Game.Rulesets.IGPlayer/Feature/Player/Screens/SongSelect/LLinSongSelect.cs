@@ -5,6 +5,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Game.Beatmaps;
+using osu.Game.Database;
 using osu.Game.Overlays;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
@@ -18,9 +19,15 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.SongSelect
         [Resolved]
         private MusicController musicController { get; set; }
 
+        // 修复Test中显示没有谱面可用
+        [Cached]
+        private DetachedBeatmapStore detachedBeatmapStore = new DetachedBeatmapStore();
+
         [BackgroundDependencyLoader]
         private void load()
         {
+            this.AddInternal(detachedBeatmapStore);
+
             musicController.CurrentTrack.Looping = true;
             Beatmap.BindValueChanged(v =>
             {
