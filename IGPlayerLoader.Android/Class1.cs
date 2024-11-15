@@ -1,4 +1,4 @@
-﻿namespace IGPlayerLoader;
+﻿namespace IGPlayerLoader.Android;
 
 public class PlayerLoaderDummyClass
 {

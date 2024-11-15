@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGPlayerLoader", "IGPlayerL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGPlayerLoader.Android", "IGPlayerLoader.Android\IGPlayerLoader.Android.csproj", "{01E21728-2E0B-48BF-922D-4B49ECDA21E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.IGPlayer.Tests.Android", "osu.Game.Rulesets.IGPlayer.Tests.Android\osu.Game.Rulesets.IGPlayer.Tests.Android.csproj", "{EB9B4197-2696-42F6-B79E-3D7A939DEDC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,12 @@ Global
 		{01E21728-2E0B-48BF-922D-4B49ECDA21E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01E21728-2E0B-48BF-922D-4B49ECDA21E5}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
 		{01E21728-2E0B-48BF-922D-4B49ECDA21E5}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{EB9B4197-2696-42F6-B79E-3D7A939DEDC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB9B4197-2696-42F6-B79E-3D7A939DEDC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB9B4197-2696-42F6-B79E-3D7A939DEDC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB9B4197-2696-42F6-B79E-3D7A939DEDC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB9B4197-2696-42F6-B79E-3D7A939DEDC4}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB9B4197-2696-42F6-B79E-3D7A939DEDC4}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

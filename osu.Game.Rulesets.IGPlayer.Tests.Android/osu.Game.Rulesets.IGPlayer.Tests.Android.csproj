@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
+      <Nullable>enable</Nullable>
+      <AssemblyName>osu.Game.Rulesets.IGPlayer.Tests.Android</AssemblyName>
+    </PropertyGroup>
+    <ItemGroup Label="Service">
+      <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    </ItemGroup>
+    <PropertyGroup>
+      <GenerateProgramFile>false</GenerateProgramFile>
+    </PropertyGroup>
+  <ItemGroup Label="Package References">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+    <PackageReference Include="ppy.osu.Framework.Android" Version="2024.1115.0" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2024.906.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IGPlayerLoader\IGPlayerLoader.csproj" />
+    <ProjectReference Include="..\osu.Game.Rulesets.IGPlayer\osu.Game.Rulesets.IGPlayer.csproj" />
+  </ItemGroup>
+  <PropertyGroup Label="Project">
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-android</TargetFramework>
+    <RootNamespace>osu.Game.Rulesets.IGPlayer.Tests.Android</RootNamespace>
+  </PropertyGroup>
+</Project>
