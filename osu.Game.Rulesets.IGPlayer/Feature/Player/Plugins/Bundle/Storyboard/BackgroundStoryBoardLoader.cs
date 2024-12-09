@@ -175,7 +175,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard
 
             epilepsyWarning.ScaleTo(1);
 
-            if (targetBeatmap.BeatmapInfo.EpilepsyWarning)
+            if (targetBeatmap.Beatmap.EpilepsyWarning)
                 epilepsyWarning.Show();
             else
                 epilepsyWarning.Hide();
@@ -224,7 +224,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Storyboard
                 else LLin.RequestNonBlackBackground(this);
             }
 
-            if (targetBeatmap.BeatmapInfo.EpilepsyWarning)
+            if (targetBeatmap.Beatmap.EpilepsyWarning)
                 epilepsyWarning.ScaleTo(1.001f, 5000).OnComplete(_ => epilepsyWarning.Hide());
 
             return true;

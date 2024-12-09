@@ -560,7 +560,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
         #region 界面属性
 
         public override bool HideOverlaysOnEnter => true;
-        public override bool AllowBackButton => false;
+
+        public override bool AllowUserExit => false;
 
         public override bool CursorVisible => !InterfacesHidden
                                               || sidebar.State.Value == Visibility.Visible

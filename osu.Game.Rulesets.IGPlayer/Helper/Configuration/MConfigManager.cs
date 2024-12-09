@@ -98,9 +98,6 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Configuration
             SetDefault(MSetting.MprisUseAvatarlogoAsCover, true);
             SetDefault(MSetting.MprisUpdateInterval, 500d, 100d, 1000d);
 
-            //Gosu
-            SetDefault(MSetting.GosuMaximumCacheSize, 600, 100, 4096);
-
             //排行榜
             //SetDefault(MSetting.InGameLeaderboardState, LeaderboardState.Fold);
         }
@@ -172,8 +169,7 @@ namespace osu.Game.Rulesets.IGPlayer.Helper.Configuration
         InGameLeaderboardState,
         MvisAutoVSync,
         MvisPlayerSettingsMaxWidth,
-        MvisUseTriangleV2,
-        GosuMaximumCacheSize
+        MvisUseTriangleV2
     }
 
     public enum GamemodeActivateCondition

@@ -7,7 +7,6 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osu.Game.Rulesets.IGPlayer.Feature;
-using osu.Game.Rulesets.IGPlayer.Feature.Gosumemory;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins;
 using osu.Game.Rulesets.IGPlayer.Helper.Configuration;
 
@@ -96,9 +95,6 @@ public partial class OsuGameHandler : AbstractInjector
                     new GameScreenHandler(),
                     new PreviewTrackHandler()
                 });
-
-                if (featureManager.CanUseGlazerMemory.Value)
-                    gameInstance.Add(new GosuCompatInjector());
             }, 1);
 
             Logging.Log("Add delayed 2");

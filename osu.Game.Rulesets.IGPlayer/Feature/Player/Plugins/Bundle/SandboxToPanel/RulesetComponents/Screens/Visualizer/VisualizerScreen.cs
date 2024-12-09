@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.SandboxToPane
 {
     public partial class VisualizerScreen : SandboxScreenWithSettings, IKeyBindingHandler<GlobalAction>
     {
-        public override bool AllowBackButton => false;
+        public override bool AllowUserExit => false;
 
         public override bool HideOverlaysOnEnter => true;
 
