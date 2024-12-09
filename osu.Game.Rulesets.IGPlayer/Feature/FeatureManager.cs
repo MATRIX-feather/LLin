@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature;
 
 public partial class FeatureManager : CompositeDrawable
 {
-    public readonly BindableBool CanUseDBus = new(true);
+    public readonly BindableBool CanUseDBus = new(false);
 
     public static FeatureManager? Instance { get; private set; }
 
@@ -22,7 +22,7 @@ public partial class FeatureManager : CompositeDrawable
     public FeatureManager()
     {
         Instance = this;
-
+/*
         // Check DBus
         if (!OperatingSystem.IsLinux())
         {
@@ -44,5 +44,6 @@ public partial class FeatureManager : CompositeDrawable
                 CanUseDBus.Value = false;
             }
         }
+*/
     }
 }
