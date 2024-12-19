@@ -20,8 +20,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.SongSelect
         private MusicController musicController { get; set; }
 
         // 修复Test中显示没有谱面可用
-        [Cached]
-        private DetachedBeatmapStore detachedBeatmapStore = new DetachedBeatmapStore();
+        [Cached(typeof(BeatmapStore))]
+        private BeatmapStore detachedBeatmapStore = new RealmDetachedBeatmapStore();
 
         [BackgroundDependencyLoader]
         private void load()

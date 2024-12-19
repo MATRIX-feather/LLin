@@ -14,7 +14,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NLua" Version="1.6.2" />
-    <PackageReference Include="ppy.osu.Game" Version="2024.1208.0" />
+    <PackageReference Include="ppy.osu.Game" Version="2024.1219.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\M.DBus\M.DBus.csproj" />
