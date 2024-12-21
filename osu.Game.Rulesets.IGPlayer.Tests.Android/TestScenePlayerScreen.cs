@@ -73,7 +73,7 @@ public partial class TestScenePlayerScreen : OsuTestScene
 
     private void screenSwitch(IScreen lastscreen, IScreen newscreen)
     {
-        if (newscreen is OsuScreen osuScreen && osuScreen.AllowBackButton)
+        if (newscreen is OsuScreen osuScreen && osuScreen.BackButtonVisibility.Value)
             backButton.Show();
         else
             backButton.Hide();
