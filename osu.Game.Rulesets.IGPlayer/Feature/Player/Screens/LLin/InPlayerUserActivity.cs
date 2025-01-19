@@ -7,6 +7,10 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 [MessagePackObject(false)]
 public class InPlayerUserActivity : UserActivity.InGame
 {
+    public InPlayerUserActivity()
+    {
+    }
+
     public override string GetStatus(bool hideIdentifiableInformation = false)
     {
         return "正在听歌";

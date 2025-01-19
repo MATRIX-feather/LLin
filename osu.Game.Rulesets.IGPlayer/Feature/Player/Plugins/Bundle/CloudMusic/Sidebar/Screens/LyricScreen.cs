@@ -60,8 +60,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
 
         private readonly T dummyPiece = new T();
 
-        private float visibleTop => LyricScroll.Current;
-        private float visibleBottom => LyricScroll.Current + DrawHeight;
+        private double visibleTop => LyricScroll.Current;
+        private double visibleBottom => LyricScroll.Current + DrawHeight;
 
         private (int first, int last) getRange()
         {
@@ -135,8 +135,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
                 {
                     var panel = lyricPool.Get(p => p.Value = item.Value);
 
-                    panel.Depth = item.CurrentY;
-                    panel.Y = item.CurrentY;
+                    panel.Depth = (float)item.CurrentY;
+                    panel.Y = (float)item.CurrentY;
 
                     LyricScroll.Add(panel);
                 }

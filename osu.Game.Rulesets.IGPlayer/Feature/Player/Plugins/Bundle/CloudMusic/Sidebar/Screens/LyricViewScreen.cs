@@ -116,7 +116,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
 
         protected override void ScrollToCurrent()
         {
-            float pos = AvaliablePieces.FirstOrDefault(p =>
+            double pos = AvaliablePieces.FirstOrDefault(p =>
                 p.Value.Equals(plugin.CurrentLine))?.CurrentY ?? 0;
 
             if (pos + DrawHeight > LyricScroll.ScrollContent.Height)

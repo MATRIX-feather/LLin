@@ -12,9 +12,8 @@ namespace osu.Game.Rulesets.IGPlayer.Rs.Objects
     {
         public override Judgement CreateJudgement() => new Judgement();
 
+        public float X { get; set; }
+        public float Y { get; set; }
         public Vector2 Position { get; set; }
-
-        public float X => Position.X;
-        public float Y => Position.Y;
     }
 }

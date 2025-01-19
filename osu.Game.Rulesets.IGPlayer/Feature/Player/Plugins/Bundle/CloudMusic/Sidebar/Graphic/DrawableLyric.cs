@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.CloudMusic.Si
 
         private Lyric value = null!;
 
-        public float CurrentY;
+        public double CurrentY;
         public abstract int FinalHeight();
 
         protected override void LoadComplete()

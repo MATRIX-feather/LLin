@@ -53,7 +53,6 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Plugins.Bundle.Collection.Si
             InternalChild = beatmapScroll = new OsuScrollContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                RightMouseScrollbar = true,
                 Child = fillFlow = new FillFlowContainer
                 {
                     Padding = new MarginPadding { Horizontal = 35 },

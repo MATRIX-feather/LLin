@@ -26,6 +26,7 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input;
 using osu.Game.Input.Bindings;
+using osu.Game.Localisation;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Dialog;
 using osu.Game.Overlays.Notifications;
@@ -670,16 +671,8 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                 new ButtonWrapper
                 {
                     Icon = FontAwesome.Solid.ArrowLeft,
-                    Action = () =>
-                    {
-                        if (this.IsCurrentScreen())
-                            this.Exit();
-                        else
-                            return false;
-
-                        return true;
-                    },
-                    Description = LLinBaseStrings.Exit,
+                    Action = this.doBack,
+                    Description = CommonStrings.Back,
                     Type = FunctionType.Base
                 },
                 prevButton = new ButtonWrapper
@@ -1255,6 +1248,29 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
 
         #endregion
 
+        private bool doBack()
+        {
+            if (sidebar.IsPresent && sidebar.State.Value == Visibility.Visible)
+            {
+                sidebar.Hide();
+                return true;
+            }
+
+            if (InterfacesHidden)
+            {
+                lockButton.Bindable.Disabled = false;
+                lockButton.Bindable.Value = false;
+                makeActive(true);
+
+                return true;
+            }
+
+            if (this.IsCurrentScreen())
+                this.Exit();
+
+            return true;
+        }
+
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
         {
             switch (e.Action)
@@ -1265,25 +1281,7 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                     return true;
 
                 case GlobalAction.Back:
-                    if (sidebar.IsPresent && sidebar.State.Value == Visibility.Visible)
-                    {
-                        sidebar.Hide();
-                        return true;
-                    }
-
-                    if (InterfacesHidden)
-                    {
-                        lockButton.Bindable.Disabled = false;
-                        lockButton.Bindable.Value = false;
-                        makeActive(true);
-                    }
-                    else
-                    {
-                        if (this.IsCurrentScreen())
-                            this.Exit();
-                    }
-
-                    return true;
+                    return doBack();
 
                 default:
                     return false;
