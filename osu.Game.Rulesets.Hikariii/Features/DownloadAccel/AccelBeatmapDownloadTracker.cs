@@ -4,7 +4,7 @@ using osu.Framework.Allocation;
 using osu.Game.Beatmaps;
 using osu.Game.Online;
 using osu.Game.Online.API;
-using osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
+using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 
 namespace osu.Game.Rulesets.Hikariii.Features.DownloadAccel;
 
@@ -33,22 +33,23 @@ public partial class AccelBeatmapDownloadTracker : BeatmapDownloadTracker
 
     private void downloadFailed(ArchiveDownloadRequest<IBeatmapSetInfo> obj)
     {
-        var method = GetType().BaseType.GetMethod("attachDownload", flag);
+        var method = GetType().BaseType?.GetMethod("attachDownload", flag);
 
-        method.Invoke(this, new object?[]{ null });
+        method?.Invoke(this, [null]);
     }
 
     private void downloadBegan(ArchiveDownloadRequest<IBeatmapSetInfo> obj)
     {
-        var method = GetType().BaseType.GetMethod("attachDownload", flag);
+        var method = GetType().BaseType?.GetMethod("attachDownload", flag);
 
         try
         {
             //Logging.Log($"Invoking Base Method! {method}", level: LogLevel.Important);
-            method.Invoke(this, new object?[]{ obj });
+            method?.Invoke(this, [obj]);
         }
         catch (Exception e)
-        {Logging.LogError(e, "???");
+        {
+            Logging.LogError(e, "???");
         }
     }
 }

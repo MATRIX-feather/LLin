@@ -2,9 +2,9 @@ using System;
 using osu.Framework.Allocation;
 using osu.Game.Utils;
 
-namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
+namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 
-public partial class SentryLoggerDisabler : AbstractInjector
+public partial class SentryLoggerDisabler : AbstractHandler
 {
     public SentryLoggerDisabler(OsuGame gameInstance)
     {

@@ -9,7 +9,6 @@ using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Graphics;
-using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
@@ -20,15 +19,12 @@ using osu.Game.Rulesets.Hikariii.Features.DownloadAccel;
 using osu.Game.Rulesets.Hikariii.Features.DownloadAccel.Graphics;
 using osu.Game.Tests.Visual;
 using osuTK;
-using Realms;
 
-namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
+namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 
-public partial class PreviewTrackHandler : AbstractInjector
+public partial class PreviewTrackHandler : AbstractHandler
 {
     private readonly object injectLock = new();
-
-    private ThreadSafeReference.List<OsuFocusedOverlayContainer> focusedContainers;
 
     [Resolved]
     private PreviewTrackManager previewTrackManager { get; set; } = null!;
@@ -171,12 +167,10 @@ public partial class PreviewTrackHandler : AbstractInjector
 
     private APIBeatmapSet? getAPISet(PreviewTrackManager.TrackManagerPreviewTrack previewTrack)
     {
-        APIBeatmapSet? val;
-
         var field = this.FindFieldInstance(previewTrack, typeof(IBeatmapSetInfo));
         if (field == null) return null;
 
-        val = field.GetValue(previewTrack) as APIBeatmapSet;
+        var val = field.GetValue(previewTrack) as APIBeatmapSet;
 
         return val;
     }

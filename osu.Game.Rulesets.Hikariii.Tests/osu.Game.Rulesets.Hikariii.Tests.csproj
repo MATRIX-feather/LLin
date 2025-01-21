@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-      <StartupObject>osu.Game.Rulesets.IGPlayer.Tests.VisualTestRunner</StartupObject>
+      <StartupObject>osu.Game.Rulesets.Hikariii.Tests.VisualTestRunner</StartupObject>
       <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup Label="Service">

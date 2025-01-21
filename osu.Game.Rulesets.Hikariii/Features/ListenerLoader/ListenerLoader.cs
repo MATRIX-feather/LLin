@@ -1,17 +1,17 @@
 using System;
 using M.Resources;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics;
 using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
 
-public partial class ListenerLoader : AbstractInjector
+public partial class ListenerLoader : AbstractHandler
 {
     public static readonly ListenerLoader INSTANCE = new ListenerLoader();
 
@@ -29,6 +29,13 @@ public partial class ListenerLoader : AbstractInjector
     {
         return gameInstance?.Dependencies as DependencyContainer;
     }
+
+    private readonly AbstractHandler[] injectors =
+    [
+        new RulesetChangeListener(),
+        new GameScreenHandler(),
+        new PreviewTrackHandler()
+    ];
 
     public bool BeginInject(Storage storage, OsuGame? gameInstance, Scheduler scheduler)
     {
@@ -83,12 +90,9 @@ public partial class ListenerLoader : AbstractInjector
                     Logging.LogError(e, "未能初始化插件管理器, 可能是因为DBus集成没有安装?");
                 }
 
-                gameInstance.AddRange(new Drawable[]
-                {
-                    new SentryLoggerDisabler(gameInstance),
-                    new GameScreenHandler(),
-                    new PreviewTrackHandler()
-                });
+                gameInstance.Add(new SentryLoggerDisabler(gameInstance));
+
+                gameInstance.AddRange(injectors);
             }, 1);
         }
         catch (Exception e)

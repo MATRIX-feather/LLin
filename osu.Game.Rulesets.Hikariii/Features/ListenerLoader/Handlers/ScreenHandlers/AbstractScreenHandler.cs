@@ -2,7 +2,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 
-namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.ScreenHandlers;
+namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers.ScreenHandlers;
 
 public abstract partial class AbstractScreenHandler : Drawable
 {

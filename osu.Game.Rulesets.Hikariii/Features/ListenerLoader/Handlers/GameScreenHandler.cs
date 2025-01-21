@@ -1,25 +1,16 @@
 using System.Collections.Generic;
 using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
-using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.ScreenHandlers;
-using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
+using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers.ScreenHandlers;
 using osu.Game.Screens;
-using osu.Game.Screens.Menu;
 
-namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
+namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 
-public partial class GameScreenHandler : AbstractInjector
+public partial class GameScreenHandler : AbstractHandler
 {
     private OsuScreenStack? screenStack;
-
-    [Resolved]
-    private OsuGame game { get; set; } = null!;
-
-    [Resolved(canBeNull: true)]
-    private IBindable<RulesetInfo>? ruleset { get; set; }
 
     private readonly List<AbstractScreenHandler> handlers = new();
 
@@ -29,19 +20,6 @@ public partial class GameScreenHandler : AbstractInjector
         hookScreenStack();
 
         this.addHandler(new PlaySongSelectHandler());
-
-        if (ruleset is Bindable<RulesetInfo> rs)
-        {
-            //避免用户切换到此ruleset
-            ruleset?.BindValueChanged(v =>
-            {
-                if (v.NewValue.ShortName == "igplayerruleset" && v.OldValue != null && v.OldValue.ShortName != "igplayerruleset")
-                {
-                    game.PerformFromScreen(screen => screen.Push(new LLinScreen()), [typeof(MainMenu)]);
-                    rs.Value = v.OldValue;
-                }
-            });
-        }
     }
 
     private void addHandler(AbstractScreenHandler handler)
@@ -57,11 +35,11 @@ public partial class GameScreenHandler : AbstractInjector
     {
         lock (this)
         {
-            var screenStackField = this.FindFieldInstance(game, typeof(OsuScreenStack));
+            var screenStackField = this.FindFieldInstance(Game, typeof(OsuScreenStack));
 
             if (screenStackField == null) return false;
 
-            object? val = screenStackField.GetValue(game);
+            object? val = screenStackField.GetValue(Game);
 
             if (val is not OsuScreenStack osuScreenStack) return false;
 

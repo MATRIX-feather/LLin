@@ -7,7 +7,7 @@ using osu.Game.Graphics.Containers;
 using osu.Game.Online;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays.BeatmapSet.Buttons;
-using osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
+using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Utils;
 using osuTK.Graphics;
 
@@ -32,11 +32,12 @@ public partial class AccelDownloadButton : HeaderDownloadButton
     {
         try
         {
-            var thisAsHeaderButton = (this as HeaderDownloadButton);
+            HeaderDownloadButton thisAsHeaderButton = this;
+
             var baseButton = (HeaderButton?)thisAsHeaderButton.FindInstance(typeof(HeaderButton));
             var downloadTracker = (BeatmapDownloadTracker?)thisAsHeaderButton.FindInstance(typeof(BeatmapDownloadTracker));
             var shakeContainer = (ShakeContainer?)thisAsHeaderButton.FindInstance(typeof(ShakeContainer));
-            var beatmaps = PreviewTrackHandler.AccelBeatmapModelDownloader;
+            var downloader = PreviewTrackHandler.AccelBeatmapModelDownloader;
 
             if (baseButton == null || downloadTracker == null || shakeContainer == null)
             {
@@ -45,9 +46,9 @@ public partial class AccelDownloadButton : HeaderDownloadButton
                 return;
             }
 
-            baseButton.BackgroundColour = Color4.Teal;
+            baseButton.BackgroundColour = Color4.Azure;
 
-            if (beatmaps != null)
+            if (downloader != null)
             {
                 baseButton.Action = () =>
                 {
@@ -56,7 +57,7 @@ public partial class AccelDownloadButton : HeaderDownloadButton
                         if (downloadTracker.State.Value != DownloadState.NotDownloaded)
                             shakeContainer.Shake();
                         else
-                            beatmaps.Download(this.beatmapSet, this.noVideo);
+                            downloader.Download(this.beatmapSet, this.noVideo);
                     }
                     catch (Exception e)
                     {
@@ -76,6 +77,7 @@ public partial class AccelDownloadButton : HeaderDownloadButton
                 Anchor = Anchor.BottomLeft,
                 Origin = Anchor.BottomLeft
             });
+
             AddInternal(this.tracker);
         }
         catch (Exception e)

@@ -11,7 +11,7 @@ using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.ScreenHandlers;
+namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers.ScreenHandlers;
 
 public partial class PlaySongSelectHandler : AbstractScreenHandler
 {

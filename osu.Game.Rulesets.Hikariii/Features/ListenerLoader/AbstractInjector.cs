@@ -1,12 +1,18 @@
 using System;
 using System.Reflection;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Utils;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
 
-public abstract partial class AbstractInjector : CompositeDrawable
+public abstract partial class AbstractHandler : CompositeDrawable
 {
+    [Resolved]
+    private OsuGame game { get; set; } = null!;
+
+    protected OsuGame Game => game;
+
     protected static readonly BindingFlags InstanceOrStaticFlag = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
 
     /// <summary>

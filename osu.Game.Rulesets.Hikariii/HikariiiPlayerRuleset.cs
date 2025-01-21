@@ -34,7 +34,9 @@ namespace osu.Game.Rulesets.Hikariii
     {
         public override string Description => "Hikariii (下载加速&音乐播放器&Gosu支持)";
 
-        public override string ShortName => "igplayerruleset";
+        public static readonly string SHORT_NAME = "igplayerruleset";
+
+        public override string ShortName => SHORT_NAME;
 
         public override string PlayingVerb => "正在听歌";
 
