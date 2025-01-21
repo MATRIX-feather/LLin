@@ -4,8 +4,10 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
+using osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin;
 using osu.Game.Rulesets.IGPlayer.Helper.Handler.ScreenHandlers;
 using osu.Game.Screens;
+using osu.Game.Screens.Menu;
 
 namespace osu.Game.Rulesets.IGPlayer.Helper.Handler;
 
@@ -34,7 +36,10 @@ public partial class GameScreenHandler : AbstractInjector
             ruleset?.BindValueChanged(v =>
             {
                 if (v.NewValue.ShortName == "igplayerruleset" && v.OldValue != null && v.OldValue.ShortName != "igplayerruleset")
+                {
+                    game.PerformFromScreen(screen => screen.Push(new LLinScreen()), [typeof(MainMenu)]);
                     rs.Value = v.OldValue;
+                }
             });
         }
     }

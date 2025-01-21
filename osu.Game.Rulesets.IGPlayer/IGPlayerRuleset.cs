@@ -91,13 +91,13 @@ namespace osu.Game.Rulesets.IGPlayer
             new KeyBinding(InputKey.H, HikariiiAction.LockOverlays)
         };
 
-        public override Drawable CreateIcon() => new Icon()
+        public override Drawable CreateIcon() => new HikariiiIcon()
         {
         };
 
-        public partial class Icon : CompositeDrawable
+        public partial class HikariiiIcon : CompositeDrawable
         {
-            public Icon()
+            public HikariiiIcon()
             {
                 RelativeSizeAxes = Axes.Both;
                 Masking = false;
