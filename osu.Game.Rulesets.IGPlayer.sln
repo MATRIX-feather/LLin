@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.IGPlayer", "osu.Game.Rulesets.IGPlayer\osu.Game.Rulesets.IGPlayer.csproj", "{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "osu.Game.Rulesets.Hikariii", "osu.Game.Rulesets.Hikariii\osu.Game.Rulesets.Hikariii.csproj", "{5AE1F0F1-DAFA-46E7-959C-DA233B7C87E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.IGPlayer.Tests", "osu.Game.Rulesets.IGPlayer.Tests\osu.Game.Rulesets.IGPlayer.Tests.csproj", "{B4577C85-CB83-462A-BCE3-22FFEB16311D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Hikariii.Tests", "osu.Game.Rulesets.Hikariii.Tests\osu.Game.Rulesets.Hikariii.Tests.csproj", "{B4577C85-CB83-462A-BCE3-22FFEB16311D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.DBus", "M.DBus\M.DBus.csproj", "{BDFACAE2-2AFB-4FB1-927A-FE22623DFD96}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.Resources", "M.Resources\M.Resources.csproj", "{2A12314F-04A6-44C9-B784-D222A32DEF21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IGPlayerLoader", "IGPlayerLoader\IGPlayerLoader.csproj", "{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildHikariii", "BuildHikariii\BuildHikariii.csproj", "{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,14 @@
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Misc
+{
+    public class APISearchResultInfo
+    {
+        [JsonProperty("songs")]
+        public List<APISongInfo>? Songs { get; set; }
+
+        [JsonProperty("songCount")]
+        public int SongCount { get; set; }
+    }
+}

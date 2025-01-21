@@ -14,7 +14,7 @@ function die()
 
 BUILD_RESULT_DIR="???"
 
-readonly OUTPUT_DIR="${PWD}/build"
+readonly OUTPUT_DIR="${PWD}/assemble-temp"
 
 readonly TARGET_DIR="${PWD}/target"
 
@@ -62,7 +62,7 @@ function main()
     copy "M.DBus.dll"
     copy "M.Resources.dll"
     copy "Tmds.DBus.dll"
-    copy "osu.Game.Rulesets.IGPlayer.dll"
+    copy "osu.Game.Rulesets.Hikariii.dll"
     copy "zh/M.Resources.resources.dll"
 
     cp "${PWD}/README.md" "${OUTPUT_DIR}" || echo "Unable to copy README.md, ignoring..."
