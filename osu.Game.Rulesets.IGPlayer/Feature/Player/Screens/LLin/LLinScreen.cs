@@ -31,6 +31,7 @@ using osu.Game.Localisation;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Dialog;
 using osu.Game.Overlays.Notifications;
+using osu.Game.Overlays.Volume;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar;
 using osu.Game.Rulesets.IGPlayer.Feature.Player.Graphics.SideBar.Settings;
@@ -642,7 +643,11 @@ namespace osu.Game.Rulesets.IGPlayer.Feature.Player.Screens.LLin
                 {
                     RelativeSizeAxes = Axes.Both,
                     Depth = float.MinValue,
-                    Name = "覆盖层"
+                    Name = "覆盖层",
+                    Children =
+                    [
+                        new GlobalScrollAdjustsVolume()
+                    ]
                 }
             };
 
