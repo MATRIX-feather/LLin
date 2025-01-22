@@ -122,7 +122,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
             if (pos + DrawHeight > LyricScroll.ScrollContent.Height)
                 LyricScroll.ScrollToEnd();
             else
-                LyricScroll.ScrollTo(pos);
+                LyricScroll.ScrollTo((float)pos);
         }
 
         private readonly BindableFloat followCooldown = new BindableFloat();

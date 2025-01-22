@@ -17,16 +17,7 @@ public partial class FeatureManager : CompositeDrawable
     private void load(OsuConfigManager osuConfig)
     {
         AccelExtensionsUtil.SetOsuConfigManager(osuConfig);
-    }
 
-    public FeatureManager()
-    {
-        Instance = this;
-    }
-
-    [BackgroundDependencyLoader]
-    private void load()
-    {
         try
         {
             tryDbus();
@@ -35,6 +26,11 @@ public partial class FeatureManager : CompositeDrawable
         {
             Logging.LogError(e, "Failed call tryDbus");
         }
+    }
+
+    public FeatureManager()
+    {
+        Instance = this;
     }
 
     private void tryDbus()
