@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.Resources", "M.Resources\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildHikariii", "BuildHikariii\BuildHikariii.csproj", "{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildHikariii.Android", "BuildHikariii.Android\BuildHikariii.Android.csproj", "{8F253E47-DB8F-4C3A-875A-A8EFB1D08E90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Hikariii.Tests.Android", "osu.Game.Rulesets.Hikariii.Tests.Android\osu.Game.Rulesets.Hikariii.Tests.Android.csproj", "{321E0625-0466-4162-A11D-1C6ADB994013}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +54,18 @@ Global
 		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
 		{A0B25AD1-1E7F-4681-896F-0EB12AD87E31}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{8F253E47-DB8F-4C3A-875A-A8EFB1D08E90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F253E47-DB8F-4C3A-875A-A8EFB1D08E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F253E47-DB8F-4C3A-875A-A8EFB1D08E90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F253E47-DB8F-4C3A-875A-A8EFB1D08E90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F253E47-DB8F-4C3A-875A-A8EFB1D08E90}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F253E47-DB8F-4C3A-875A-A8EFB1D08E90}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{321E0625-0466-4162-A11D-1C6ADB994013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{321E0625-0466-4162-A11D-1C6ADB994013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{321E0625-0466-4162-A11D-1C6ADB994013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{321E0625-0466-4162-A11D-1C6ADB994013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{321E0625-0466-4162-A11D-1C6ADB994013}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{321E0625-0466-4162-A11D-1C6ADB994013}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

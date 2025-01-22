@@ -18,7 +18,7 @@ public partial class ListenerLoader : AbstractHandler
     /// <summary>
     /// 当前注入生效的游戏中 OsuGame 的 HashCode，-1则代表未曾注入过
     /// </summary>
-    private static int currentSessionHash = -1;
+    private static int currentSessionHash = -2;
 
     public int GetRegisteredSessionHash()
     {
@@ -101,6 +101,8 @@ public partial class ListenerLoader : AbstractHandler
             //Logging.Log(e.Message, level: LogLevel.Important);
             return false;
         }
+
+        Logging.Log("Initial inject done!");
 
         return true;
     }

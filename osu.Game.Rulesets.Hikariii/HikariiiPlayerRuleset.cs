@@ -142,7 +142,8 @@ namespace osu.Game.Rulesets.Hikariii
                     Logging.Log("Begin init ListenerLoader");
                     Logging.Log($"Deps: Game = '{game}' :: Storage = '{storage}' :: Importer = '{beatmapImporter}' :: IAPIProvider = '{api}'");
 
-                    if (ListenerLoader.INSTANCE.BeginInject(storage, game, this.Scheduler)) return;
+                    if (ListenerLoader.INSTANCE.BeginInject(storage, game, this.Scheduler))
+                        return;
 
                     Logging.Log("Inject failed!", level: LogLevel.Error);
                     return;

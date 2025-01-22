@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Hikariii.Features;
 
 public partial class FeatureManager : CompositeDrawable
 {
-    public readonly BindableBool CanUseDBus = new(true);
+    public readonly BindableBool CanUseDBus = new(false);
 
     public static FeatureManager? Instance { get; private set; }
 
@@ -22,7 +22,23 @@ public partial class FeatureManager : CompositeDrawable
     public FeatureManager()
     {
         Instance = this;
+    }
 
+    [BackgroundDependencyLoader]
+    private void load()
+    {
+        try
+        {
+            tryDbus();
+        }
+        catch (Exception e)
+        {
+            Logging.LogError(e, "Failed call tryDbus");
+        }
+    }
+
+    private void tryDbus()
+    {
         // Check DBus
         if (!OperatingSystem.IsLinux())
         {
@@ -38,8 +54,6 @@ public partial class FeatureManager : CompositeDrawable
             }
             catch (Exception e)
             {
-                if (e is not TypeLoadException) return;
-
                 Logging.LogError(e, $"Unable to activate DBus integration: {e.Message}");
                 CanUseDBus.Value = false;
             }

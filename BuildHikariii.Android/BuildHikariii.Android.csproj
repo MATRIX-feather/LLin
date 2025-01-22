@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <Import Project="..\upstream_assets\osu.Android.props" />
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net8.0-android</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <OutputType>Library</OutputType>
+	      <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
