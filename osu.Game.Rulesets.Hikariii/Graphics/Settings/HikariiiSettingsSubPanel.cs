@@ -9,7 +9,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics.Settings;
 
-public partial class SubPanel : SettingsSubPanel
+public partial class HikariiiSettingsSubPanel : SettingsSubPanel
 {
     protected override Drawable CreateHeader()
     {

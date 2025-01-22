@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Hikariii.Graphics.Settings
     {
         protected override LocalisableString Header { get; } = "Hikariii";
 
-        private readonly SubPanel subPanel = new();
+        private readonly HikariiiSettingsSubPanel subPanel = new();
 
         private readonly SettingsButton settingsButton;
 
@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Hikariii.Graphics.Settings
             var targetMethod = settingsOverlay.GetType()
                                               .GetRuntimeMethods()
                                               .FirstOrDefault(method => method.Name == "createSubPanel")
-                                              ?.MakeGenericMethod(typeof(SubPanel));
+                                              ?.MakeGenericMethod(typeof(HikariiiSettingsSubPanel));
 
             if (targetMethod == null)
             {
