@@ -9,9 +9,9 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects.Drawables
 {
-    public partial class DrawableIGPlayerHitObject : DrawableHitObject<IGPlayerHitObject>
+    public partial class DrawableIGPlayerHitObject : DrawableHitObject<HikariiiPlayerHitObject>
     {
-        public DrawableIGPlayerHitObject(IGPlayerHitObject hitObject)
+        public DrawableIGPlayerHitObject(HikariiiPlayerHitObject hitObject)
             : base(hitObject)
         {
             Size = new Vector2(40);

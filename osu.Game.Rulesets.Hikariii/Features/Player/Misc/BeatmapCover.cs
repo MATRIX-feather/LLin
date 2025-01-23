@@ -1,7 +1,6 @@
-#nullable disable
+#nullable enable
 
 using System.Threading;
-using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -16,13 +15,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
 {
     public partial class BeatmapCover : CompositeDrawable
     {
-        private readonly WorkingBeatmap b;
+        private readonly WorkingBeatmap? b;
 
-        [CanBeNull]
-        private Drawable cover;
+        private Drawable? cover;
 
-        [CanBeNull]
-        private CancellationTokenSource changeCoverTask;
+        private CancellationTokenSource? changeCoverTask;
 
         public bool BackgroundBox = true;
 
@@ -30,7 +27,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
         public float TimeBeforeWrapperLoad = 500;
         public bool NoFadeIn;
 
-        public BeatmapCover(WorkingBeatmap beatmap)
+        public BeatmapCover(WorkingBeatmap? beatmap)
         {
             RelativeSizeAxes = Axes.Both;
 
@@ -57,7 +54,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
             UpdateBackground(b);
         }
 
-        public void UpdateBackground(WorkingBeatmap beatmap)
+        public void UpdateBackground(WorkingBeatmap? beatmap)
         {
             changeCoverTask?.Cancel();
             if (IsDisposed) return;
@@ -121,9 +118,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
 
         public partial class Cover : Sprite
         {
-            private readonly WorkingBeatmap b;
+            private readonly WorkingBeatmap? b;
 
-            public Cover(WorkingBeatmap beatmap = null)
+            public Cover(WorkingBeatmap? beatmap = null)
             {
                 RelativeSizeAxes = Axes.Both;
                 FillMode = FillMode.Fill;

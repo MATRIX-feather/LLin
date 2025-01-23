@@ -17,7 +17,7 @@ using osu.Game.Rulesets.UI;
 namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.UI
 {
     [Cached]
-    public partial class DrawableIGPlayerRuleset : DrawableRuleset<IGPlayerHitObject>
+    public partial class DrawableIGPlayerRuleset : DrawableRuleset<HikariiiPlayerHitObject>
     {
         public DrawableIGPlayerRuleset(HikariiiPlayerRuleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             : base(ruleset, beatmap, mods)
@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.UI
 
         protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new IGPlayerFramedReplayInputHandler(replay);
 
-        public override DrawableHitObject<IGPlayerHitObject> CreateDrawableRepresentation(IGPlayerHitObject h) => new DrawableIGPlayerHitObject(h);
+        public override DrawableHitObject<HikariiiPlayerHitObject> CreateDrawableRepresentation(HikariiiPlayerHitObject h) => new DrawableIGPlayerHitObject(h);
 
         protected override PassThroughInputManager CreateInputManager() => new HikariiiPlayerInputManager(Ruleset?.RulesetInfo);
     }

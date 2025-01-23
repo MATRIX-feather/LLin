@@ -11,7 +11,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Beatmaps
 {
-    public class IGPlayerBeatmapConverter : BeatmapConverter<IGPlayerHitObject>
+    public class IGPlayerBeatmapConverter : BeatmapConverter<HikariiiPlayerHitObject>
     {
         public IGPlayerBeatmapConverter(IBeatmap beatmap, Rulesets.Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -22,9 +22,9 @@ namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Beatmaps
         // https://github.com/ppy/osu/tree/master/osu.Game/Rulesets/Objects/Types
         public override bool CanConvert() => true;
 
-        protected override IEnumerable<IGPlayerHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken)
+        protected override IEnumerable<HikariiiPlayerHitObject> ConvertHitObject(HitObject original, IBeatmap beatmap, CancellationToken cancellationToken)
         {
-            yield return new IGPlayerHitObject
+            yield return new HikariiiPlayerHitObject
             {
                 Samples = original.Samples,
                 StartTime = original.StartTime,

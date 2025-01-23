@@ -46,7 +46,7 @@ public partial class AccelDownloadButton : HeaderDownloadButton
                 return;
             }
 
-            baseButton.BackgroundColour = Color4.Azure;
+            baseButton.BackgroundColour = Color4.RosyBrown;
 
             if (downloader != null)
             {

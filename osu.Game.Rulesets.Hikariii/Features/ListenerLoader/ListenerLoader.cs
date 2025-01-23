@@ -30,12 +30,15 @@ public partial class ListenerLoader : AbstractHandler
         return gameInstance?.Dependencies as DependencyContainer;
     }
 
-    private readonly AbstractHandler[] injectors =
-    [
-        new RulesetChangeListener(),
-        new GameScreenHandler(),
-        new PreviewTrackHandler()
-    ];
+    private AbstractHandler[] injectors()
+    {
+        return
+        [
+            new HikariiiFeatureBoxListener(),
+            new GameScreenHandler(),
+            new PreviewTrackHandler()
+        ];
+    }
 
     public bool BeginInject(Storage storage, OsuGame? gameInstance, Scheduler scheduler)
     {
@@ -92,7 +95,7 @@ public partial class ListenerLoader : AbstractHandler
 
                 gameInstance.Add(new SentryLoggerDisabler(gameInstance));
 
-                gameInstance.AddRange(injectors);
+                gameInstance.AddRange(injectors());
             }, 1);
         }
         catch (Exception e)

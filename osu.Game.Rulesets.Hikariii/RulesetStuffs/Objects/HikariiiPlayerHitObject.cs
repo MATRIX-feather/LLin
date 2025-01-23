@@ -8,12 +8,12 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects
 {
-    public class IGPlayerHitObject : HitObject, IHasPosition
+    public class HikariiiPlayerHitObject : HitObject, IHasPosition
     {
         public override Judgement CreateJudgement() => new Judgement();
 
         public float X { get; set; }
         public float Y { get; set; }
-        public Vector2 Position { get; set; }
+        public Vector2 Position { get; set; } = Vector2.Zero;
     }
 }

@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Replays
 {
     public class IGPlayerAutoGenerator : AutoGenerator<IGPlayerReplayFrame>
     {
-        public new Beatmap<IGPlayerHitObject> Beatmap => (Beatmap<IGPlayerHitObject>)base.Beatmap;
+        public new Beatmap<HikariiiPlayerHitObject> Beatmap => (Beatmap<HikariiiPlayerHitObject>)base.Beatmap;
 
         public IGPlayerAutoGenerator(IBeatmap beatmap)
             : base(beatmap)
@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Replays
         {
             Frames.Add(new IGPlayerReplayFrame());
 
-            foreach (IGPlayerHitObject hitObject in Beatmap.HitObjects)
+            foreach (HikariiiPlayerHitObject hitObject in Beatmap.HitObjects)
             {
                 Frames.Add(new IGPlayerReplayFrame
                 {
