@@ -136,8 +136,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             base.Update();
         }
 
-        public float GetSafeAreaPadding() => contentContainer.Height - contentContainer.Y + 10;
-
         public override void Show()
         {
             currentHidden = false;
@@ -145,7 +143,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             contentContainer.MoveToY(0, 300, Easing.OutQuint);
             progressBar.MoveToY(0, 300, Easing.OutQuint);
 
-            updatePlayerSafeArea();
+            updatePlayerSafeArea(includeContainerY: false);
         }
 
         private bool currentHidden = false;
@@ -160,14 +158,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             updatePlayerSafeArea(true);
         }
 
-        private void updatePlayerSafeArea(bool doRemove = false)
+        private void updatePlayerSafeArea(bool removeSafeArea = false, bool includeContainerY = true)
         {
-            float amount = contentContainer.Height - (currentHidden ? contentContainer.Y : 0) + 10;
+            float amount = contentContainer.Height - (includeContainerY ? contentContainer.Y : 0) + 15;
 
-            if (!doRemove)
-                LLin?.AddBottomSafeArea(this, amount);
-            else
+            if (removeSafeArea)
                 LLin?.RemoveBottomSafeArea(this);
+            else
+                LLin?.AddBottomSafeArea(this, amount);
         }
 
         public bool OkForHide() => !IsHovered;
@@ -291,18 +289,19 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
         public void ShowFunctionControl()
         {
+            // workaround: 调用FadeIn后，floatingContent不会立即显现 -> 不会被计算在物件的高度里
+            //             所以我们需要设置一下透明度来让他能被计算到
+            if (!floatingContent.IsPresent)
+                floatingContent.Alpha = 0.01f;
+
             floatingContent.FadeIn(500, Easing.OutQuint);
-            this.Schedule(() => this.updatePlayerSafeArea());
-            /*
-                                       .Then()
-                                       .Delay(2000)
-                                       .FadeOut(500, Easing.OutQuint);*/
+            this.updatePlayerSafeArea();
         }
 
         public void HideFunctionControl()
         {
             floatingContent.FadeOut(500, Easing.OutQuint)
-                           .OnComplete(container => this.updatePlayerSafeArea());
+                           .OnComplete(container => this.updatePlayerSafeArea(currentHidden));
         }
 
         public List<IPluginFunctionProvider> GetAllPluginFunctionButton() => pluginButtons;

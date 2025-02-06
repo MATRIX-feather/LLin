@@ -7,12 +7,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
     public interface IFunctionBarProvider : IDrawable
     {
         /// <summary>
-        /// 用于确定附加层(Overlay)安全区的底部Padding
-        /// </summary>
-        /// <returns>底部Padding</returns>
-        public float GetSafeAreaPadding();
-
-        /// <summary>
         /// 是否允许播放器隐藏界面
         /// </summary>
         /// <returns>

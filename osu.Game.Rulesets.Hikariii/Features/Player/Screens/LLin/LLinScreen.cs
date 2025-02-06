@@ -261,7 +261,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
-            makeActive(false);
+            tryMakeActive(false);
+            showFunctionControlTemporary();
+
             return base.OnMouseMove(e);
         }
 
@@ -276,10 +278,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         protected override void OnHoverLost(HoverLostEvent e)
         {
-            if (lockButton.Bindable.Value && InterfacesHidden && !lockButton.Bindable.Disabled)
+            if (lockButton.Bindable.Value && IsIdle && !lockButton.Bindable.Disabled)
                 lockButton.Bindable.Toggle();
 
-            makeActive(false);
+            tryMakeActive(false);
             base.OnHoverLost(e);
         }
 
@@ -361,7 +363,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             ApplyToBackground(b =>
             {
                 Color4 targetColor = auto
-                    ? OsuColour.Gray(InterfacesHidden ? idleBgDim.Value : 0.6f)
+                    ? OsuColour.Gray(IsIdle ? idleBgDim.Value : 0.6f)
                     : OsuColour.Gray(brightness);
 
                 b.FadeColour(blackBackground.Value ? Color4.Black : targetColor, 300, Easing.OutQuint);
@@ -558,7 +560,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         public override bool AllowUserExit => false;
 
-        public override bool CursorVisible => !InterfacesHidden
+        public override bool CursorVisible => !IsIdle
                                               || sidebar.State.Value == Visibility.Visible
                                               || tabControl.IsVisible.Value //TabControl可见
                                               || IsHovered == false; //隐藏界面或侧边栏可见，显示光标
@@ -579,7 +581,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         public PlayerInfo GetInfo() => info;
 
-        public bool InterfacesHidden { get; set; }
+        public bool IsIdle { get; private set; }
 
         //region Bottom Safe Area
 
@@ -744,7 +746,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     Action = () =>
                     {
                         //隐藏界面，锁定更改并隐藏锁定按钮
-                        makeIdle(true);
+                        tryMakeIdle(true);
 
                         //隐藏侧边栏
                         sidebar.ShowComponent(null);
@@ -917,7 +919,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             inputIdle.BindValueChanged(v =>
             {
-                if (v.NewValue) makeIdle(false);
+                if (v.NewValue) tryMakeIdle(false);
             });
 
             allowProxy.BindValueChanged(v =>
@@ -994,9 +996,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         private void showFunctionControlTemporary()
         {
-            controlDisplayTemp.Value = 114514;
+            if (controlDisplayTemp.Value <= 0f)
+                currentFunctionBar.ShowFunctionControl();
 
-            currentFunctionBar.ShowFunctionControl();
+            controlDisplayTemp.Value = 114514f;
 
             this.TransformBindableTo(controlDisplayTemp, 0f, 4000)
                 .OnComplete(_ => currentFunctionBar.HideFunctionControl());
@@ -1089,6 +1092,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             //触发一次onBeatmapChanged和onTrackRunningToggle
             Beatmap.BindValueChanged(onBeatmapChanged, true);
             OnTrackRunningToggle?.Invoke(CurrentTrack.IsRunning);
+
+            showFunctionControlTemporary();
+            tryMakeActive(true);
         }
 
         public override bool OnExiting(ScreenExitEvent e)
@@ -1187,27 +1193,29 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                                   && inputManager?.DraggedDrawable == null
                                   && inputManager?.FocusedDrawable == null;
 
-        private void makeIdle(bool forceIdle)
+        private void tryMakeIdle(bool forceIdle)
         {
             if (!forceIdle && !okForHide)
                 return;
 
+            IsIdle = true;
             applyBackgroundBrightness(true, idleBgDim.Value);
-            InterfacesHidden = true;
             OnIdle?.Invoke();
         }
 
-        private void makeActive(bool forceActive)
+        private void tryMakeActive(bool forceActive)
         {
-            showFunctionControlTemporary();
+            if (!IsIdle && !forceActive) return;
 
             //如果界面已隐藏、不是强制显示并且已经锁定变更
-            if (!forceActive && lockButton.Bindable.Value && InterfacesHidden) return;
+            if (!forceActive && lockButton.Bindable.Value) return;
 
+            IsIdle = false;
+
+            showFunctionControlTemporary();
             currentFunctionBar.Show();
             applyBackgroundBrightness();
 
-            InterfacesHidden = false;
             OnActive?.Invoke();
         }
 
@@ -1285,11 +1293,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 return true;
             }
 
-            if (InterfacesHidden)
+            if (IsIdle)
             {
                 lockButton.Bindable.Disabled = false;
                 lockButton.Bindable.Value = false;
-                makeActive(true);
+                tryMakeActive(true);
 
                 return true;
             }

@@ -258,7 +258,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
 
         private void onBottomSafeAreaPaddingChanged(ValueChangedEvent<float> obj)
         {
-            var newPadding = new MarginPadding { Bottom = obj.NewValue + 10 };
+            var newPadding = new MarginPadding { Bottom = obj.NewValue + 5 };
             this.TransformTo(nameof(Padding), newPadding, 300, Easing.OutQuint);
         }
 

@@ -31,11 +31,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal
 
         public override int Version => 6;
 
-        public float GetSafeAreaPadding()
-        {
-            throw new NotImplementedException();
-        }
-
         public bool OkForHide()
         {
             throw new NotImplementedException();

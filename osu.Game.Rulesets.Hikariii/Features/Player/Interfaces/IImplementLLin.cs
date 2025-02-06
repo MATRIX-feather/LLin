@@ -128,7 +128,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         /// <summary>
         /// 播放器是否处于界面隐藏状态
         /// </summary>
-        public bool InterfacesHidden { get; }
+        public bool IsIdle { get; }
 
         #region 音频插件控制
 

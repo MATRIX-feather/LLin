@@ -73,7 +73,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
 
         private void onIdleAlphaChanged(ValueChangedEvent<float> v)
         {
-            if ((LLin?.InterfacesHidden ?? true) && Enabled.Value)
+            if ((LLin?.IsIdle ?? true) && Enabled.Value)
             {
                 this.FadeTo(v.NewValue, 750, Easing.OutQuint);
                 if (v.NewValue == 0) CurrentBeatmap.Disabled = true;
@@ -255,7 +255,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
         {
             bool result = base.Enable();
 
-            this.FadeTo(LLin?.InterfacesHidden ?? false ? idleAlpha.Value : 1, 300).ScaleTo(1, 400, Easing.OutQuint);
+            this.FadeTo(LLin?.IsIdle ?? false ? idleAlpha.Value : 1, 300).ScaleTo(1, 400, Easing.OutQuint);
             LLin?.OnBeatmapChanged(onBeatmapChanged, this, true);
 
             return result;

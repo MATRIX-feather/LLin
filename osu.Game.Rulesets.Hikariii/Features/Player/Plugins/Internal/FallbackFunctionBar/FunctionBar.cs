@@ -15,8 +15,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
 {
     public partial class FunctionBar : LLinPlugin, IFunctionBarProvider
     {
-        public float GetSafeAreaPadding() => Height;
-
         public bool OkForHide() => IsHovered;
 
         private readonly FillFlowContainer<SimpleBarButton> contentContainer;

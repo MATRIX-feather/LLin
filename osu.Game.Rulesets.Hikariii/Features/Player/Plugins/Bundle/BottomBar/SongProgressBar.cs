@@ -93,7 +93,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             this.fillWidth = value;
             //fill.Width = value;
 
-            if (mvis.InterfacesHidden)
+            if (mvis.IsIdle)
             {
                 songProgressIndicator.MoveToX(
                     getFinalPosX(songProgressIndicator, (value * UsableWidth) - (songProgressIndicator.Width / 2)),
@@ -122,7 +122,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
         protected override void Update()
         {
-            if (mvis.InterfacesHidden)
+            if (mvis.IsIdle)
             {
                 var indicatorX = indicator.X - 5;
                 var indicatorEnd = indicatorX + indicator.Width + 5;
@@ -150,7 +150,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
         private void showIndicators()
         {
-            if (!mvis.InterfacesHidden) return;
+            if (!mvis.IsIdle) return;
 
             indicator.Show();
             songProgressIndicator.Show();
