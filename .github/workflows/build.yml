@@ -13,10 +13,10 @@ jobs:
         dotnet-version: ['8.0.x']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup dotnet (${{ matrix.dotnet-version }})
-        uses: actions/setup-dotnet@v1.7.2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
@@ -30,7 +30,7 @@ jobs:
         run: cp 'README.md' BuildHikariii/bin/Release/net8.0/publish
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: |
             BuildHikariii/bin/Release/net8.0/publish/M.*.dll
