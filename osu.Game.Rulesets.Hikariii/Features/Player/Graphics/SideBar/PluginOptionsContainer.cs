@@ -87,47 +87,47 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
             {
                 bgBox.Colour = colourProvider.Background5.Opacity(0.8f);
             }, true);
+
+            CurrentDisplay.BindValueChanged(onCurrentDisplayChanged);
         }
 
         protected override void LoadComplete()
         {
-            CurrentDisplay.BindValueChanged(onCurrentDisplayChanged);
+            llin?.BottomSafeAreaPadding.BindValueChanged(this.onBottomSafeAreaChange, true);
+
             base.LoadComplete();
         }
 
         private void onCurrentDisplayChanged(ValueChangedEvent<Drawable> v)
         {
-            if (!(v.NewValue is ISidebarContent sc)) return;
+            if (v.NewValue is not ISidebarContent sc) return;
 
             prevTab?.MakeInActive();
 
-            foreach (var t in Header.Tabs)
+            foreach (TabControlItem t in Header.Tabs.Where(t => t.Value == sc))
             {
-                if (t.Value == sc)
-                {
-                    t.MakeActive();
-                    prevTab = t;
-                    break;
-                }
+                t.MakeActive();
+                prevTab = t;
+                break;
             }
 
             if (!startFromHiddenState)
                 sampleToggle?.Play();
         }
 
-        protected override void UpdateAfterChildren()
+        private void onBottomSafeAreaChange(ValueChangedEvent<float> v)
         {
-            contentContainer.Padding = new MarginPadding
+            var contentNewPadding = new MarginPadding
             {
                 Right = Header.GetRightUnavaliableSpace(),
                 Left = Header.GetLeftUnavaliableSpace(),
                 Top = Header.GetTopUnavaliableSpace(),
-                Bottom = (llin?.BottomBarHeight ?? 0)
+                Bottom = v.NewValue
             };
 
-            dropdown.Height = (llin?.BottomBarHeight ?? 0);
+            contentContainer.TransformTo(nameof(contentContainer.Padding), contentNewPadding, duration, Easing.OutQuint);
 
-            base.UpdateAfterChildren();
+            dropdown.ResizeHeightTo(v.NewValue, duration, Easing.OutQuint);
         }
 
         public void ShowComponent(Drawable? d, bool allowHide = false)

@@ -61,9 +61,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal
             throw new NotImplementedException();
         }
 
-        public void ShowFunctionControlTemporary()
+        public void ShowFunctionControl()
         {
-            throw new NotImplementedException();
+        }
+
+        public void HideFunctionControl()
+        {
         }
 
         public List<IPluginFunctionProvider> GetAllPluginFunctionButton()

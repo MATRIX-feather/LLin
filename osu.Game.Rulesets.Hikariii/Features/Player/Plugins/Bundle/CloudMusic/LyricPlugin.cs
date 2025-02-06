@@ -252,6 +252,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
                 if (currentResponseRoot != null)
                     currentResponseRoot.LocalOffset = v.NewValue;
             });
+
+            LLin?.BottomSafeAreaPadding.BindValueChanged(this.onBottomSafeAreaPaddingChanged);
+        }
+
+        private void onBottomSafeAreaPaddingChanged(ValueChangedEvent<float> obj)
+        {
+            var newPadding = new MarginPadding { Bottom = obj.NewValue + 10 };
+            this.TransformTo(nameof(Padding), newPadding, 300, Easing.OutQuint);
         }
 
         private void onMvisExiting()
@@ -275,11 +283,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         {
             CurrentStatus.Value = Status.Working;
 
-            if (lrcLine != null)
-            {
-                lrcLine.Text = string.Empty;
-                lrcLine.TranslatedText = string.Empty;
-            }
+            lrcLine.Text = string.Empty;
+            lrcLine.TranslatedText = string.Empty;
 
             Lyrics.Clear();
             currentResponseRoot = null;
@@ -310,7 +315,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         {
             if (Disabled.Value) return;
 
-            if (CurrentWorkingBeatmap != null) SaveLyricConfigToDisk(CurrentWorkingBeatmap);
+            SaveLyricConfigToDisk(CurrentWorkingBeatmap);
 
             CurrentWorkingBeatmap = working;
             track = working.Track;
@@ -413,8 +418,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         protected override void Update()
         {
             base.Update();
-
-            Padding = new MarginPadding { Bottom = (LLin?.BottomBarHeight ?? 0) + 10 };
 
             if (ContentLoaded)
             {

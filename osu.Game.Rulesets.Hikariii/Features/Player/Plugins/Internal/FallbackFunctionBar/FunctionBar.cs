@@ -174,9 +174,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
                 throw new ButtonNotFoundException(provider);
         }
 
-        public void ShowFunctionControlTemporary()
+        public void ShowFunctionControl()
         {
             idleIndicator.FlashColour(Color4.Green, 500);
+        }
+
+        public void HideFunctionControl()
+        {
+            idleIndicator.FlashColour(Color4.Aqua, 500);
         }
 
         public List<IPluginFunctionProvider> GetAllPluginFunctionButton() => pluginButtons;

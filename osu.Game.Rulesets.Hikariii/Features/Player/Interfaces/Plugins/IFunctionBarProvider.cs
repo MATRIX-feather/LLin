@@ -58,15 +58,20 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         public void Remove(IFunctionProvider provider);
 
         /// <summary>
-        /// 临时显示功能控制按钮
-        /// </summary>
-        public void ShowFunctionControlTemporary();
-
-        /// <summary>
         /// 获取所有插件功能控制器
         /// </summary>
         /// <returns>插件按钮列表</returns>
         public List<IPluginFunctionProvider> GetAllPluginFunctionButton();
+
+        /// <summary>
+        /// 显示功能控制按钮
+        /// </summary>
+        public void ShowFunctionControl();
+
+        /// <summary>
+        /// 隐藏功能控制按钮
+        /// </summary>
+        public void HideFunctionControl();
 
         /// <summary>
         /// 被禁用时触发

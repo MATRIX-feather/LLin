@@ -259,13 +259,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             internalKeyBindings[HikariiiAction.LockOverlays] = () => disableChangesButton.Active();
         }
 
-        protected override bool Handle(UIEvent e)
-        {
-            //if (this.inputHandler != null)
-            //    this.inputHandler.HandleExternal(e);
-            return base.Handle(e);
-        }
-
         protected override bool OnMouseMove(MouseMoveEvent e)
         {
             makeActive(false);
@@ -588,7 +581,33 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         public bool InterfacesHidden { get; set; }
 
-        public float BottomBarHeight => currentFunctionBar.GetSafeAreaPadding();
+        //region Bottom Safe Area
+
+        private readonly BindableFloat bottomPadding = new BindableFloat(0);
+        public IBindable<float> BottomSafeAreaPadding => bottomPadding;
+
+        private readonly Dictionary<LLinPlugin, float> safeAreaPaddings = new();
+
+        public void AddBottomSafeArea(LLinPlugin plugin, float amount)
+        {
+            safeAreaPaddings[plugin] = amount;
+            updateBottomPadding();
+        }
+
+        public void RemoveBottomSafeArea(LLinPlugin plugin)
+        {
+            safeAreaPaddings.Remove(plugin);
+            updateBottomPadding();
+        }
+
+        private void updateBottomPadding()
+        {
+            float value = safeAreaPaddings.Sum(kvp => kvp.Value);
+
+            this.bottomPadding.Value = value;
+        }
+
+        //endregion Bottom Safe Area
 
         private readonly Container backgroundLayer;
         private readonly Container foregroundLayer;
@@ -671,8 +690,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             sidebar.AddRange(new Drawable[] { settingsPage, pluginsPage });
 
-            functionProviders.AddRange(new IFunctionProvider[]
-            {
+            functionProviders.AddRange(
+            [
                 new ButtonWrapper
                 {
                     Icon = FontAwesome.Solid.ArrowLeft,
@@ -736,7 +755,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                         //防止手机端无法恢复界面
                         lockButton.Bindable.Disabled = RuntimeInfo.IsDesktop;
 
-                        currentFunctionBar.ShowFunctionControlTemporary();
+                        showFunctionControlTemporary();
 
                         return true;
                     },
@@ -782,17 +801,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     Description = LLinBaseStrings.LockInterface,
                     Action = () =>
                     {
-                        currentFunctionBar.ShowFunctionControlTemporary();
+                        showFunctionControlTemporary();
 
                         return true;
                     },
                     Type = FunctionType.Plugin,
                     Icon = FontAwesome.Solid.Lock
                 }
-            });
+            ]);
 
-            overlayLayer.AddRange(new Drawable[]
-            {
+            overlayLayer.AddRange(
+            [
                 loadingIndicator = new LoadingIndicator
                 {
                     Anchor = Anchor.BottomCentre,
@@ -803,7 +822,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 nightcoreBeatContainer,
                 sidebar,
                 tabControl
-            });
+            ]);
 
             backgroundLayer.Add(backgroundTriangles);
 
@@ -939,7 +958,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             var rsInput = new HikariiiPlayerInputManager(HikariiiPlayerRuleset.GetRulesetInfo()!);
             this.AddInternal(rsInput);
             rsInput.Add(rsInputHandler);
-            this.inputHandler = rsInputHandler;
+            this.rulesetInput = rsInputHandler;
 
             //添加DBusEntry
             pluginManager.AddDBusMenuEntry(dbusEntry);
@@ -970,6 +989,18 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             blackBackground.BindValueChanged(_ => applyBackgroundBrightness());
         }
 
+        private readonly BindableFloat controlDisplayTemp = new();
+
+        private void showFunctionControlTemporary()
+        {
+            controlDisplayTemp.Value = 114514;
+
+            currentFunctionBar.ShowFunctionControl();
+
+            this.TransformBindableTo(controlDisplayTemp, 0f, 4000)
+                .OnComplete(_ => currentFunctionBar.HideFunctionControl());
+        }
+
         private readonly SimpleEntry dbusEntry = new SimpleEntry
         {
             Label = "LLin - 插件",
@@ -985,15 +1016,18 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             bool blockInput = tracker.ShouldBlockFirstInput();
             if (blockInput) tracker.ClearHistory();
 
-            if (inputHandler != null)
-                inputHandler.BlockNextAction = blockInput;
+            if (rulesetInput != null)
+                rulesetInput.BlockNextAction = blockInput;
 
             this.focusNum++;
-            var focusNum = this.focusNum;
+            int currentFocusNum = this.focusNum;
+
             this.Delay(2).Schedule(() =>
             {
-                if (this.focusNum != focusNum) return;
-                inputHandler.BlockNextAction = false;
+                if (this.focusNum != currentFocusNum) return;
+
+                if (rulesetInput != null)
+                    rulesetInput.BlockNextAction = false;
             });
 
             base.OnFocus(e);
@@ -1003,15 +1037,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         protected override void OnFocusLost(FocusLostEvent e)
         {
-            if (inputHandler != null)
-                inputHandler.BlockNextAction = true;
+            if (rulesetInput != null)
+                rulesetInput.BlockNextAction = true;
 
             base.OnFocusLost(e);
         }
 
         private readonly InputManagerTracker tracker = new();
 
-        private RulesetInputHandler? inputHandler;
+        private RulesetInputHandler? rulesetInput;
 
         protected override void LoadComplete()
         {
@@ -1122,8 +1156,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         {
             base.OnResuming(e);
 
-            if (inputHandler != null)
-                inputHandler.BlockNextAction = false;
+            if (rulesetInput != null)
+                rulesetInput.BlockNextAction = false;
 
             //更新Mod
             lastScreenMods = ((OsuScreen)e.Last).Mods.Value;
@@ -1169,7 +1203,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         private void makeActive(bool forceActive)
         {
-            currentFunctionBar.ShowFunctionControlTemporary();
+            showFunctionControlTemporary();
 
             //如果界面已隐藏、不是强制显示并且已经锁定变更
             if (!forceActive && lockButton.Bindable.Value && InterfacesHidden) return;

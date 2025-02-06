@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types
 {
     public class ToggleableButtonWrapper : IToggleableFunctionProvider
     {
-        public Vector2 Size { get; set; } = new Vector2(30);
+        public Vector2 Size { get; set; } = new(30);
         public Func<bool> Action { get; set; }
         public IconUsage Icon { get; set; }
         public LocalisableString Title { get; set; }

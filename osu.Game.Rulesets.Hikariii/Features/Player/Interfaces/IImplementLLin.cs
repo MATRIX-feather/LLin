@@ -176,7 +176,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         /// <summary>
         /// 底栏高度，可用于避免插件内容与当前底栏插件冲突
         /// </summary>
-        public float BottomBarHeight { get; }
+        public IBindable<float> BottomSafeAreaPadding { get; }
+
+        public void AddBottomSafeArea(LLinPlugin plugin, float amount);
+
+        public void RemoveBottomSafeArea(LLinPlugin plugin);
 
         /// <summary>
         /// 当前谱面
