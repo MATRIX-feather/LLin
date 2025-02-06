@@ -80,13 +80,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         private OsuGame? game { get; set; }
 
         [Resolved]
-        private MusicController musicController { get; set; }
+        private MusicController musicController { get; set; } = null!;
 
         [Cached]
-        private readonly CustomColourProvider colourProvider = new CustomColourProvider();
+        private readonly CustomColourProvider colourProvider = new();
 
         [Cached]
-        private BeatmapHashResolver hashResolver = new BeatmapHashResolver();
+        private BeatmapHashResolver hashResolver = new();
 
         #endregion
 
@@ -269,7 +269,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         {
             //查找插件按键绑定并执行
             var target = pluginKeyBindings.FirstOrDefault(b => b.Key.Key == e.Key).Key;
-            target?.Action?.Invoke();
+            target?.Action.Invoke();
 
             return target != null;
         }
@@ -567,7 +567,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         #endregion
 
-        private InputManager inputManager = null!;
+        private InputManager? inputManager;
 
         private readonly PlayerInfo info = new PlayerInfo
         {
@@ -604,7 +604,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         {
             float value = safeAreaPaddings.Sum(kvp => kvp.Value);
 
-            this.bottomPadding.Value = value;
+            bottomPadding.Value = value;
         }
 
         //endregion Bottom Safe Area
@@ -639,8 +639,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         public LLinScreen()
         {
-            InternalChildren = new Drawable[]
-            {
+            InternalChildren =
+            [
                 tracker,
                 hashResolver,
                 backgroundLayer = new Container
@@ -667,7 +667,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                         new GlobalScrollAdjustsVolume()
                     ]
                 }
-            };
+            ];
 
             //对proxyLayer的处理交由allowProxy，因此不在这里添加
             proxyLayer = new Container
@@ -680,7 +680,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         [BackgroundDependencyLoader]
         private void load(MConfigManager config, IdleTracker idleTracker, FrameworkConfigManager fcm)
         {
-            this.AddInternal(colourProvider);
+            AddInternal(colourProvider);
 
             inputManager = GetContainingInputManager();
 
@@ -688,14 +688,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             var settingsPage = new PlayerSettings();
             var pluginsPage = new SidebarPluginsPage();
 
-            sidebar.AddRange(new Drawable[] { settingsPage, pluginsPage });
+            sidebar.AddRange([settingsPage, pluginsPage]);
 
             functionProviders.AddRange(
             [
                 new ButtonWrapper
                 {
                     Icon = FontAwesome.Solid.ArrowLeft,
-                    Action = this.doBack,
+                    Action = doBack,
                     Description = CommonStrings.Back,
                     Type = FunctionType.Base
                 },
@@ -956,9 +956,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             var rsInputHandler = new RulesetInputHandler(internalKeyBindings, this);
             var rsInput = new HikariiiPlayerInputManager(HikariiiPlayerRuleset.GetRulesetInfo()!);
-            this.AddInternal(rsInput);
             rsInput.Add(rsInputHandler);
-            this.rulesetInput = rsInputHandler;
+            rulesetInput = rsInputHandler;
+
+            AddInternal(rsInput);
 
             //添加DBusEntry
             pluginManager.AddDBusMenuEntry(dbusEntry);
@@ -1019,12 +1020,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (rulesetInput != null)
                 rulesetInput.BlockNextAction = blockInput;
 
-            this.focusNum++;
-            int currentFocusNum = this.focusNum;
+            focusNum++;
+            int currentFocusNum = focusNum;
 
             this.Delay(2).Schedule(() =>
             {
-                if (this.focusNum != currentFocusNum) return;
+                if (focusNum != currentFocusNum) return;
 
                 if (rulesetInput != null)
                     rulesetInput.BlockNextAction = false;
@@ -1046,11 +1047,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         private readonly InputManagerTracker tracker = new();
 
         private RulesetInputHandler? rulesetInput;
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-        }
 
         private DrawableTrack? prevTrack;
 
