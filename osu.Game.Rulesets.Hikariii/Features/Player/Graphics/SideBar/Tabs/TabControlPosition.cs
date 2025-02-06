@@ -11,6 +11,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
         Left,
 
         [Description("顶部")]
-        Top
+        Top,
+
+        Bottom
     }
 }

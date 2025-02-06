@@ -136,7 +136,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             base.Update();
         }
 
-        public float GetSafeAreaPadding() => contentContainer.Height - contentContainer.Y;
+        public float GetSafeAreaPadding() => contentContainer.Height - contentContainer.Y + 10;
 
         public override void Show()
         {

@@ -348,7 +348,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 new StoryboardPluginProvider(),
 
                 new LyricPluginProvider(),
-                new YaspProvider()
+                new YaspProvider(),
+
+                //new NewBottomBarProvider()
             };
 
             providers.AddRange(bundledPlugins);

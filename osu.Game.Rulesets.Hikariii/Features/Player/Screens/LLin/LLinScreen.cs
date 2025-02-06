@@ -23,8 +23,6 @@ using osu.Framework.Screens;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics.UserInterface;
 using osu.Game.Input;
 using osu.Game.Input.Bindings;
 using osu.Game.Localisation;
@@ -802,28 +800,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     Size = new Vector2(100),
                     Margin = new MarginPadding { Bottom = 125 }
                 },
-#if DEBUG
-                new OsuAnimatedButton
-                {
-                    Size = new Vector2(125, 125),
-                    Child = new OsuSpriteText
-                    {
-                        Text = "Toggle",
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre,
-                    },
-                    Action = () =>
-                    {
-                        if (loadingIndicator.Displaying)
-                            loadingIndicator.Hide();
-                        else
-                            loadingIndicator.Show();
-                    }
-                },
-#endif
                 nightcoreBeatContainer,
                 sidebar,
-                tabControl,
+                tabControl
             });
 
             backgroundLayer.Add(backgroundTriangles);
@@ -904,53 +883,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     Logging.Log(e.StackTrace);
                 }
             }
-        }
 
-        private readonly SimpleEntry dbusEntry = new SimpleEntry
-        {
-            Label = "LLin - 插件",
-            Enabled = false
-        };
-
-        public override bool RequestsFocus => true;
-
-        public override bool AcceptsFocus => this.IsCurrentScreen();
-
-        protected override void OnFocus(FocusEvent e)
-        {
-            bool blockInput = tracker.ShouldBlockFirstInput();
-            if (blockInput) tracker.ClearHistory();
-
-            if (inputHandler != null)
-                inputHandler.BlockNextAction = blockInput;
-
-            this.focusNum++;
-            var focusNum = this.focusNum;
-            this.Delay(2).Schedule(() =>
-            {
-                if (this.focusNum != focusNum) return;
-                inputHandler.BlockNextAction = false;
-            });
-
-            base.OnFocus(e);
-        }
-
-        private int focusNum;
-
-        protected override void OnFocusLost(FocusLostEvent e)
-        {
-            if (inputHandler != null)
-                inputHandler.BlockNextAction = true;
-
-            base.OnFocusLost(e);
-        }
-
-        private readonly InputManagerTracker tracker = new();
-
-        private RulesetInputHandler? inputHandler;
-
-        protected override void LoadComplete()
-        {
             bgBlur.BindValueChanged(v => updateBackground(Beatmap.Value));
             idleBgDim.BindValueChanged(v => applyBackgroundBrightness(true, v.NewValue));
             musicSpeed.BindValueChanged(_ => updateTrackAdjustments());
@@ -1035,7 +968,53 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             }, true);
 
             blackBackground.BindValueChanged(_ => applyBackgroundBrightness());
+        }
 
+        private readonly SimpleEntry dbusEntry = new SimpleEntry
+        {
+            Label = "LLin - 插件",
+            Enabled = false
+        };
+
+        public override bool RequestsFocus => true;
+
+        public override bool AcceptsFocus => this.IsCurrentScreen();
+
+        protected override void OnFocus(FocusEvent e)
+        {
+            bool blockInput = tracker.ShouldBlockFirstInput();
+            if (blockInput) tracker.ClearHistory();
+
+            if (inputHandler != null)
+                inputHandler.BlockNextAction = blockInput;
+
+            this.focusNum++;
+            var focusNum = this.focusNum;
+            this.Delay(2).Schedule(() =>
+            {
+                if (this.focusNum != focusNum) return;
+                inputHandler.BlockNextAction = false;
+            });
+
+            base.OnFocus(e);
+        }
+
+        private int focusNum;
+
+        protected override void OnFocusLost(FocusLostEvent e)
+        {
+            if (inputHandler != null)
+                inputHandler.BlockNextAction = true;
+
+            base.OnFocusLost(e);
+        }
+
+        private readonly InputManagerTracker tracker = new();
+
+        private RulesetInputHandler? inputHandler;
+
+        protected override void LoadComplete()
+        {
             base.LoadComplete();
         }
 
@@ -1050,11 +1029,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             var currentTrack = musicController.CurrentTrack;
 
-            if (currentTrack == prevTrack) return;
+            if (currentTrack != prevTrack)
+                updateAudioClock(currentTrack);
+        }
 
+        private void updateAudioClock(DrawableTrack? currentTrack)
+        {
             prevTrack = currentTrack;
             AudioClock.ChangeSource(currentTrack);
-            AudioClock.Seek(currentTrack.CurrentTime); //workaround: 有时候需要手动Seek一遍才能让AudioClock和当前音轨正确同步
+            AudioClock.Seek(currentTrack?.CurrentTime ?? 0); //workaround: 有时候需要手动Seek一遍才能让AudioClock和当前音轨正确同步
         }
 
         private IReadOnlyList<Mod>? lastScreenMods;
@@ -1202,9 +1185,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         #region 侧边栏
 
-        private readonly Sidebar sidebar = new Sidebar();
+        private readonly PluginOptionsContainer sidebar = new();
 
-        private readonly TabControl tabControl = new TabControl();
+        private readonly OptionButtonFlow tabControl = new();
 
         #endregion
 

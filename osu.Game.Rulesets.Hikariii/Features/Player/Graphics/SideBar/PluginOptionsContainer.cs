@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -8,6 +9,7 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
@@ -15,17 +17,17 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
 {
-    internal partial class Sidebar : VisibilityContainer
+    internal partial class PluginOptionsContainer : VisibilityContainer
     {
         [Resolved]
         private CustomColourProvider colourProvider { get; set; } = null!;
 
         [Resolved(CanBeNull = true)]
-        private IImplementLLin? mvisScreen { get; set; }
+        private IImplementLLin? llin { get; set; }
 
         public readonly List<ISidebarContent> Components = new List<ISidebarContent>();
 
-        public TabControl Header = null!;
+        public OptionButtonFlow Header = null!;
 
         private const float duration = 400;
         private TabControlItem? prevTab;
@@ -42,13 +44,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
         private bool startFromHiddenState;
         private bool isFirstHide = true;
         private readonly Box bgBox;
+        private readonly LLinBottombarPaddingIndicatorMaybe dropdown;
 
-        public Sidebar()
+        [Cached]
+        private OverlayColourProvider overlayColourProvider = new(OverlayColourScheme.Blue);
+
+        public PluginOptionsContainer()
         {
             RelativeSizeAxes = Axes.Both;
 
-            InternalChildren = new Drawable[]
-            {
+            InternalChildren =
+            [
                 bgBox = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -60,8 +66,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
+                },
+                dropdown = new LLinBottombarPaddingIndicatorMaybe
+                {
+                    RelativeSizeAxes = Axes.X,
+                    Anchor = Anchor.BottomLeft,
+                    Origin = Anchor.BottomLeft,
                 }
-            };
+            ];
         }
 
         [BackgroundDependencyLoader]
@@ -70,6 +82,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
             sampleToggle = audio.Samples.Get("UI/overlay-pop-in");
             samplePopIn = audio.Samples.Get("UI/overlay-pop-in");
             samplePopOut = audio.Samples.Get("UI/overlay-pop-out");
+
+            colourProvider.HueColour.BindValueChanged(v =>
+            {
+                bgBox.Colour = colourProvider.Background5.Opacity(0.8f);
+            }, true);
         }
 
         protected override void LoadComplete()
@@ -105,8 +122,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
                 Right = Header.GetRightUnavaliableSpace(),
                 Left = Header.GetLeftUnavaliableSpace(),
                 Top = Header.GetTopUnavaliableSpace(),
-                Bottom = mvisScreen?.BottomBarHeight ?? 0
+                Bottom = (llin?.BottomBarHeight ?? 0)
             };
+
+            dropdown.Height = (llin?.BottomBarHeight ?? 0);
 
             base.UpdateAfterChildren();
         }
@@ -181,17 +200,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
 
         public override bool Remove(Drawable drawable, bool disposeImmediately)
         {
-            if (drawable is ISidebarContent sc)
+            if (drawable is not ISidebarContent sc)
+                return base.Remove(drawable, disposeImmediately);
+
+            foreach (TabControlItem t in Header.Tabs.Where(t => t.Value == sc))
             {
-                foreach (var t in Header.Tabs)
-                {
-                    if (t.Value == sc)
-                    {
-                        Header.Tabs.Remove(t, true);
-                        drawable.Expire();
-                        return true;
-                    }
-                }
+                Header.Tabs.Remove(t, true);
+                drawable.Expire();
+                return true;
             }
 
             return base.Remove(drawable, disposeImmediately);
@@ -209,7 +225,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
             bgBox.FadeOut(duration, Easing.OutQuint);
 
             contentContainer.FadeOut(duration, Easing.OutQuint)
-                            .MoveToY(70, duration, Easing.OutQuint);
+                            .MoveToX(35, duration, Easing.OutQuint);
+
+            dropdown.FadeOut(duration, Easing.OutQuint);
 
             prevTab?.MakeInActive();
         }
@@ -218,12 +236,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar
         {
             samplePopIn?.Play();
 
+            dropdown.FadeIn(duration, Easing.OutQuint);
+
             Header.SidebarActive = true;
             Header.Show();
             bgBox.FadeIn(duration, Easing.OutQuint);
 
             contentContainer.FadeIn(duration, Easing.OutQuint)
-                            .MoveToY(0, duration, Easing.OutQuint);
+                            .MoveToX(0, duration, Easing.OutQuint);
         }
     }
 }

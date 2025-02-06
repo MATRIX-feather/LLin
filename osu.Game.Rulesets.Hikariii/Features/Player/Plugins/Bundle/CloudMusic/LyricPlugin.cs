@@ -414,7 +414,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         {
             base.Update();
 
-            Padding = new MarginPadding { Bottom = (LLin?.BottomBarHeight ?? 0) + 20 };
+            Padding = new MarginPadding { Bottom = (LLin?.BottomBarHeight ?? 0) + 10 };
 
             if (ContentLoaded)
             {

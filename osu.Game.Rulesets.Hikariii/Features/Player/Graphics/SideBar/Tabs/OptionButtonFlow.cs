@@ -13,7 +13,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
 {
-    internal partial class TabControl : CompositeDrawable
+    internal partial class OptionButtonFlow : CompositeDrawable
     {
         public FillFlowContainer<TabControlItem> Tabs;
 
@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
 
         private Bindable<TabControlPosition> anchorTarget;
 
-        public TabControl()
+        public OptionButtonFlow()
         {
             Name = "Header";
             Width = 50;
@@ -75,6 +75,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
         private void load(MConfigManager config)
         {
             anchorTarget = new Bindable<TabControlPosition>();
+
+            //anchorTarget.Value = TabControlPosition.Bottom;
 
             anchorTarget.BindValueChanged(onTabControlPosChanged, true);
         }

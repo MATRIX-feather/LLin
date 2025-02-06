@@ -5,6 +5,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics.Containers;
 using osu.Game.Overlays;
+using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics;
 
@@ -35,6 +36,13 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
     protected OverlayColourProvider ColourProvider => colourProvider;
 
     protected virtual float TargetHeight => 200;
+
+    protected virtual bool UseRelativeHeight => false;
+
+    /// <summary>
+    /// 是否在进出动画缩放底BottomLine
+    /// </summary>
+    protected virtual bool ResizeBarOnAnimation => true;
 
     public BasicDropdownContainer()
     {
@@ -67,7 +75,7 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
             },
             new Container
             {
-                RelativeSizeAxes = Axes.X,
+                RelativeSizeAxes = UseRelativeHeight ? Axes.Both : Axes.X,
                 Height = TargetHeight,
 
                 Children =
@@ -76,7 +84,7 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
                     ContentContainer,
                 ]
             },
-            new Box
+            BottomLine = new Box
             {
                 Name = "Bottom Bar",
                 Height = 5,
@@ -88,16 +96,30 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
         ];
     }
 
+    protected Box BottomLine { get; set; }
+
     protected override Container<Drawable> Content => ContentContainer;
 
     protected override void PopIn()
     {
         this.FadeIn()
             .ResizeHeightTo(TargetHeight, 500, Easing.OutQuint);
+
+        if (ResizeBarOnAnimation)
+        {
+            var finalAxes = this.ApplyRelativeAxes(this.RelativeSizeAxes, new Vector2(0, this.TargetHeight), FillMode.Fill);
+
+            BottomLine.ResizeHeightTo(finalAxes.Y)
+                      .Then()
+                      .ResizeHeightTo(5, 500, Easing.OutQuint);
+        }
     }
 
     protected override void PopOut()
     {
+        if (ResizeBarOnAnimation)
+            BottomLine.ResizeHeightTo(this.DrawHeight, 300, Easing.OutQuint);
+
         this.ResizeHeightTo(0, 300, Easing.OutQuint)
             .Then()
             .FadeOut();
