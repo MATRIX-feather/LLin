@@ -280,8 +280,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.H
         [Resolved]
         private Storage storage { get; set; } = null!;
 
-        public void WriteLrcToFile(APILyricResponseRoot? responseRoot, WorkingBeatmap beatmap)
+        public void WriteLrcToFile(APILyricResponseRoot? responseRoot, WorkingBeatmap? beatmap)
         {
+            if (beatmap == null) return;
+
             try
             {
                 string serializedObject = JsonConvert.SerializeObject(responseRoot);
