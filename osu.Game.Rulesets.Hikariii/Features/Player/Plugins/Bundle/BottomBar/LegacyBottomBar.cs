@@ -57,7 +57,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    AutoSizeEasing = Easing.OutQuint,
                     Children =
                     [
                         leftContent = new FillFlowContainer<BottomBarButton>
@@ -87,18 +86,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
                             AutoSizeAxes = Axes.Both,
                             Spacing = new Vector2(5),
                             Margin = new MarginPadding { Right = 5, Bottom = 10 }
-                        },
-                        floatingContent = new FillFlowContainer<BottomBarButton>
-                        {
-                            Name = "Plugin Entries Container",
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            AutoSizeAxes = Axes.Both,
-                            AutoSizeDuration = 300,
-                            AutoSizeEasing = Easing.OutQuint,
-                            Spacing = new Vector2(5)
                         }
                     ]
+                },
+                floatingContent = new FillFlowContainer<BottomBarButton>
+                {
+                    Name = "Plugin Entries Container",
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    AutoSizeAxes = Axes.Both,
+                    Spacing = new Vector2(5),
+                    Alpha = 0
                 },
                 progressBar = new SongProgressBar()
             ];
@@ -107,7 +105,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
         [BackgroundDependencyLoader]
         private void load()
         {
-            LLin!.OnIdle += Hide;
+            LLin.OnIdle += Hide;
             LLin.OnActive += Show;
 
             progressBar.OnSeek = target =>
@@ -138,34 +136,44 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
         public override void Show()
         {
-            currentHidden = false;
-
             contentContainer.MoveToY(0, 300, Easing.OutQuint);
+            floatingContent.MoveToY(0, 300, Easing.OutQuint);
+
             progressBar.MoveToY(0, 300, Easing.OutQuint);
 
-            updatePlayerSafeArea(includeContainerY: false);
+            setSafeAreaModifier("base_container", contentContainer.Height);
         }
-
-        private bool currentHidden = false;
 
         public override void Hide()
         {
-            currentHidden = true;
-
             contentContainer.MoveToY(floatingContent.Margin.Bottom - 5, 300, Easing.OutQuint);
+            floatingContent.MoveToY(floatingContent.Margin.Bottom - 5, 300, Easing.OutQuint);
+
             progressBar.MoveToY(4f, 300, Easing.OutQuint);
 
-            updatePlayerSafeArea(true);
+            setSafeAreaModifier("base_container", 0f);
         }
 
-        private void updatePlayerSafeArea(bool removeSafeArea = false, bool includeContainerY = true)
+        private void setSafeAreaModifier(string name, float amount)
         {
-            float amount = contentContainer.Height - (includeContainerY ? contentContainer.Y : 0) + 15;
-
-            if (removeSafeArea)
-                LLin?.RemoveBottomSafeArea(this);
+            if (amount > 0f)
+                safeAreaModifiers[name] = amount;
             else
-                LLin?.AddBottomSafeArea(this, amount);
+                safeAreaModifiers.Remove(name);
+
+            updatePlayerSafeArea();
+        }
+
+        private readonly Dictionary<string, float> safeAreaModifiers = new();
+
+        private void updatePlayerSafeArea()
+        {
+            float total = safeAreaModifiers.Values.Sum();
+
+            if (total <= 0f)
+                LLin.RemoveBottomSafeArea(this);
+            else
+                LLin.AddBottomSafeArea(this, total + 15);
         }
 
         public bool OkForHide() => !IsHovered;
@@ -295,13 +303,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
                 floatingContent.Alpha = 0.01f;
 
             floatingContent.FadeIn(500, Easing.OutQuint);
-            this.updatePlayerSafeArea();
+            setSafeAreaModifier("floating", floatingContent.Height);
         }
 
         public void HideFunctionControl()
         {
-            floatingContent.FadeOut(500, Easing.OutQuint)
-                           .OnComplete(container => this.updatePlayerSafeArea(currentHidden));
+            setSafeAreaModifier("floating", 0);
+
+            floatingContent.FadeOut(500, Easing.OutQuint);
         }
 
         public List<IPluginFunctionProvider> GetAllPluginFunctionButton() => pluginButtons;
