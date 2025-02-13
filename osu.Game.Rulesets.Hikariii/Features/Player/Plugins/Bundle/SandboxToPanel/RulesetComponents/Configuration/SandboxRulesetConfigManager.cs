@@ -55,6 +55,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
             SetDefault(SandboxRulesetSetting.EnableRulesetPanel, true);
             SetDefault(SandboxRulesetSetting.IdleAlpha, 1f, 0, 1);
             SetDefault(SandboxRulesetSetting.SpinningCoverAndVisualizer, false);
+            SetDefault(SandboxRulesetSetting.TypeAUseMenuVisualisation, false);
         }
 
         public SandboxRulesetConfigManager(Storage storage)
@@ -109,7 +110,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
         //mfosu
         EnableRulesetPanel,
         IdleAlpha,
-        SpinningCoverAndVisualizer
+        SpinningCoverAndVisualizer,
+        TypeAUseMenuVisualisation
     }
 
     public enum VisualizerLayout

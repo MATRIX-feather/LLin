@@ -181,6 +181,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
                     KeyboardStep = 1,
                     ////////TransferValueOnCommit = true
                 },
+                new BooleanSettingsEntry
+                {
+                    Name = "使用osu!自带的特效显示",
+                    Bindable = config.GetBindable<bool>(SandboxRulesetSetting.TypeAUseMenuVisualisation)
+                },
                 new NumberSettingsEntry<int>
                 {
                     Name = StpStrings.BarsPerVisual,
