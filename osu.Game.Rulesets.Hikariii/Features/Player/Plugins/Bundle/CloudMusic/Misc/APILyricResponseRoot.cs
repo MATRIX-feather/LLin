@@ -26,6 +26,66 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
         [JsonIgnore]
         private List<string>? translateLyrics => TLyricInfo?.RawLyric?.Split("\n", StringSplitOptions.RemoveEmptyEntries).ToList();
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="rawLyric"></param>
+        /// <returns>一个装有<see cref="Lyric"/>列表，以及他们所对应的字符串内容</returns>
+        private (List<Lyric>, string) processRaw(string rawLyric)
+        {
+            bool propertyDetected = false;
+            string propertyName = string.Empty;
+            string lyricContent = string.Empty;
+
+            //创建currentLrc
+            //可能存在一行歌词多个时间，所以先创建列表
+            List<Lyric> processedLyrics = [];
+
+            //处理属性
+            foreach (char c in rawLyric)
+            {
+                if (c == '[')
+                {
+                    propertyDetected = true;
+                    continue;
+                }
+
+                //如果检测到']'，那么退出属性检测并处理结果
+                if (c == ']' && propertyDetected)
+                {
+                    propertyDetected = false;
+
+                    //处理属性
+                    //时间
+
+                    //如果是时间属性
+                    if (propertyName[0].IsDigit())
+                    {
+                        processedLyrics.Add(new Lyric
+                        {
+                            Time = propertyName.ToMilliseconds()
+                        });
+                    }
+
+                    //todo: 在此放置对其他属性的处理逻辑
+
+                    //清空属性名称
+                    propertyName = string.Empty;
+
+                    //继续
+                    continue;
+                }
+
+                //如果是属性，那么添加字符到propertyName，反之则是lyricContent
+                if (propertyDetected) propertyName += c;
+                else lyricContent += c;
+
+                //Logging.Log($"原始歌词: propertyName: {propertyName} | lyricContent: {lyricContent}");
+            }
+
+            return (processedLyrics, lyricContent);
+        }
+
         public List<Lyric> ToLyricList()
         {
             var result = new List<Lyric>();
@@ -34,64 +94,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
 
             //蠢办法，但起码比之前有用(
             //先处理原始歌词信息
-            foreach (string lyricString in lyrics)
+            foreach (string lyricString in lyrics.Where(lyricString => !lyricString.Contains("纯音乐，请欣赏")))
             {
-                //创建currentLrc
-                //可能存在一行歌词多个时间，所以先创建列表
-                List<Lyric> processedLyrics = [];
-
-                //Logger.Log($"处理歌词: {lyricString}");
-
-                bool propertyDetected = false;
-                string propertyName = string.Empty;
-                string lyricContent = string.Empty;
-
-                //处理属性
-                foreach (char c in lyricString)
-                {
-                    if (c == '[')
-                    {
-                        propertyDetected = true;
-                        continue;
-                    }
-
-                    //如果检测到']'，那么退出属性检测并处理结果
-                    if (c == ']' && propertyDetected)
-                    {
-                        propertyDetected = false;
-
-                        //处理属性
-                        //时间
-
-                        //如果是时间属性
-                        if (propertyName[0].IsDigit())
-                        {
-                            processedLyrics.Add(new Lyric
-                            {
-                                Time = propertyName.ToMilliseconds()
-                            });
-                        }
-
-                        //todo: 在此放置对其他属性的处理逻辑
-
-                        //清空属性名称
-                        propertyName = string.Empty;
-
-                        //继续
-                        continue;
-                    }
-
-                    //如果是属性，那么添加字符到propertyName，反之则是lyricContent
-                    if (propertyDetected) propertyName += c;
-                    else lyricContent += c;
-
-                    //Logging.Log($"原始歌词: propertyName: {propertyName} | lyricContent: {lyricContent}");
-                }
+                (var outLyrics, string? trimmedContent) = processRaw(lyricString);
 
                 //最后，设置歌词内容并添加到result
-                foreach (var lyric in processedLyrics)
+                foreach (var lyric in outLyrics)
                 {
-                    lyric.Content = lyricContent;
+                    lyric.Content = trimmedContent;
+
                     //Logging.Log($"添加歌词: {lyric}");
 
                     result.Add(lyric);
@@ -99,65 +110,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
             }
 
             //再处理翻译歌词
+            //有必要进行分开处理，因为在返回的数据里歌词和翻译不总是一一对应
             if (translateLyrics != null)
             {
                 foreach (string tlyricString in translateLyrics)
                 {
-                    bool propertyDetected = false;
-                    string propertyName = string.Empty;
-                    string lyricContent = string.Empty;
-
-                    List<int> times = [];
-
                     //Logging.Log($"处理翻译歌词: {tlyricString}");
 
-                    //处理属性
-                    foreach (char c in tlyricString)
-                    {
-                        if (c == '[')
-                        {
-                            propertyDetected = true;
-                            continue;
-                        }
+                    (var outLyrics, string? trimmedContent) = processRaw(tlyricString);
 
-                        //如果检测到']'，那么退出属性检测并处理结果
-                        if (c == ']' && propertyDetected)
-                        {
-                            propertyDetected = false;
-
-                            //处理属性
-
-                            //时间
-
-                            //如果是时间属性
-                            if (propertyName[0].IsDigit())
-                            {
-                                //添加当前时间到times
-                                times.Add(propertyName.ToMilliseconds());
-                            }
-
-                            //todo: 在此放置对其他属性的处理逻辑
-
-                            //清空属性名称
-                            propertyName = string.Empty;
-
-                            //继续
-                            continue;
-                        }
-
-                        //如果是属性，那么添加字符到propertyName，反之则是lyricContent
-                        if (propertyDetected) propertyName += c;
-                        else lyricContent += c;
-                    }
-
-                    foreach (int time in times)
-                    {
-                        foreach (var lrc in result.FindAll(l => l.Time == time))
-                        {
-                            lrc.TranslatedString = lyricContent;
-                            //Logger.Log($"设置歌词: {lrc}");
-                        }
-                    }
+                    foreach (Lyric lrc in outLyrics.SelectMany(lyric => result.FindAll(l => Math.Abs(l.Time - lyric.Time) < 0.01d)))
+                        lrc.TranslatedString = trimmedContent;
                 }
             }
 
