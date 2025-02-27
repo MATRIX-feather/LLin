@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Markdig.Helpers;
 using Newtonsoft.Json;
 using osu.Framework.Development;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Helper.LyricProperties;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Misc
 {
@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
                 if (nextCloseQuote == -1)
                 {
                     if (DebugUtils.IsDebugBuild)
-                        Logging.Log($"找到了 ’[’, 但是没有下一个 ’]’... 这对吗？正在返回剩下的字符串 --> '{rawLyric}'");
+                        Logging.Log($"DEBUG 找到了 ’[’, 但是没有下一个 ’]’... 这对吗？正在返回剩下的字符串 --> '{rawLyric}'");
 
                     lyricContent = rawLyric[nextOpenQuote..];
                     break;
@@ -78,31 +78,25 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
                 if (property == string.Empty)
                 {
                     if (DebugUtils.IsDebugBuild)
-                        Logging.Log($"Bad code! We reached the limit! '{rawLyric}'");
+                        Logging.Log($"DEBUG Bad code! We reached the limit! '{rawLyric}'");
 
                     lyricContent = rawLyric[nextOpenQuote..];
                     break;
                 }
 
                 if (DebugUtils.IsDebugBuild)
-                    Logging.Log($"GET PROPERTY '{property}' :: {exceedRawLyricLimit}");
+                    Logging.Log($"DEBUG GET PROPERTY '{property}' :: {exceedRawLyricLimit}");
 
                 // 处理property
-                try
+                Lyric initialLyric = new Lyric();
+
+                if (!PropertyProcessorManager.INSTANCE.Process(property, initialLyric))
                 {
-                    //如果是时间属性
-                    if (property[0].IsDigit())
-                    {
-                        processedLyrics.Add(new Lyric
-                        {
-                            Time = PropertyProcessor.ToMilliseconds(property)
-                        });
-                    }
+                    Logging.Log($"Failed to process lyric propety '{property}', none matched!");
+                    continue;
                 }
-                catch (Exception e)
-                {
-                    Logging.Log($"Failed to process lyric: {e.Message}");
-                }
+
+                processedLyrics.Add(initialLyric);
             }
 
             return (processedLyrics, lyricContent);
