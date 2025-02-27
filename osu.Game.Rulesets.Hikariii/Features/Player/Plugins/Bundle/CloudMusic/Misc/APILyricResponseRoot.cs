@@ -99,6 +99,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
                 processedLyrics.Add(initialLyric);
             }
 
+            if (lyricContent == "纯音乐，请欣赏")
+                lyricContent = string.Empty;
+
             return (processedLyrics, lyricContent);
         }
 
@@ -116,13 +119,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
 
                 if (outLyrics.Count == 0)
                     continue;
-
-                if (trimmedContent.Contains("纯音乐，请欣赏"))
-                {
-                    var lyricFirst = outLyrics.First();
-                    result.Add(lyricFirst);
-                    continue;
-                }
 
                 //最后，设置歌词内容并添加到result
                 foreach (var lyric in outLyrics)
