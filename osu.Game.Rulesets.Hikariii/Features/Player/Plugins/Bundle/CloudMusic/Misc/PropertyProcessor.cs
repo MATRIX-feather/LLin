@@ -2,9 +2,9 @@ using System;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Misc
 {
-    public static class StringExtensions
+    public static class PropertyProcessor
     {
-        public static int ToMilliseconds(this string src)
+        public static int ToMilliseconds(string src)
         {
             string[] spilt = src.Contains(':')
                 ? src.Split(':')

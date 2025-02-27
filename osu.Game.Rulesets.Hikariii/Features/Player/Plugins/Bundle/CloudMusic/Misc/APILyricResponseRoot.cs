@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Markdig.Helpers;
 using Newtonsoft.Json;
+using osu.Framework.Development;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Misc
 {
@@ -33,54 +34,75 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
         /// <returns>一个装有<see cref="Lyric"/>列表，以及他们所对应的字符串内容</returns>
         private (List<Lyric>, string) processRaw(string rawLyric)
         {
-            bool propertyDetected = false;
-            string propertyName = string.Empty;
-            string lyricContent = string.Empty;
+            string lyricContent;
 
             //创建currentLrc
             //可能存在一行歌词多个时间，所以先创建列表
             List<Lyric> processedLyrics = [];
 
-            //处理属性
-            foreach (char c in rawLyric)
+            int nextIndex = 0;
+
+            while (true)
             {
-                if (c == '[')
+                int nextOpenQuote = rawLyric.IndexOf('[', nextIndex);
+
+                if (nextOpenQuote == -1)
                 {
-                    propertyDetected = true;
-                    continue;
+                    lyricContent = rawLyric[nextIndex..];
+                    break;
                 }
 
-                //如果检测到']'，那么退出属性检测并处理结果
-                if (c == ']' && propertyDetected)
+                int nextCloseQuote = rawLyric.IndexOf(']', nextOpenQuote + 1);
+
+                if (nextCloseQuote == -1)
                 {
-                    propertyDetected = false;
+                    if (DebugUtils.IsDebugBuild)
+                        Logging.Log($"找到了 ’[’, 但是没有下一个 ’]’... 这对吗？正在返回剩下的字符串 --> '{rawLyric}'");
 
-                    //处理属性
-                    //时间
+                    lyricContent = rawLyric[nextOpenQuote..];
+                    break;
+                }
 
+                nextIndex = nextCloseQuote + 1;
+
+                // 截取property
+
+                int length = nextCloseQuote - nextOpenQuote - 1;
+                bool exceedRawLyricLimit = nextOpenQuote + 1 + length >= rawLyric.Length;
+
+                string property = exceedRawLyricLimit
+                    ? string.Empty
+                    : rawLyric.Substring(nextOpenQuote + 1, length);
+
+                // 属性是空的，BadLyric!
+                if (property == string.Empty)
+                {
+                    if (DebugUtils.IsDebugBuild)
+                        Logging.Log($"Bad code! We reached the limit! '{rawLyric}'");
+
+                    lyricContent = rawLyric[nextOpenQuote..];
+                    break;
+                }
+
+                if (DebugUtils.IsDebugBuild)
+                    Logging.Log($"GET PROPERTY '{property}' :: {exceedRawLyricLimit}");
+
+                // 处理property
+                try
+                {
                     //如果是时间属性
-                    if (propertyName[0].IsDigit())
+                    if (property[0].IsDigit())
                     {
                         processedLyrics.Add(new Lyric
                         {
-                            Time = propertyName.ToMilliseconds()
+                            Time = PropertyProcessor.ToMilliseconds(property)
                         });
                     }
-
-                    //todo: 在此放置对其他属性的处理逻辑
-
-                    //清空属性名称
-                    propertyName = string.Empty;
-
-                    //继续
-                    continue;
                 }
-
-                //如果是属性，那么添加字符到propertyName，反之则是lyricContent
-                if (propertyDetected) propertyName += c;
-                else lyricContent += c;
-
-                //Logging.Log($"原始歌词: propertyName: {propertyName} | lyricContent: {lyricContent}");
+                catch (Exception e)
+                {
+                    Logging.Log($"Failed to process lyric: {e.Message}");
+                }
             }
 
             return (processedLyrics, lyricContent);
