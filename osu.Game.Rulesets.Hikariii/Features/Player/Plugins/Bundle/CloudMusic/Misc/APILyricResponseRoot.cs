@@ -94,9 +94,19 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
 
             //蠢办法，但起码比之前有用(
             //先处理原始歌词信息
-            foreach (string lyricString in lyrics.Where(lyricString => !lyricString.Contains("纯音乐，请欣赏")))
+            foreach (string lyricString in lyrics)
             {
                 (var outLyrics, string? trimmedContent) = processRaw(lyricString);
+
+                if (outLyrics.Count == 0)
+                    continue;
+
+                if (trimmedContent.Contains("纯音乐，请欣赏"))
+                {
+                    var lyricFirst = outLyrics.First();
+                    result.Add(lyricFirst);
+                    continue;
+                }
 
                 //最后，设置歌词内容并添加到result
                 foreach (var lyric in outLyrics)
