@@ -2,7 +2,7 @@ using System;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Misc.Mapping
 {
-    public class APIMappingRoot : IDisposable
+    public class LyricMappings : IDisposable
     {
         /// <summary>
         /// 上次更新，每隔一周查询一次
@@ -14,7 +14,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
         /// <summary>
         /// 数据
         /// </summary>
-        public APIBeatmapLyricMapping[]? Data { get; set; }
+        public BeatmapLyricMapping[]? Data { get; set; }
 
         public void Dispose()
         {

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Misc.Mapping
 {
-    public class APIBeatmapLyricMapping : IDisposable
+    public class BeatmapLyricMapping : IDisposable
     {
         /// <summary>
         /// 目标歌曲的网易云ID
@@ -14,12 +14,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
         /// <summary>
         /// 对应的谱面
         /// </summary>
-        public int[] Beatmaps { get; set; } = Array.Empty<int>();
+        public int[] Beatmaps { get; set; } = [];
 
         /// <summary>
         /// 要匹配的标题
         /// </summary>
-        public string[] MatchingTitle { get; set; } = Array.Empty<string>();
+        public string[] MatchingTitle { get; set; } = [];
 
         /// <summary>
         /// 匹配模式
@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
         /// <summary>
         /// 要匹配的艺术家
         /// </summary>
-        public string[] MatchingArtist { get; set; } = Array.Empty<string>();
+        public string[] MatchingArtist { get; set; } = [];
 
         /// <summary>
         /// 艺术家匹配模式

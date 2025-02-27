@@ -8,7 +8,7 @@ using osu.Game.Screens;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 
-public partial class GameScreenHandler : AbstractHandler
+public partial class ScreenHandlerManager : AbstractHandler
 {
     private OsuScreenStack? screenStack;
 

@@ -133,9 +133,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
 
                     var color = Color4.White;
 
-                    if (v.NewValue == LyricProcessor.SearchState.Success)
+                    if (v.NewValue == OnlineLyrics.SearchState.Success)
                         color = Color4.GreenYellow;
-                    else if (v.NewValue == LyricProcessor.SearchState.Fail)
+                    else if (v.NewValue == OnlineLyrics.SearchState.Fail)
                         color = Color4.Gold;
 
                     statusText.FadeColour(color, 300, Easing.OutQuint);

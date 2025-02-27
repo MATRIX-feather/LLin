@@ -18,9 +18,9 @@ using Component = osu.Framework.Graphics.Component;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Helper
 {
-    public partial class LyricProcessor : Component
+    public partial class OnlineLyrics : Component
     {
-        #region 获取状态
+        #region 搜索状态
 
         public enum SearchState
         {

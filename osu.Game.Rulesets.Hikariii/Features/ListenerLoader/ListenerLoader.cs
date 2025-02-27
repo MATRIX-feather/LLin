@@ -30,12 +30,12 @@ public partial class ListenerLoader : AbstractHandler
         return gameInstance?.Dependencies as DependencyContainer;
     }
 
-    private AbstractHandler[] injectors()
+    private static AbstractHandler[] injectors()
     {
         return
         [
             new HikariiiFeatureBoxListener(),
-            new GameScreenHandler(),
+            new ScreenHandlerManager(),
             new PreviewTrackHandler()
         ];
     }

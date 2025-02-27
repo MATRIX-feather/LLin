@@ -153,7 +153,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         /// </summary>
         protected override Drawable CreateContent() => lrcLine;
 
-        public readonly LyricProcessor LyricProcessor = new LyricProcessor();
+        public readonly OnlineLyrics LyricProcessor = new OnlineLyrics();
 
         private List<Lyric>? cachedLyrics;
 
@@ -304,7 +304,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
             }
             else
             {
-                LyricProcessor.State.Value = LyricProcessor.SearchState.Success;
+                LyricProcessor.State.Value = OnlineLyrics.SearchState.Success;
                 onLyricRequestFinished(localLyrics);
             }
         }

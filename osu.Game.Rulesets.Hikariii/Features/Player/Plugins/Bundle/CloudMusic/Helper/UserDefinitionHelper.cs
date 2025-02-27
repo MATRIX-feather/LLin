@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.H
 {
     public partial class UserDefinitionHelper : Component
     {
-        private APIMappingRoot? mappingRoot;
+        private LyricMappings? mappingRoot;
 
         #region 依赖
 
@@ -65,7 +65,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.H
             //检查本地
             if (storage.Exists(filePath))
             {
-                var deserializedObject = JsonConvert.DeserializeObject<APIMappingRoot>(File.ReadAllText(storage.GetFullPath(filePath)));
+                var deserializedObject = JsonConvert.DeserializeObject<LyricMappings>(File.ReadAllText(storage.GetFullPath(filePath)));
 
                 //检查日期
                 //如果日期那里是-1，那么直接跳过时间检查
@@ -90,7 +90,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.H
             //从网络上下载定义
             currentRequest?.Abort();
 
-            var req = new OsuJsonWebRequest<APIMappingRoot>(url);
+            var req = new OsuJsonWebRequest<LyricMappings>(url);
 
             req.Finished += () =>
             {
