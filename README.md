@@ -16,15 +16,6 @@
 ### 播放器
 播放器可以通过主界面和单人游戏选歌进入，按键可以在`输入 ~> 快捷键和键位绑定`中设置。
 
-### Gosu集成
-要使用gosu集成，首先前往gosu的[静态资源repo](https://github.com/l3lackShark/static/releases/)下载最新release的源码，然后解压到osu数据目录的`gosu_statics`中。
-
-解压后的数据结构应类似于这样：
-```
-> gosu_statics
-  > Classic
-  > DarkAndWhite
-  > ...
-```
-
-完成后重启游戏和录制/直播软件即可。
+## 第三方开源许可
+- SandboxToPanel插件：[EVAST9919/lazer-sandbox](https://github.com/EVAST9919/lazer-sandbox) --> [LICENSE](./osu.Game.Rulesets.Hikariii/Features/Player/Plugins/Bundle/SandboxToPanel/LICENSE)
+- `osu.Game.Rulesets.Hikariii/RulesetStuffs`下的基础组件：[ppy/osu](https://github.com/ppy/osu) --> [LICENCE](./osu.Game.Rulesets.Hikariii/RulesetStuffs/LICENCE)
