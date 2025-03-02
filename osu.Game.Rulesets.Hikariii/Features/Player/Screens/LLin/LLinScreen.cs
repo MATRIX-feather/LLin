@@ -937,22 +937,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 }
             }, true);
 
-            //VSync
-            previousFrameSync = frameSyncMode.Value;
-            previousExecutionMode = gameExecutionMode.Value;
-
-            if (autoVsync.Value)
-            {
-                frameSyncMode.Value = FrameSync.VSync;
-                gameExecutionMode.Value = ExecutionMode.SingleThread;
-            }
-
-            autoVsync.BindValueChanged(v =>
-            {
-                frameSyncMode.Value = v.NewValue ? FrameSync.VSync : previousFrameSync;
-                gameExecutionMode.Value = v.NewValue ? ExecutionMode.SingleThread : previousExecutionMode;
-            });
-
             //设置键位
             initInternalKeyBindings();
 
@@ -990,6 +974,21 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             }, true);
 
             blackBackground.BindValueChanged(_ => applyBackgroundBrightness());
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            autoVsync.BindValueChanged(v =>
+            {
+                //VSync
+                previousFrameSync = frameSyncMode.Value;
+                previousExecutionMode = gameExecutionMode.Value;
+
+                frameSyncMode.Value = v.NewValue ? FrameSync.VSync : previousFrameSync;
+                gameExecutionMode.Value = v.NewValue ? ExecutionMode.SingleThread : previousExecutionMode;
+            }, true);
         }
 
         private readonly BindableFloat controlDisplayTemp = new();
