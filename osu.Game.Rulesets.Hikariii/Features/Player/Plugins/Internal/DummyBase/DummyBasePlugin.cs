@@ -93,6 +93,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
                     Bindable = config.GetBindable<bool>(MSetting.MvisUseTriangleV2),
                     Description = "可能不适合所有背景，仍需调教"
                 },
+                new BooleanSettingsEntry
+                {
+                    Name = "启用进、退场动画",
+                    Description = "嗯...至少有人说挺炫酷的？",
+                    Bindable = config.GetBindable<bool>(MSetting.MvisEnableAdvancedEnterLeaveAnimation)
+                },
                 new NumberSettingsEntry<float>
                 {
                     Name = "播放器设置最大宽度",

@@ -97,6 +97,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
 
             //排行榜
             //SetDefault(MSetting.InGameLeaderboardState, LeaderboardState.Fold);
+
+            SetDefault(MSetting.MvisEnableAdvancedEnterLeaveAnimation, true);
         }
 
         public Color4 GetCustomLoaderColor()
@@ -166,7 +168,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
         InGameLeaderboardState,
         MvisAutoVSync,
         MvisPlayerSettingsMaxWidth,
-        MvisUseTriangleV2
+        MvisUseTriangleV2,
+
+        MvisEnableAdvancedEnterLeaveAnimation
     }
 
     public enum GamemodeActivateCondition
