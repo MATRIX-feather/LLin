@@ -142,6 +142,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             progressBar.MoveToY(0, 300, Easing.OutQuint);
 
             setSafeAreaModifier("base_container", contentContainer.Height);
+            setSafeAreaModifier("hide_padding", 0f);
         }
 
         public override void Hide()
@@ -152,6 +153,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             progressBar.MoveToY(4f, 300, Easing.OutQuint);
 
             setSafeAreaModifier("base_container", 0f);
+            setSafeAreaModifier("hide_padding", 15f);
         }
 
         private void setSafeAreaModifier(string name, float amount)
@@ -171,9 +173,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
             float total = safeAreaModifiers.Values.Sum();
 
             if (total <= 0f)
-                LLin.RemoveBottomSafeArea(this);
+                LLin?.RemoveBottomSafeArea(this);
             else
-                LLin.AddBottomSafeArea(this, total + 15);
+                LLin?.AddBottomSafeArea(this, total + 15);
         }
 
         public bool OkForHide() => !IsHovered;
