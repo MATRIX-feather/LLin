@@ -44,7 +44,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFuncti
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin;
-using osu.Game.Rulesets.Hikariii.RulesetStuffs;
+using osu.Game.Rulesets.Hikariii.ppyStuffs;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Screens;

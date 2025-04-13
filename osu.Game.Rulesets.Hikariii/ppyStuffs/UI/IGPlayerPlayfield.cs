@@ -5,7 +5,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.UI;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.UI
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.UI
 {
     [Cached]
     public partial class IGPlayerPlayfield : Playfield

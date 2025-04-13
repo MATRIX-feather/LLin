@@ -7,14 +7,14 @@ using osu.Framework.Input;
 using osu.Game.Beatmaps;
 using osu.Game.Input.Handlers;
 using osu.Game.Replays;
-using osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects;
-using osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects.Drawables;
-using osu.Game.Rulesets.Hikariii.RulesetStuffs.Replays;
+using osu.Game.Rulesets.Hikariii.ppyStuffs.Objects;
+using osu.Game.Rulesets.Hikariii.ppyStuffs.Objects.Drawables;
+using osu.Game.Rulesets.Hikariii.ppyStuffs.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.UI
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.UI
 {
     [Cached]
     public partial class DrawableIGPlayerRuleset : DrawableRuleset<HikariiiPlayerHitObject>

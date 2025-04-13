@@ -8,6 +8,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Backgrounds;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osu.Game.Rulesets.Hikariii.ppyStuffs.osu;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 {
@@ -49,7 +50,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         private partial class BackgroundTriangles : Container
         {
             private Triangles? triangles;
-            private TrianglesV2? trianglesV2;
+            private TrianglesV2Copy? trianglesV2;
             public readonly float TriangleScale;
 
             public bool AllowBeatSync;
@@ -71,15 +72,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             {
                 configManager.BindWith(MSetting.MvisUseTriangleV2, useV2);
 
-                InternalChildren = new Drawable[]
-                {
-                    trianglesV2 ??= new TrianglesV2
+                InternalChildren =
+                [
+                    trianglesV2 ??= new TrianglesV2Copy
                     {
                         Anchor = Anchor.BottomCentre,
                         Origin = Anchor.BottomCentre,
                         RelativeSizeAxes = Axes.Both,
                         Colour = highLight ? Color4Extensions.FromHex(@"88b300") : OsuColour.Gray(0.2f),
-                        Alpha = 0
+                        Alpha = 0,
+                        SpawnRatio = 1,
+                        ExtraScaleRange = (0.2f, 2f)
                     },
                     triangles ??= new TrianglesV1Wrapper
                     {
@@ -90,9 +93,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                         Colour = highLight ? Color4Extensions.FromHex(@"88b300") : OsuColour.Gray(0.2f),
                         Alpha = 0
                     }
-                };
-
-                trianglesV2.SpawnRatio = 1.2f;
+                ];
 
                 useV2.BindValueChanged(v => updateTriangle(v.NewValue), true);
             }

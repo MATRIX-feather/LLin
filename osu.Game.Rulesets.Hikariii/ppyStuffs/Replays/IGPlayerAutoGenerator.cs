@@ -2,10 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects;
+using osu.Game.Rulesets.Hikariii.ppyStuffs.Objects;
 using osu.Game.Rulesets.Replays;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Replays
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.Replays
 {
     public class IGPlayerAutoGenerator : AutoGenerator<IGPlayerReplayFrame>
     {

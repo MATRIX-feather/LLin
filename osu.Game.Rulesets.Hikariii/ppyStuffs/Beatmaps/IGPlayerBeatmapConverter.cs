@@ -4,12 +4,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects;
+using osu.Game.Rulesets.Hikariii.ppyStuffs.Objects;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osuTK;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Beatmaps
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.Beatmaps
 {
     public class IGPlayerBeatmapConverter : BeatmapConverter<HikariiiPlayerHitObject>
     {

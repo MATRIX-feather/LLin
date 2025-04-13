@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Scoring;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects.Drawables
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.Objects.Drawables
 {
     public partial class DrawableIGPlayerHitObject : DrawableHitObject<HikariiiPlayerHitObject>
     {

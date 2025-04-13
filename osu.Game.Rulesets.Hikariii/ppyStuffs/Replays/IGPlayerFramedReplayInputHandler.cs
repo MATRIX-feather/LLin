@@ -8,7 +8,7 @@ using osu.Framework.Utils;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Replays;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Replays
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.Replays
 {
     public class IGPlayerFramedReplayInputHandler : FramedReplayInputHandler<IGPlayerReplayFrame>
     {

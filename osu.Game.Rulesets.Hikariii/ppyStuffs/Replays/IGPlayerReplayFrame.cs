@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using osu.Game.Rulesets.Replays;
 using osuTK;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Replays
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.Replays
 {
     public class IGPlayerReplayFrame : ReplayFrame
     {

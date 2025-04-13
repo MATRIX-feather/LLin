@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Hikariii.RulesetStuffs.Replays;
+using osu.Game.Rulesets.Hikariii.ppyStuffs.Replays;
 using osu.Game.Rulesets.Mods;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Mods
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.Mods
 {
     public class IGPlayerModAutoplay : ModAutoplay
     {

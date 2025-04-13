@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 using osuTK;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs.Objects
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs.Objects
 {
     public class HikariiiPlayerHitObject : HitObject, IHasPosition
     {

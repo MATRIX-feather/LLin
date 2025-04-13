@@ -5,7 +5,7 @@ using System.ComponentModel;
 using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.UI;
 
-namespace osu.Game.Rulesets.Hikariii.RulesetStuffs
+namespace osu.Game.Rulesets.Hikariii.ppyStuffs
 {
     public partial class HikariiiPlayerInputManager : RulesetInputManager<HikariiiAction>
     {
