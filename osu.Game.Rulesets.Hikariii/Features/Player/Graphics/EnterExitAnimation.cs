@@ -145,11 +145,6 @@ public partial class EnterExitAnimation : InputBlockingContainer
         beatmap.BindValueChanged(v => beatmapBackground.UpdateBackground(v.NewValue));
     }
 
-    private const float move_duration = 500f;
-    private const float wait_duration = 600f;
-    private const float total_duration = move_duration * 2 + wait_duration;
-    private const float line_animation_start_time = 200f;
-
     public void PlayHide(LocalisableString text, Action onMasked)
     {
         this.Show();
@@ -161,24 +156,29 @@ public partial class EnterExitAnimation : InputBlockingContainer
 
         nowPlayingText.Text = beatmap.Value.Metadata.GetDisplayTitleRomanisable();
 
-        movingContainer.MoveToY(30, 300 + 500 + 500);
-
+/*
         bottomMovingLine.FadeIn()
                         .ResizeHeightTo(1)
                         .Then()
                         .Delay(line_animation_start_time)
-                        .ResizeHeightTo(0, move_duration, Easing.OutQuint);
+                        .ResizeHeightTo(0, move_duration, Easing.OutQuint);*/
+
+        const float move_duration = 300f;
+        const float wait_duration = 0f;
+        const float total_duration = move_duration * 2 + wait_duration;
+        const float line_animation_start_time = 200f;
+
+        movingContainer.MoveToY(30, total_duration);
 
         topMovingLine.ResizeHeightTo(0)
-                     .Delay(move_duration + wait_duration)
                      .Then()
                      .ResizeHeightTo(1f, move_duration, Easing.OutQuint);
 
         this.MoveToY(0, move_duration, Easing.OutQuint)
             .Then()
-            .Delay(wait_duration)
+            //.Delay(wait_duration)
             .Schedule(onMasked)
-            .MoveToY(1, move_duration, Easing.InQuint)
+            .MoveToY(1, move_duration / 2f, Easing.OutQuint)
             .Then()
             .FadeOut();
     }
@@ -193,6 +193,11 @@ public partial class EnterExitAnimation : InputBlockingContainer
         movingContainer.Y = 0;
 
         nowPlayingText.Text = beatmap.Value.Metadata.GetDisplayTitleRomanisable();
+
+        const float move_duration = 500f;
+        const float wait_duration = 600f;
+        const float total_duration = move_duration * 2 + wait_duration;
+        const float line_animation_start_time = 200f;
 
         bottomMovingLine.FadeIn()
                         .ResizeHeightTo(0)
