@@ -125,6 +125,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
 
         #endregion
 
+        public int SessionMagicCode { get; }
+
         /// <summary>
         /// 播放器是否处于界面隐藏状态
         /// </summary>

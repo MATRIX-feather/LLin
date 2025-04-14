@@ -21,6 +21,7 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osu.Framework.Timing;
+using osu.Framework.Utils;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Input;
@@ -642,8 +643,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         private readonly Container masterContainer;
         private readonly EnterExitAnimation enterExitAnimation;
 
+        public int SessionMagicCode { get; }
+
         public LLinScreen()
         {
+            SessionMagicCode = RNG.Next(int.MinValue / 3, int.MaxValue / 3);
+
             InternalChildren =
             [
                 enterExitAnimation = new EnterExitAnimation
@@ -1158,6 +1163,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             CurrentTrack.ResetSpeedAdjustments();
             CurrentTrack.Looping = false;
             Beatmap.Disabled = false;
+
+            this.FadeOut(300);
+
+            //if (!alreadyPlayingExit)
+            //    enterExitAnimation.ClearTransforms(true);
 
             //恢复mods
             Mods.Value = lastScreenMods;

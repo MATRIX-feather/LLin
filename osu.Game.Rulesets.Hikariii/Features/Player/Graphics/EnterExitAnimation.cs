@@ -10,9 +10,11 @@ using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 
@@ -41,10 +43,14 @@ public partial class EnterExitAnimation : InputBlockingContainer
     [Resolved]
     private IBindable<WorkingBeatmap> beatmap { get; set; } = null!;
 
+    private readonly BindableBool triangelesUseV2 = new BindableBool();
+
     [BackgroundDependencyLoader]
-    private void load()
+    private void load(MConfigManager config)
     {
         Masking = true;
+
+        config.BindWith(MSetting.MvisUseTriangleV2, triangelesUseV2);
 
         beatmapBackground = new BeatmapCover(beatmap.Value)
         {
@@ -94,6 +100,11 @@ public partial class EnterExitAnimation : InputBlockingContainer
                 RelativeSizeAxes = Axes.Both,
                 Colour = colourProvider.Background5,
             },
+            new MBgTriangles(trianglesColor: Color4.White, withBeat: true, alpha: 0.9f, triangleScale: 4f)
+            {
+                RelativeSizeAxes = Axes.Both,
+                UseV2 = { BindTarget = triangelesUseV2 }
+            },
             movingContainer = new Container
             {
                 RelativeSizeAxes = Axes.Both,
@@ -140,7 +151,7 @@ public partial class EnterExitAnimation : InputBlockingContainer
         {
             topMovingLine.Colour = bottomMovingLine.Colour = colourProvider.Highlight1;
             bgBox.Colour = colourProvider.Background5;
-        }, false);
+        });
 
         beatmap.BindValueChanged(v => beatmapBackground.UpdateBackground(v.NewValue));
     }
@@ -148,8 +159,6 @@ public partial class EnterExitAnimation : InputBlockingContainer
     public void PlayHide(LocalisableString text, Action onMasked)
     {
         this.Show();
-
-        this.Y = -1;
 
         titleText.Text = text;
         movingContainer.Y = 0;
@@ -161,7 +170,8 @@ public partial class EnterExitAnimation : InputBlockingContainer
                         .ResizeHeightTo(1)
                         .Then()
                         .Delay(line_animation_start_time)
-                        .ResizeHeightTo(0, move_duration, Easing.OutQuint);*/
+                        .ResizeHeightTo(0, move_duration, Easing.OutQuint);
+*/
 
         const float move_duration = 300f;
         const float wait_duration = 0f;
@@ -170,9 +180,7 @@ public partial class EnterExitAnimation : InputBlockingContainer
 
         movingContainer.MoveToY(30, total_duration);
 
-        topMovingLine.ResizeHeightTo(0)
-                     .Then()
-                     .ResizeHeightTo(1f, move_duration, Easing.OutQuint);
+        topMovingLine.ResizeHeightTo(1f, move_duration, Easing.OutQuint);
 
         this.MoveToY(0, move_duration, Easing.OutQuint)
             .Then()
@@ -199,19 +207,23 @@ public partial class EnterExitAnimation : InputBlockingContainer
         const float total_duration = move_duration * 2 + wait_duration;
         const float line_animation_start_time = 200f;
 
+        // 底边往上延展扩展的线
         bottomMovingLine.FadeIn()
                         .ResizeHeightTo(0)
                         .Then()
                         .Delay(move_duration + wait_duration)
                         .ResizeHeightTo(1, 500, Easing.OutQuint);
 
+        // 顶端往上收回的线
         topMovingLine.ResizeHeightTo(1)
                      .Delay(line_animation_start_time)
                      .Then()
                      .ResizeHeightTo(0.0f, 500, Easing.OutQuint);
 
+        // 谱面背景的动画
         movingContainer.MoveToY(-30, total_duration);
 
+        // 整体移动
         this.MoveToY(0, move_duration, Easing.OutQuint)
             .Then()
             .Delay(wait_duration)

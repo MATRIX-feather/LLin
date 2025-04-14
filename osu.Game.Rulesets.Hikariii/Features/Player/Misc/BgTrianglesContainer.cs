@@ -14,6 +14,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
         private const float triangles_alpha = 0.65f;
         private readonly Bindable<bool> enableBgTriangles = new Bindable<bool>();
         private Container trianglesContainer;
+        private readonly BindableBool trianglesV2 = new BindableBool();
 
         [BackgroundDependencyLoader]
         private void load(MConfigManager config)
@@ -21,11 +22,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
             RelativeSizeAxes = Axes.Both;
             State.Value = Visibility.Visible;
 
-            Child = trianglesContainer = new MBgTriangles(triangleScale: 4f, sync: true)
+            config.BindWith(MSetting.MvisUseTriangleV2, trianglesV2);
+
+            Child = trianglesContainer = new MBgTriangles(triangleScale: 4f, withBeat: true)
             {
                 Alpha = triangles_alpha,
-                RelativeSizeAxes = Axes.Both
+                RelativeSizeAxes = Axes.Both,
+                UseV2 = { BindTarget = trianglesV2 }
             };
+
             config.BindWith(MSetting.MvisEnableBgTriangles, enableBgTriangles);
         }
 

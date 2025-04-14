@@ -189,7 +189,8 @@ namespace osu.Game.Rulesets.Hikariii.ppyStuffs.osu
             float speedMultiplier = Math.Max(mean + std_dev * randStdNormal, 0.1f); // random normal(mean,stdDev^2)
 
             // LLin: Random scale
-            float extraScale = RNG.NextSingle(this.ExtraScaleRange.Item1, this.ExtraScaleRange.Item2);
+            float nextSingle = stableRandom?.NextSingle() ?? RNG.NextSingle();
+            float extraScale = ExtraScaleRange.Item1 + (ExtraScaleRange.Item2 - ExtraScaleRange.Item1) * nextSingle;
 
             //                                                               LLin: Random scale
             return new TriangleParticle { SpeedMultiplier = speedMultiplier, ExtraScale = extraScale };
