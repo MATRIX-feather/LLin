@@ -22,6 +22,7 @@ using osu.Framework.Platform;
 using osu.Framework.Screens;
 using osu.Framework.Timing;
 using osu.Framework.Utils;
+using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Input;
@@ -704,6 +705,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         }
 
         private readonly BindableBool enableEnterLeaveAnimation = new(true);
+
+        [Cached(type: typeof(ISamplePlaybackDisabler))]
+        public readonly HikariiiSamplePlaybackAntiDisabler samplePlaybackAntiDisabler = new HikariiiSamplePlaybackAntiDisabler();
 
         [BackgroundDependencyLoader]
         private void load(MConfigManager config, IdleTracker idleTracker, FrameworkConfigManager fcm)
