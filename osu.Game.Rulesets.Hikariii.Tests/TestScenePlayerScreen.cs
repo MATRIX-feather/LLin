@@ -55,16 +55,15 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
 
         cacheAndAdd(new IdleTracker(6000));
 
-        cacheAndAdd(backButton = new BackButton()
+        cacheAndAdd(backButton = new BackButton
         {
             Anchor = Anchor.BottomLeft,
-            Origin = Anchor.BottomLeft
+            Origin = Anchor.BottomLeft,
+            Action = () =>
+            {
+                if (backButton.State.Value == Visibility.Visible && stack.CurrentScreen != null) stack.Exit();
+            }
         });
-
-        backButton.Action = () =>
-        {
-            if (backButton.State.Value == Visibility.Visible && stack.CurrentScreen != null) stack.Exit();
-        };
 
         //AddGame(gameInstance = new OsuGame());
         AddStep("Push player", pushPlayer);
