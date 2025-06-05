@@ -22,6 +22,9 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
 
     private BackButton backButton = null!;
 
+    [Resolved]
+    private HikariiiTestBrowser testBrowser { get; set; } = null!;
+
     [BackgroundDependencyLoader]
     private void load(Storage storage, OsuGameBase gameBase)
     {
@@ -67,6 +70,12 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
 
         //AddGame(gameInstance = new OsuGame());
         AddStep("Push player", pushPlayer);
+
+        AddToggleStep("切换Host光标", v =>
+        {
+            testBrowser.OsuHostCursorVisible.Value = v;
+            testBrowser.SystemCursorVisible.Value = !v;
+        });
     }
 
     private void screenSwitch(IScreen lastscreen, IScreen newscreen)

@@ -4,7 +4,6 @@
 using System;
 using osu.Framework;
 using osu.Framework.Platform;
-using osu.Game.Tests;
 
 namespace osu.Game.Rulesets.Hikariii.Tests
 {
@@ -15,7 +14,7 @@ namespace osu.Game.Rulesets.Hikariii.Tests
         {
             using (DesktopGameHost host = Host.GetSuitableDesktopHost(@"osu", new HostOptions { }))
             {
-                host.Run(new OsuTestBrowser());
+                host.Run(new HikariiiTestBrowser());
                 return 0;
             }
         }
