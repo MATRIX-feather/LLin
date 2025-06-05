@@ -6,6 +6,7 @@ using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Graphics.Settings.Sections;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics.Settings;
 
@@ -19,6 +20,8 @@ public partial class HikariiiSettingsSubPanel : SettingsSubPanel
     [BackgroundDependencyLoader]
     private void load(LLinPluginManager manager)
     {
+        AddSection(new GeneralHikariiiSettingsSection());
+
         foreach (LLinPlugin pl in manager.GetAllPlugins(false).Where(pl => manager.GetSettingsFor(pl)?.Length > 0))
             AddSection(new PluginSettingsSubsection(pl));
     }

@@ -99,6 +99,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             //SetDefault(MSetting.InGameLeaderboardState, LeaderboardState.Fold);
 
             SetDefault(MSetting.MvisEnableAdvancedEnterLeaveAnimation, true);
+
+            SetDefault(MSetting.InjectButtonToNewSongSelect, true);
         }
 
         public Color4 GetCustomLoaderColor()
@@ -170,7 +172,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
         MvisPlayerSettingsMaxWidth,
         MvisUseTriangleV2,
 
-        MvisEnableAdvancedEnterLeaveAnimation
+        MvisEnableAdvancedEnterLeaveAnimation,
+
+        InjectButtonToNewSongSelect
     }
 
     public enum GamemodeActivateCondition

@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Hikariii
 
         public override RulesetSettingsSubsection? CreateSettings()
         {
-            return new MfMainSection(this);
+            return new HikariiiMainSection(this);
         }
 
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod>? mods) =>

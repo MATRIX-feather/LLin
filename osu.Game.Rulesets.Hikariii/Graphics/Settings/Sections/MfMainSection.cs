@@ -10,7 +10,7 @@ using osu.Game.Overlays.Settings;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics.Settings
 {
-    public sealed partial class MfMainSection : RulesetSettingsSubsection
+    public sealed partial class HikariiiMainSection : RulesetSettingsSubsection
     {
         protected override LocalisableString Header { get; } = "Hikariii";
 
@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Hikariii.Graphics.Settings
 
         private readonly SettingsButton settingsButton;
 
-        public MfMainSection(Ruleset ruleset)
+        public HikariiiMainSection(Ruleset ruleset)
             : base(ruleset)
         {
             var button = new SettingsButton();
