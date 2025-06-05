@@ -189,7 +189,8 @@ namespace osu.Game.Rulesets.Hikariii.ppyStuffs.osu
             float speedMultiplier = Math.Max(mean + std_dev * randStdNormal, 0.1f); // random normal(mean,stdDev^2)
 
             // LLin: Random scale
-            float nextSingle = stableRandom?.NextSingle() ?? RNG.NextSingle();
+            // stableRandom.NextSingle() throws System.MissingMethodException on Android, WTF??
+            float nextSingle = (float?)stableRandom?.NextDouble() ?? RNG.NextSingle();
             float extraScale = ExtraScaleRange.Item1 + (ExtraScaleRange.Item2 - ExtraScaleRange.Item1) * nextSingle;
 
             //                                                               LLin: Random scale
