@@ -15,7 +15,6 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Rulesets.Hikariii.Graphics;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
-using osu.Game.Screens.SelectV2;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
@@ -167,21 +166,6 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
                 Action = () =>
                 {
                     Game.HandleLink("https://github.com/MATRIX-feather/LLin");
-                    overlay.Hide();
-                }
-            },
-            new IconButton
-            {
-                Anchor = Anchor.BottomLeft,
-                Origin = Anchor.BottomLeft,
-
-                Size = new Vector2(75, 30),
-                Icon = FontAwesome.Solid.Play,
-                Text = "打开新版歌曲选择",
-
-                Action = () =>
-                {
-                    Game.PerformFromScreen(screen => screen.Push(new SoloSongSelect()), [typeof(MainMenu), typeof(PlaySongSelect)]);
                     overlay.Hide();
                 }
             }
