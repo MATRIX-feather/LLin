@@ -58,7 +58,10 @@ public partial class ScreenHandlerManager : AbstractHandler
 
     private void onScreenSwitch(IScreen lastscreen, IScreen newscreen)
     {
-        if (newscreen is Drawable drawable)
+        if (newscreen is not Drawable drawable)
+            return;
+
+        if (!drawable.IsLoaded)
             drawable.OnLoadComplete += _ => this.processNewScreen(lastscreen, newscreen);
         else
             processNewScreen(lastscreen, newscreen);
@@ -66,6 +69,9 @@ public partial class ScreenHandlerManager : AbstractHandler
 
     private void processNewScreen(IScreen lastscreen, IScreen newscreen)
     {
+        if (!newscreen.IsCurrentScreen())
+            return;
+
         Logging.Log($"🦢 Screen Changed! {lastscreen} -> {newscreen}", level: LogLevel.Debug);
 
         foreach (var screenHandler in handlers)

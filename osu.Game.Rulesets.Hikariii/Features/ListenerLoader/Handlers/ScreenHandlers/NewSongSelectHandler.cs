@@ -17,8 +17,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers.ScreenHand
 
 public partial class NewSongSelectHandler : AbstractScreenHandler
 {
-    private SoloSongSelect? currentPlaySongSelect;
-
     private partial class NewFooterButtonOpenInMvis : ScreenFooterButton
     {
         [BackgroundDependencyLoader]
@@ -46,18 +44,16 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
         if (!enableInject.Value)
             return;
 
-        if (prev == currentPlaySongSelect && next is MainMenu)
-            currentPlaySongSelect = null;
-
         if (next is not SoloSongSelect playSongSelect) return;
-
-        if (playSongSelect == currentPlaySongSelect) return;
 
         waitUntilSelectReady(playSongSelect, () => injectButtons(playSongSelect));
     }
 
     private void injectButtons(SoloSongSelect songSelect)
     {
+        if (!songSelect.IsCurrentScreen())
+            return;
+
         try
         {
             /*
@@ -71,9 +67,7 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
                 throw new NullDependencyException("OsuGame.ScreenFooter is not a instance of ScreenFooter!");
             */
 
-            List<ScreenFooterButton> buttons =
-            [
-            ];
+            List<ScreenFooterButton> buttons = [];
 
             buttons.AddRange(songSelect.CreateFooterButtons());
             buttons.Add(new NewFooterButtonOpenInMvis
@@ -82,8 +76,6 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
             });
 
             screenFooter.SetButtons(buttons);
-
-            currentPlaySongSelect = songSelect;
         }
         catch (Exception e)
         {
@@ -95,9 +87,6 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
     {
         if (!songSelect.IsLoaded)
             this.Delay(100).Schedule(() => waitUntilSelectReady(songSelect, action));
-
-        if (!songSelect.IsCurrentScreen())
-            return;
 
         this.Delay(1000).Schedule(action);
 
