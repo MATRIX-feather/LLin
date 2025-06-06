@@ -15,6 +15,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Rulesets.Hikariii.Graphics;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
+using osu.Game.Screens.SelectV2;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
@@ -151,7 +152,13 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
                 Text = "打开 Hikariii 播放器",
                 Action = () =>
                 {
-                    Game.PerformFromScreen(screen => screen.Push(new LLinScreen()), [typeof(MainMenu), typeof(PlaySongSelect)]);
+                    Game.PerformFromScreen(s => s.Push(new LLinScreen()), new[]
+                    {
+                        typeof(MainMenu),
+                        typeof(PlaySongSelect),
+                        typeof(SoloSongSelect)
+                    });
+
                     overlay.Hide();
                 }
             },
