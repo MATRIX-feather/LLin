@@ -29,7 +29,7 @@ public partial class GeneralHikariiiSettingsSection : SettingsSection
             new SettingsCheckbox
             {
                 LabelText = "向新歌曲选择界面添加 Hikariii 入口",
-                TooltipText = "受限于形式, Hikariii 只能在选歌屏幕被推送后等待一段时间再重新设定 Footer 按钮...\n如果你觉得不舒服, 可以关闭此选项。",
+                TooltipText = "如果你不喜欢我们这样做, 可以关闭此选项。",
                 Current = config.GetBindable<bool>(MSetting.InjectButtonToNewSongSelect)
             }
         ];
