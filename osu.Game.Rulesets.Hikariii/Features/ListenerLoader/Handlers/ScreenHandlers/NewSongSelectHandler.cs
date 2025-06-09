@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Screens;
 using osu.Game.Graphics;
@@ -12,6 +13,7 @@ using osu.Game.Screens.Footer;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
 using osu.Game.Screens.SelectV2;
+using BindingFlags = System.Reflection.BindingFlags;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers.ScreenHandlers;
 
@@ -56,26 +58,40 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
 
         try
         {
-            /*
             const BindingFlags flag = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
-            var gameFooterField = Game.GetType().GetField("ScreenFooter", flag);
-            if (gameFooterField is null)
-                throw new MissingFieldException("ScreenFooter");
+            List<ScreenFooterButton> buttons =
+            [
+                new NewFooterButtonOpenInMvis
+                {
+                    Action = this.pushPlayerScreen
+                }
+            ];
 
-            if (gameFooterField.GetValue(Game) is not ScreenFooter screenFooter)
-                throw new NullDependencyException("OsuGame.ScreenFooter is not a instance of ScreenFooter!");
-            */
+            var buttonFlowField = screenFooter.GetType().GetField("buttonsFlow", flag);
+            if (buttonFlowField is null)
+                throw new MissingFieldException("buttonsFlow");
 
-            List<ScreenFooterButton> buttons = [];
+            if (buttonFlowField.GetValue(screenFooter) is not FillFlowContainer<ScreenFooterButton> flowContainer)
+                throw new NullDependencyException("The button flow is not a valid FillFlowContainer!");
 
-            buttons.AddRange(songSelect.CreateFooterButtons());
-            buttons.Add(new NewFooterButtonOpenInMvis
+            flowContainer.AddRange(buttons);
+            buttons.ForEach(b => b.OnLoadComplete += _ =>
             {
-                Action = this.pushPlayerScreen
-            });
+                try
+                {
+                    // This fucking call may throw exception sometime
+                    if (!flowContainer.Contains(b)) return;
+                }
+                catch (Exception e)
+                {
+                    return;
+                }
 
-            screenFooter.SetButtons(buttons);
+                // See osu!lazer -> ScreenFooter#L312
+                int index = flowContainer.IndexOf(b);
+                b.AppearFromBottom(index * 30);
+            });
         }
         catch (Exception e)
         {
@@ -88,7 +104,7 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
         if (!songSelect.IsLoaded)
             this.Delay(100).Schedule(() => waitUntilSelectReady(songSelect, action));
 
-        this.Delay(1000).Schedule(action);
+        this.Delay(1).Schedule(action);
 
         //action.Invoke();
     }
