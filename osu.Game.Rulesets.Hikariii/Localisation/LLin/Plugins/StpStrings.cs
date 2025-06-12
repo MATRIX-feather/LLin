@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins
 
         public static LocalisableString TypeASettings => new TranslatableString(getKey(@"type_a_settings"), @"Type A Settings");
 
-        public static LocalisableString TypeBSettings => new TranslatableString(getKey(@"type_a_settings"), @"Type B Settings");
+        public static LocalisableString TypeBSettings => new TranslatableString(getKey(@"type_b_settings"), @"Type B Settings");
 
         public static LocalisableString Radius => new TranslatableString(getKey(@"radius"), @"Radius");
 
