@@ -88,9 +88,11 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
                     return;
                 }
 
+
                 // See osu!lazer -> ScreenFooter#L312
-                int index = flowContainer.IndexOf(b);
-                b.AppearFromBottom(index * 30);
+                //int index = flowContainer.IndexOf(b);
+                //b.AppearFromBottom(index * 30);
+                b.AppearFromBottom(0);
             });
         }
         catch (Exception e)
