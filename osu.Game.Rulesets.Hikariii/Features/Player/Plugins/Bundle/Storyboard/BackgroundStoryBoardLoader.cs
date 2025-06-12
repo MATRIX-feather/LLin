@@ -250,6 +250,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
                 LLin.RequestNonBlackBackground(this);
             }
 
+            epilepsyWarning.FinishTransforms();
+            epilepsyWarning.Hide();
             hideOrCancelLoadStoryboard(false);
 
             return base.Disable();
