@@ -375,31 +375,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         #endregion
 
-        #region Proxy
-
-        private readonly Container proxyLayer;
-
-        public void AddProxy(Drawable d)
-        {
-            if (!d.IsProxy) throw new InvalidOperationException("试图向Proxy层添加非Proxy Drawable");
-
-            if (!proxyLayer.Contains(d))
-                proxyLayer.Add(d);
-        }
-
-        public bool RemoveProxy(Drawable d)
-        {
-            if (proxyLayer.Contains(d))
-            {
-                proxyLayer.Remove(d, false);
-                return true;
-            }
-
-            return false;
-        }
-
-        #endregion
-
         #region 插件加载、卸载
 
         private readonly List<LLinPlugin> loadingList = new List<LLinPlugin>();
@@ -628,7 +603,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         private readonly BindableDouble musicSpeed = new BindableDouble();
         private readonly BindableBool adjustFreq = new BindableBool();
         private readonly BindableBool nightcoreBeat = new BindableBool();
-        private readonly BindableBool allowProxy = new BindableBool();
         private readonly BindableBool autoVsync = new BindableBool();
         private Bindable<string> currentAudioControlProviderSetting = null!;
         private Bindable<string> currentFunctionbarSetting = null!;
@@ -695,13 +669,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     ]
                 }
             ];
-
-            //对proxyLayer的处理交由allowProxy，因此不在这里添加
-            proxyLayer = new Container
-            {
-                RelativeSizeAxes = Axes.Both,
-                Name = "Proxy 层"
-            };
         }
 
         private readonly BindableBool enableEnterLeaveAnimation = new(true);
@@ -865,7 +832,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             config.BindWith(MSetting.MvisMusicSpeed, musicSpeed);
             config.BindWith(MSetting.MvisAdjustMusicWithFreq, adjustFreq);
             config.BindWith(MSetting.MvisEnableNightcoreBeat, nightcoreBeat);
-            config.BindWith(MSetting.MvisStoryboardProxy, allowProxy);
             config.BindWith(MSetting.MvisAutoVSync, autoVsync);
             config.BindWith(MSetting.MvisEnableAdvancedEnterLeaveAnimation, enableEnterLeaveAnimation);
             currentAudioControlProviderSetting = config.GetBindable<string>(MSetting.MvisCurrentAudioProvider);
@@ -952,21 +918,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             {
                 if (v.NewValue) tryMakeIdle(false);
             });
-
-            allowProxy.BindValueChanged(v =>
-            {
-                //如果允许proxy显示
-                if (v.NewValue)
-                {
-                    backgroundLayer.Remove(proxyLayer, false);
-                    masterContainer.Add(proxyLayer);
-                }
-                else
-                {
-                    RemoveInternal(proxyLayer, false);
-                    backgroundLayer.Add(proxyLayer);
-                }
-            }, true);
 
             //设置键位
             initInternalKeyBindings();

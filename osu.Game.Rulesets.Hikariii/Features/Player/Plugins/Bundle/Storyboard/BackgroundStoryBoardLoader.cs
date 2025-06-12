@@ -2,7 +2,6 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
@@ -87,7 +86,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
             }
 
             AddInternal(epilepsyWarning);
-            LLin?.AddProxy(epilepsyWarning.CreateProxy());
         }
 
         private void onScreenResuming()
@@ -188,8 +186,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
             return true;
         }
 
-        private Drawable? prevProxy;
-
         protected override bool OnContentLoaded(Drawable content)
         {
             var newStoryboard = (BackgroundStoryboard)content;
@@ -204,17 +200,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
                 LLin.OnSeek += Seek;
 
             Enabled.TriggerChange();
-
-            if (prevProxy != null)
-            {
-                LLin?.RemoveProxy(prevProxy);
-                prevProxy.Expire();
-            }
-
-            prevProxy = getProxy(newStoryboard);
-
-            if (prevProxy != null) LLin?.AddProxy(prevProxy);
-            prevProxy?.Show();
 
             if (LLin != null)
             {
@@ -306,13 +291,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
 
             if (!Disabled.Value)
                 Load();
-        }
-
-        private Drawable getProxy(BackgroundStoryboard storyboard)
-        {
-            if (storyboard != currentStoryboard) return new Container();
-
-            return storyboard.StoryboardProxy();
         }
 
         public void Seek(double position)

@@ -65,12 +65,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
                 },
                 new BooleanSettingsEntry
                 {
-                    Name = "置顶Proxy",
-                    Bindable = config.GetBindable<bool>(MSetting.MvisStoryboardProxy),
-                    Description = "让所有Proxy显示在前景上方"
-                },
-                new BooleanSettingsEntry
-                {
                     Name = "启用背景动画",
                     Bindable = config.GetBindable<bool>(MSetting.MvisEnableBgTriangles),
                     Description = "如果条件允许,播放器将会在背景显示动画"

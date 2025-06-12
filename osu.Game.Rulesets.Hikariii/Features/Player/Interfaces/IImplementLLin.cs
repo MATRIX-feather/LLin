@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using osu.Framework.Bindables;
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
@@ -103,25 +102,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         /// </summary>
         /// <returns>播放器信息</returns>
         public PlayerInfo GetInfo();
-
-        #endregion
-
-        #region Proxy功能实现
-
-        /// <summary>
-        /// 添加一个Proxy
-        /// </summary>
-        /// <param name="d">要添加的Drawable</param>
-        public void AddProxy(Drawable d);
-
-        /// <summary>
-        /// 移除一个Proxy
-        /// </summary>
-        /// <param name="d">要移除的Drawable</param>
-        /// <returns>
-        /// true: 移除成功<br/>
-        /// false: 移除出现异常</returns>
-        public bool RemoveProxy(Drawable d);
 
         #endregion
 

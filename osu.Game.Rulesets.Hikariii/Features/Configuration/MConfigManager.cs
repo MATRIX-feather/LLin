@@ -50,7 +50,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             //MvisSettings
             SetDefault(MSetting.MvisContentAlpha, 1f, 0f, 1f);
             SetDefault(MSetting.MvisBgBlur, 0.2f, 0f, 1f);
-            SetDefault(MSetting.MvisStoryboardProxy, false);
             SetDefault(MSetting.MvisIdleBgDim, 0.8f, 0f, 1f);
             SetDefault(MSetting.MvisEnableBgTriangles, true);
             SetDefault(MSetting.MvisAdjustMusicWithFreq, true);
@@ -127,7 +126,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
         TrianglesEnabled,
         UseAccelForDefault,
         MvisBgBlur,
-        MvisStoryboardProxy,
         MvisIdleBgDim,
         MvisContentAlpha,
         MvisEnableBgTriangles,
