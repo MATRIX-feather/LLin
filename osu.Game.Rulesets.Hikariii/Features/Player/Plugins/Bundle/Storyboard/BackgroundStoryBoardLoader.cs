@@ -66,7 +66,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
             Margin = new MarginPadding(20),
             Depth = -1,
             Width = 0.5f,
-            Scale = new Vector2(2f)
+            Scale = new Vector2(2f),
+            Alpha = 0
         };
 
         [BackgroundDependencyLoader]
