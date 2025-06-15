@@ -70,7 +70,7 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
 
             var buttonFlowField = screenFooter.GetType().GetField("buttonsFlow", flag);
             if (buttonFlowField is null)
-                throw new MissingFieldException("buttonsFlow");
+                throw new NullDependencyException("Field 'buttonsFlow' not found in ScreenFooter!");
 
             if (buttonFlowField.GetValue(screenFooter) is not FillFlowContainer<ScreenFooterButton> flowContainer)
                 throw new NullDependencyException("The button flow is not a valid FillFlowContainer!");
@@ -87,7 +87,6 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
                 {
                     return;
                 }
-
 
                 // See osu!lazer -> ScreenFooter#L312
                 //int index = flowContainer.IndexOf(b);
