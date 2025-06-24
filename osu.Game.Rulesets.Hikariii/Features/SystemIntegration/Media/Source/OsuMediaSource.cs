@@ -40,6 +40,11 @@ public partial class OsuMediaSource : CompositeDrawable, IMediaSource
         doUpdateProgress(time);
     }
 
+    public virtual void OnExternalTogglePause()
+    {
+        musicController.TogglePause();
+    }
+
     public virtual void OnExternalPlayPause(bool play)
     {
         if (play)

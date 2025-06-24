@@ -46,6 +46,10 @@ public class FallbackMediaSource : IMediaSource
     {
     }
 
+    public void OnExternalTogglePause()
+    {
+    }
+
     public void OnExternalNext()
     {
     }

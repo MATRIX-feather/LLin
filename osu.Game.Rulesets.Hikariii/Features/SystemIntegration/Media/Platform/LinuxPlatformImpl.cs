@@ -46,6 +46,7 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
         mprisPlayerService.Play += () => Schedule(() => HandlePlayPause?.Invoke(true));
         mprisPlayerService.Pause += () => Schedule(() => HandlePlayPause?.Invoke(false));
         mprisPlayerService.Stop += () => Schedule(() => HandlePlayPause?.Invoke(false));
+        mprisPlayerService.TogglePause += () => Schedule(() => HandleTogglePause?.Invoke());
 
         mprisPlayerService.Seek += offset => Schedule(() => HandleSeek?.Invoke(offset / 1000d));
         mprisPlayerService.SetPosition += targetTime => Schedule(() => HandleSetProgress?.Invoke(targetTime / 1000d));
@@ -60,6 +61,7 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
     public Action<double>? HandleSeek { get; set; }
     public Action<double>? HandleSetProgress { get; set; }
     public Action<bool>? HandlePlayPause { get; set; }
+    public Action? HandleTogglePause { get; set; }
     public Action? HandleNext { get; set; }
     public Action? HandlePrevious { get; set; }
     public Action<bool>? HandleLoopStatus { get; set; }

@@ -26,6 +26,11 @@ public interface IPlatformImpl
     Action<bool>? HandlePlayPause { get; set; }
 
     /// <summary>
+    /// Called when the system requested TogglePause
+    /// </summary>
+    public Action? HandleTogglePause { get; set; }
+
+    /// <summary>
     /// Called when the system requested to play the next track
     /// </summary>
     Action? HandleNext { get; set; }

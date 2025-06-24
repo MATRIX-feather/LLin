@@ -122,6 +122,8 @@ public partial class MediaIntegration : CompositeComponent
             impl.HandleNext += () => MediaHandler?.OnExternalNext();
             impl.HandlePrevious += () => MediaHandler?.OnExternalPrevious();
 
+            impl.HandleTogglePause += () => MediaHandler?.OnExternalTogglePause();
+
             impl.HandleLoopStatus += loop => MediaHandler?.OnExternalLoopSet(loop);
             impl.HandleShuffleStatus += shuffle => MediaHandler?.OnExternalShuffleSet(shuffle);
         }

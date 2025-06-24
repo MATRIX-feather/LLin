@@ -12,6 +12,7 @@ public interface IMediaSource
     void OnExternalSetTime(double time);
 
     void OnExternalPlayPause(bool play);
+    void OnExternalTogglePause();
     void OnExternalNext();
     void OnExternalPrevious();
 

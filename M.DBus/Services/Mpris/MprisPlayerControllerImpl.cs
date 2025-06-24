@@ -225,6 +225,7 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
     public event Action? Pause;
     public event Action? Stop;
     public event Action? Play;
+    public event Action? PlayPause;
 
     public event Action<long>? Seek;
     public event Action<long>? SetPosition;
@@ -252,7 +253,7 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
 
     protected override ValueTask OnPlayPauseAsync(Message request)
     {
-        Play?.Invoke();
+        PlayPause?.Invoke();
         return ValueTask.CompletedTask;
     }
 

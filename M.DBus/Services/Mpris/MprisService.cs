@@ -17,6 +17,7 @@ public class MprisService : IRegisterable, IMethodHandler
     public event Action? Pause;
     public event Action? Stop;
     public event Action? Play;
+    public event Action? TogglePause;
 
     public event Action<long>? Seek;
     public event Action<long>? SetPosition;
@@ -78,6 +79,7 @@ public class MprisService : IRegisterable, IMethodHandler
         MprisPlayerControllerService.Seek += offset => Seek?.Invoke(offset);
         MprisPlayerControllerService.SetPosition += pos => SetPosition?.Invoke(pos);
         MprisPlayerControllerService.OpenUri += uri => OpenUri?.Invoke(uri);
+        MprisPlayerControllerService.PlayPause += () => TogglePause?.Invoke();
     }
 
     public void register(Connection connection)
