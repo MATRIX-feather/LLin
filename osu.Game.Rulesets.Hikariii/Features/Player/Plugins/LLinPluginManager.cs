@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
-using M.DBus;
-using M.DBus.Services.Notifications;
-using M.DBus.Tray;
 using Newtonsoft.Json;
 using osu.Framework;
 using osu.Framework.Allocation;
@@ -58,9 +55,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 
         [Resolved]
         private Storage storage { get; set; } = null!;
-
-        [Resolved(canBeNull: true)]
-        private IDBusManagerContainer<IMDBusObject>? dBusManagerContainer { get; set; }
 
         public readonly IProvideAudioControlPlugin DefaultAudioController = new OsuMusicControllerWrapper();
 
@@ -227,36 +221,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 
         public IPluginConfigManager GetConfigManager(LLinPlugin pl) =>
             configManagers.GetOrAdd(pl.GetType(), _ => pl.CreateConfigManager(storage));
-
-        public void RegisterDBusObject(IMDBusObject target)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.Add(target);
-        }
-
-        public void UnRegisterDBusObject(IMDBusObject target)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.Remove(target);
-        }
-
-        public void AddDBusMenuEntry(SimpleEntry entry)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.AddTrayEntry(entry);
-        }
-
-        public void RemoveDBusMenuEntry(SimpleEntry entry)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.RemoveTrayEntry(entry);
-        }
-
-        public void PostSystemNotification(SystemNotification notification)
-        {
-            if (platformSupportsDBus)
-                dBusManagerContainer?.PostSystemNotification(notification);
-        }
 
         public List<LLinPlugin> GetActivePlugins() => activePlugins.ToList();
 

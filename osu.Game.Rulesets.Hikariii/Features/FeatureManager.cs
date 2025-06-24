@@ -4,6 +4,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.DownloadAccel.AccelUtils;
+using Tmds.DBus.Protocol;
 
 namespace osu.Game.Rulesets.Hikariii.Features;
 
@@ -45,7 +46,7 @@ public partial class FeatureManager : CompositeDrawable
             try
             {
                 // 尝试访问Tmds.DBus和M.DBus中的值，如果访问成功则代表安装了DBus集成
-                string? tmdsDBusSystrmAddr = Tmds.DBus.Address.System;
+                string? tmdsDBusSystrmAddr = Address.System;
                 var mDbus = new M.DBus.ServiceUtils();
             }
             catch (Exception e)
