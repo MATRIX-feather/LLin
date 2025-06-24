@@ -119,8 +119,11 @@ public partial class OsuMediaSource : CompositeDrawable, IMediaSource
 
     private void progressUpdateLoop()
     {
-        var track = musicController.CurrentTrack;
-        doUpdateProgress(track.CurrentTime);
+        if (trackLoaded.Value)
+        {
+            var track = musicController.CurrentTrack;
+            doUpdateProgress(track.CurrentTime);
+        }
 
         this.Delay(1000).Schedule(progressUpdateLoop);
     }
