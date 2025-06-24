@@ -4,14 +4,11 @@ using Tmds.DBus.SourceGenerator;
 
 namespace M.DBus.Services.Mpris;
 
-internal class MprisPlayerImpl : OrgMprisMediaPlayer2Handler, IMDBusObject
+internal class MprisPlayerImpl : OrgMprisMediaPlayer2Handler
 {
-    public static readonly string PATH = "/org/mpris/MprisPlayer2";
-
     public MprisPlayerImpl(Connection bindingConnection)
     {
         Connection = bindingConnection;
-        this.PathHandler = new PathHandler(Path);
 
         Setup();
     }
@@ -41,16 +38,4 @@ internal class MprisPlayerImpl : OrgMprisMediaPlayer2Handler, IMDBusObject
     {
         return ValueTask.CompletedTask;
     }
-
-    public ValueTask HandleMethodAsync(MethodContext context)
-    {
-        return PathHandler!.HandleMethodAsync(context);
-    }
-
-    public bool RunMethodHandlerSynchronously(Message message)
-    {
-        return PathHandler!.RunMethodHandlerSynchronously(message);
-    }
-
-    public string Path { get; } = PATH;
 }

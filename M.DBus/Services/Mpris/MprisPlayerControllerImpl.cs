@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Mpris;
 using Tmds.DBus.Protocol;
@@ -6,12 +7,11 @@ using Tmds.DBus.SourceGenerator;
 
 namespace M.DBus.Services.Mpris;
 
-internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHandler, IMDBusObject
+internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHandler
 {
     public MprisPlayerControllerImpl(Connection bindingConnection)
     {
         Connection = bindingConnection;
-        this.PathHandler = new PathHandler(Path);
         Setup();
     }
 
@@ -38,13 +38,187 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
         CanControl = true;
     }
 
+    public string Path { get; } = "/org/mpris/MediaPlayer2";
+
+    protected void NotifyChange<T>(string name, T val)
+    {
+        Dictionary<string, Variant> dict;
+
+        if (val is Dictionary<string, Variant> d)
+        {
+            dict = d;
+        }
+        else
+        {
+            dict = new Dictionary<string, Variant>
+            {
+                [name] = Variant.FromStruct(new Struct<T>(val))
+            };
+        }
+
+        MessageWriter writer = Connection.GetMessageWriter();
+        writer.WriteSignalHeader(null, Path, "org.freedesktop.DBus.Properties", "PropertiesChanged", "sa{sv}as");
+        writer.WriteString("org.mpris.MediaPlayer2.Player");
+        writer.WriteDictionary(dict);
+        writer.WriteArray(new[] { "" });
+
+        if (!Connection.TrySendMessage(writer.CreateMessage()))
+            throw new Exception("Can't send notify!");
+
+        writer.Dispose();
+    }
+
     //region OrgMprisMediaPlayer2PlayerHandler
 
     public override Connection Connection { get; }
-    public override string? LoopStatus { get; set; } = MprisStatusStrings.LOOP_STATUS_NONE;
-    public override double Rate { get; set; } = 1;
-    public override bool Shuffle { get; set; } = false;
-    public override double Volume { get; set; } = 1;
+
+    private string? loopStatus = MprisStatusStrings.LOOP_STATUS_NONE;
+
+    public override string? LoopStatus
+    {
+        get => loopStatus;
+        set
+        {
+            loopStatus = value;
+            NotifyChange(nameof(LoopStatus), value);
+        }
+    }
+
+    private double rate = 1d;
+
+    public override double Rate
+    {
+        get => rate;
+        set
+        {
+            rate = value;
+            NotifyChange(nameof(Rate), value);
+        }
+    }
+
+    private bool shuffle;
+
+    public override bool Shuffle
+    {
+        get => shuffle;
+        set
+        {
+            shuffle = value;
+            NotifyChange(nameof(Shuffle), value);
+        }
+    }
+
+    private double volume = 1d;
+
+    public override double Volume
+    {
+        get => volume;
+        set
+        {
+            volume = value;
+            NotifyChange(nameof(Volume), value);
+        }
+    }
+
+    public new double MaximumRate
+    {
+        get => base.MaximumRate;
+        set
+        {
+            base.MaximumRate = value;
+            NotifyChange(nameof(MaximumRate), value);
+        }
+    }
+
+    public new double MinimumRate
+    {
+        get => base.MinimumRate;
+        set
+        {
+            base.MinimumRate = value;
+            NotifyChange(nameof(MinimumRate), value);
+        }
+    }
+
+    public new long Position
+    {
+        get => base.Position;
+        set
+        {
+            base.Position = value;
+            NotifyChange(nameof(Position), value);
+        }
+    }
+
+    public new Dictionary<string, Variant>? Metadata
+    {
+        get => base.Metadata;
+        set
+        {
+            base.Metadata = value;
+            NotifyChange(nameof(Metadata), Metadata);
+        }
+    }
+
+    public new bool CanGoNext
+    {
+        get => base.CanGoNext;
+        set
+        {
+            base.CanGoNext = value;
+            NotifyChange(nameof(CanGoNext), value);
+        }
+    }
+
+    public new bool CanGoPrevious
+    {
+        get => base.CanGoPrevious;
+        set
+        {
+            base.CanGoPrevious = value;
+            NotifyChange(nameof(CanGoPrevious), value);
+        }
+    }
+
+    public new bool CanPlay
+    {
+        get => base.CanPlay;
+        set
+        {
+            base.CanPlay = value;
+            NotifyChange(nameof(CanPlay), value);
+        }
+    }
+
+    public new bool CanPause
+    {
+        get => base.CanPause;
+        set
+        {
+            base.CanPause = value;
+            NotifyChange(nameof(CanPause), value);
+        }
+    }
+
+    public new bool CanSeek
+    {
+        get => base.CanSeek;
+        set
+        {
+            base.CanSeek = value;
+            NotifyChange(nameof(CanSeek), value);
+        }
+    }
+
+    public new bool CanControl
+    {
+        get => base.CanControl;
+        set
+        {
+            base.CanControl = value;
+            NotifyChange(nameof(CanControl), CanControl);
+        }
+    }
 
     public event Action? Next;
     public event Action? Previous;
@@ -111,18 +285,5 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
         OpenUri?.Invoke(uri);
         return ValueTask.CompletedTask;
     }
-
-    public ValueTask HandleMethodAsync(MethodContext context)
-    {
-        return PathHandler!.HandleMethodAsync(context);
-    }
-
-    public bool RunMethodHandlerSynchronously(Message message)
-    {
-        return PathHandler!.RunMethodHandlerSynchronously(message);
-    }
-
     //endregion
-
-    public string Path { get; } = PATH;
 }
