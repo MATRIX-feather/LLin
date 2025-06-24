@@ -1,11 +1,11 @@
 using System;
-using M.DBus;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.DBus;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Mpris;
+using Tmds.DBus;
 
 namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media.Platform;
 
@@ -28,9 +28,9 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
 
         var manager = dbusIntegration.DBusManager;
 
-        Logging.Log("DBus connect status is " + manager.connectionState);
+        Logging.Log("DBus connect status is " + manager.ConnectionState);
 
-        if (manager.connectionState == DBusManager<IMDBusObject>.ConnectionState.Connected)
+        if (manager.ConnectionState == ConnectionState.Connected)
             registerService();
         else
             manager.OnConnected += registerService;
@@ -38,9 +38,10 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
 
     private void registerService()
     {
+        Logging.Log("Registering MPRIS service...");
         var manager = dbusIntegration.DBusManager;
         manager.OnConnected -= registerService;
-        manager.RegisterNewObject(mprisPlayerService, "org.mpris.MediaPlayer2.mfosu").Wait();
+        manager.RegisterObject(mprisPlayerService).Wait();
 
         mprisPlayerService.Play += () => Schedule(() => HandlePlayPause?.Invoke(true));
         mprisPlayerService.Pause += () => Schedule(() => HandlePlayPause?.Invoke(false));

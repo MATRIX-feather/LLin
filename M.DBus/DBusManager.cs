@@ -11,6 +11,7 @@ using Tmds.DBus;
 
 namespace M.DBus
 {
+    [Obsolete]
     public class DBusManager<T> : IDisposable
         where T : IDBusObject
     {

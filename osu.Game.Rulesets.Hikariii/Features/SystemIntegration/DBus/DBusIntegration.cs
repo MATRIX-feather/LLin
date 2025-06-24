@@ -8,12 +8,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.DBus;
 
 public partial class DBusIntegration : CompositeComponent
 {
-    public readonly DBusManager<IMDBusObject> DBusManager;
+    public readonly DBusMgrNew DBusManager;
     public readonly Greet GreetService;
 
     public DBusIntegration()
     {
-        this.DBusManager = new DBusManager<IMDBusObject>();
+        this.DBusManager = new DBusMgrNew();
         DBusManager.OnConnected += onConnected;
 
         GreetService = new Greet("hikariii");
@@ -22,16 +22,18 @@ public partial class DBusIntegration : CompositeComponent
     [BackgroundDependencyLoader]
     private void load()
     {
+        int start = DateTime.Now.Millisecond;
         DBusManager.Connect().Wait();
+        int end = DateTime.Now.Millisecond;
 
-        Logging.Log("Done connecting to DBus!");
+        Logging.Log($"Done connecting to DBus! Took {end - start}ms.");
     }
 
-    public Action<DBusManager<IMDBusObject>>? OnDBusConnected;
+    public Action<DBusMgrNew>? OnDBusConnected;
 
     private void onConnected()
     {
-        DBusManager.RegisterNewObject(GreetService).Wait();
+        DBusManager.RegisterObject(GreetService).Wait();
         GreetService.SwitchState(true, "DBus connected");
 
         OnDBusConnected?.Invoke(DBusManager);

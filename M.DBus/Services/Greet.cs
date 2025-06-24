@@ -8,7 +8,7 @@ using Tmds.DBus;
 namespace M.DBus.Services
 {
     [DBusInterface("io.matrix_feather.dbus.greet")]
-    public interface IGreet : IDBusObject
+    public interface IGreet : IMDBusObject
     {
         // Methods
         Task<string> GreetAsync(string message);
@@ -71,5 +71,7 @@ namespace M.DBus.Services
             => SignalWatcher.AddAsync(this, nameof(GoingOnline), handler);
 
         public ObjectPath ObjectPath => PATH;
+        public string CustomRegisterName => "io.matrix_feather.dbus.greet";
+        public bool IsService => true;
     }
 }

@@ -21,23 +21,11 @@ public partial class DBusMgrNew : CompositeDrawable
 
     public string TargetUrl { get; set; } = Address.Session;
 
-    public DBusMgrNew()
-    {
-    }
-
-    [BackgroundDependencyLoader]
-    private void load()
-    {
-        Task.Run(StartConnect);
-    }
-
-    private readonly SemaphoreSlim writeLock = new SemaphoreSlim(1, 1);
-
     #region Connect and Disconnect
 
     private CancellationTokenSource? cancellationTokenSource;
 
-    public void StartConnect()
+    public Task Connect()
     {
         Disconnect();
 
@@ -47,41 +35,34 @@ public partial class DBusMgrNew : CompositeDrawable
             AutoConnect = false
         });
 
-        Task.Run(startConnectTask, cancellationTokenSource.Token);
+        return Task.Run(startConnectTask, cancellationTokenSource.Token);
     }
 
-    private async Task startConnectTask()
+    private Task startConnectTask()
     {
         try
         {
-            await writeLock.WaitAsync().ConfigureAwait(false);
-
             if (currentConnection == null)
                 throw new NullDependencyException("Called StartConnect but DBusConnection is not ready!");
 
-            this.currentConnection = new Connection(TargetUrl);
-            this.ConnectionState = ConnectionState.Connecting;
+            currentConnection = new Connection(TargetUrl);
+            ConnectionState = ConnectionState.Connecting;
 
             // Await for connection to finish
-            await currentConnection.ConnectAsync().ConfigureAwait(false);
             currentConnection.StateChanged += onConnectionStateChanged;
 
-            this.ConnectionState = ConnectionState.Connected;
-
-            // Resolve all previously registed objects to DBus
-            foreach (var keyValuePair in registedObjects)
-                await registerToConnectionTask(keyValuePair.Key).ConfigureAwait(false);
+            currentConnection.ConnectAsync().Wait();
 
             OnConnected?.Invoke();
+
+            return Task.CompletedTask;
         }
         catch (Exception e)
         {
             this.ConnectionState = ConnectionState.Disconnected;
             Logger.Error(e, "初始化到DBus的连接时出现异常");
-        }
-        finally
-        {
-            writeLock.Release();
+
+            return Task.FromException(e);
         }
     }
 
@@ -91,7 +72,9 @@ public partial class DBusMgrNew : CompositeDrawable
 
         Logger.Log($"Sender: {sender}");
         Logger.Log($"Connection State: {e.State}");
-        Logger.Log($"Reason: {e.DisconnectReason}");
+
+        if (e.DisconnectReason != null)
+            Logger.Log($"Reason: {e.DisconnectReason}");
 
         if (e.DisconnectReason != null)
             Logger.Log($"StackTrace: {e.DisconnectReason.StackTrace}");
@@ -119,32 +102,28 @@ public partial class DBusMgrNew : CompositeDrawable
 
     #region Object Register
 
-    private readonly ConcurrentDictionary<IMDBusObject, string> registedObjects = new ConcurrentDictionary<IMDBusObject, string>();
+    private readonly ConcurrentDictionary<IMDBusObject, string> registedObjects = new();
 
     /// <summary>
     /// Register a dbus object to this manager.
     /// </summary>
     /// <param name="dBusObject">The target object to register</param>
     /// <returns></returns>
-    public RegisterResult RegisterObject(IMDBusObject? dBusObject)
+    public Task RegisterObject(IMDBusObject? dBusObject)
     {
-        if (dBusObject == null) return RegisterResult.NULL_OBJECT;
+        if (dBusObject == null)
+            return Task.FromException(new Exception("Null DBusObject!"));
 
         if (registedObjects.ContainsKey(dBusObject))
-            return RegisterResult.PATH_ALREADY_IN_USE;
+            return Task.FromException(new Exception("Already have an object registered in the same path!"));
 
-        string registedName = string.IsNullOrEmpty(dBusObject.CustomRegisterName)
+        string registeredName = string.IsNullOrEmpty(dBusObject.CustomRegisterName)
             ? dBusObject.ObjectPath.ToServiceName()
             : dBusObject.CustomRegisterName;
 
-        writeLock.Wait();
+        registedObjects[dBusObject] = registeredName;
 
-        registedObjects[dBusObject] = registedName;
-        Task.Run(() => registerToConnectionTask(dBusObject));
-
-        writeLock.Release();
-
-        return RegisterResult.OK;
+        return Task.Run(() => registerToConnectionTask(dBusObject));
     }
 
     /// <summary>
@@ -155,7 +134,7 @@ public partial class DBusMgrNew : CompositeDrawable
     private async Task registerToConnectionTask(IMDBusObject obj)
     {
         if (!ConnectionReady())
-            return;
+            throw new Exception("Connection not ready!");
 
         Debug.Assert(currentConnection != null, nameof(currentConnection) + " != null");
         await currentConnection.RegisterObjectAsync(obj).ConfigureAwait(false);
@@ -165,7 +144,7 @@ public partial class DBusMgrNew : CompositeDrawable
         if (obj.CustomRegisterName?.StartsWith('.') ?? false)
         {
             Logger.Log($"Not registering {obj}: A CustomRegisterName may not starts with '.'");
-            return;
+            throw new Exception($"Not registering {obj}: A CustomRegisterName may not starts with '.'");
         }
 
         if (obj.IsService)
@@ -250,7 +229,7 @@ public partial class DBusMgrNew : CompositeDrawable
             resolvedServiceNames.Add(serviceName);
         }
 
-        Logger.Log($"为{obj.ObjectPath}注册{serviceName}", level: LogLevel.Debug);
+        Logger.Log($"为 {obj.ObjectPath} 注册 {serviceName}", level: LogLevel.Debug);
     }
 
     private void onServiceNameChanged(ServiceOwnerChangedEventArgs args)
