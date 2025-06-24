@@ -1,4 +1,4 @@
-using Tmds.DBus;
+using Tmds.DBus.Protocol;
 
 namespace M.DBus.Utils
 {

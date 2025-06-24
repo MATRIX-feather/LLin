@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using M.DBus.Tray;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
@@ -957,9 +956,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             masterContainer.Add(rsInput);
 
-            //添加DBusEntry
-            pluginManager.AddDBusMenuEntry(dbusEntry);
-
             //当插件卸载时调用onPluginUnload
             pluginManager.OnPluginUnLoad += onPluginUnLoad;
 
@@ -1013,12 +1009,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             this.TransformBindableTo(controlDisplayTemp, 0f, 4000)
                 .OnComplete(_ => currentFunctionBar.HideFunctionControl());
         }
-
-        private readonly SimpleEntry dbusEntry = new SimpleEntry
-        {
-            Label = "LLin - 插件",
-            Enabled = false
-        };
 
         public override bool RequestsFocus => true;
 
@@ -1185,8 +1175,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             Exiting?.Invoke();
 
             pluginManager.OnPluginUnLoad -= onPluginUnLoad;
-
-            pluginManager.RemoveDBusMenuEntry(dbusEntry);
 
             if (autoVsync.Value)
             {

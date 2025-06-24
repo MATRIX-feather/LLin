@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using M.DBus.Tray;
-using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
@@ -13,7 +11,6 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Config;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.DBus;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Helper;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Sidebar;
@@ -222,11 +219,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         /// </summary>
         protected override bool OnContentLoaded(Drawable content) => true;
 
-        private readonly SimpleEntry lyricEntry = new SimpleEntry
-        {
-            Enabled = false
-        };
-
         [Cached]
         public UserDefinitionHelper UserDefinitionHelper { get; private set; } = new UserDefinitionHelper();
 
@@ -241,8 +233,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
 
             AddInternal(LyricProcessor);
             AddInternal(UserDefinitionHelper);
-
-            PluginManager!.RegisterDBusObject(dbusObject);
 
             if (LLin != null)
                 LLin.Exiting += onMvisExiting;
@@ -264,13 +254,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
 
         private void onMvisExiting()
         {
-            resetDBusMessage();
-            PluginManager!.UnRegisterDBusObject(dbusObject);
-
             this.SaveLyricConfigToDisk(CurrentWorkingBeatmap);
-
-            if (!Disabled.Value)
-                PluginManager.RemoveDBusMenuEntry(lyricEntry);
         }
 
         public void SaveLyricConfigToDisk(WorkingBeatmap? currentBeatmap = null)
@@ -355,9 +339,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         {
             this.MoveToX(-10, 300, Easing.OutQuint).FadeOut(300, Easing.OutQuint);
 
-            resetDBusMessage();
-            PluginManager!.RemoveDBusMenuEntry(lyricEntry);
-
             return base.Disable();
         }
 
@@ -369,24 +350,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
 
             LLin?.OnBeatmapChanged(onBeatmapChanged, this, true);
 
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-            {
-                dbusObject.RawLyric = currentLine?.Content;
-                dbusObject.TranslatedLyric = currentLine?.TranslatedString;
-
-                PluginManager!.AddDBusMenuEntry(lyricEntry);
-            }
-
             return result;
-        }
-
-        private void resetDBusMessage()
-        {
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-            {
-                dbusObject.RawLyric = string.Empty;
-                dbusObject.TranslatedLyric = string.Empty;
-            }
         }
 
         protected override bool PostInit() => true;
@@ -402,18 +366,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
                 value ??= emptyLine;
 
                 currentLine = value;
-
-                if (RuntimeInfo.OS != RuntimeInfo.Platform.Linux) return;
-
-                dbusObject.RawLyric = value.Content;
-                dbusObject.TranslatedLyric = value.TranslatedString;
-
-                lyricEntry.Label = $"♩: {value.TranslatedString}\n♪: {value.Content}";
             }
         }
 
         private readonly Lyric defaultLrc = new Lyric();
-        private readonly LyricDBusObject dbusObject = new LyricDBusObject();
 
         protected override void Update()
         {

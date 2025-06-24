@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using M.DBus.Utils;
+using M.DBus.Services;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
-using Tmds.DBus;
+using Tmds.DBus.Protocol;
 
 namespace M.DBus;
 
@@ -16,8 +16,9 @@ namespace M.DBus;
 
 public partial class DBusMgrNew : CompositeDrawable
 {
-    private Connection? currentConnection;
-    public ConnectionState ConnectionState { get; private set; } = ConnectionState.Disconnected;
+    public Connection? CurrentConnection { get; private set; }
+
+    public DBusAccess? CurrentAccess { get; private set; }
 
     public string TargetUrl { get; set; } = Address.Session;
 
@@ -30,7 +31,7 @@ public partial class DBusMgrNew : CompositeDrawable
         Disconnect();
 
         this.cancellationTokenSource = new CancellationTokenSource();
-        currentConnection = new Connection(new ClientConnectionOptions(TargetUrl)
+        CurrentConnection = new Connection(new ClientConnectionOptions(TargetUrl)
         {
             AutoConnect = false
         });
@@ -42,16 +43,19 @@ public partial class DBusMgrNew : CompositeDrawable
     {
         try
         {
-            if (currentConnection == null)
+            if (CurrentConnection == null)
                 throw new NullDependencyException("Called StartConnect but DBusConnection is not ready!");
 
-            currentConnection = new Connection(TargetUrl);
-            ConnectionState = ConnectionState.Connecting;
+            CurrentConnection = new Connection(TargetUrl);
 
             // Await for connection to finish
-            currentConnection.StateChanged += onConnectionStateChanged;
+            //currentConnection.StateChanged += onConnectionStateChanged;
 
-            currentConnection.ConnectAsync().Wait();
+            CurrentConnection.ConnectAsync().AsTask().Wait();
+            this.CurrentAccess = new DBusAccess(new DBusProxy(CurrentConnection));
+
+            CurrentAccess.RequestName("aaaio.matrix_feather.mfosu", 0).Wait();
+            Logger.Log("Connected to DBus!");
 
             OnConnected?.Invoke();
 
@@ -59,13 +63,12 @@ public partial class DBusMgrNew : CompositeDrawable
         }
         catch (Exception e)
         {
-            this.ConnectionState = ConnectionState.Disconnected;
             Logger.Error(e, "初始化到DBus的连接时出现异常");
 
             return Task.FromException(e);
         }
     }
-
+/*
     private void onConnectionStateChanged(object? sender, ConnectionStateChangedEventArgs e)
     {
         Logger.Log($"-----------------------DBus Connection State Changed--------------------------");
@@ -89,13 +92,13 @@ public partial class DBusMgrNew : CompositeDrawable
 
         this.ConnectionState = e.State;
     }
-
+*/
     public void Disconnect()
     {
         cancellationTokenSource?.Cancel();
 
-        currentConnection?.Dispose();
-        currentConnection = null;
+        CurrentConnection?.Dispose();
+        CurrentConnection = null;
     }
 
     #endregion
@@ -117,11 +120,7 @@ public partial class DBusMgrNew : CompositeDrawable
         if (registedObjects.ContainsKey(dBusObject))
             return Task.FromException(new Exception("Already have an object registered in the same path!"));
 
-        string registeredName = string.IsNullOrEmpty(dBusObject.CustomRegisterName)
-            ? dBusObject.ObjectPath.ToServiceName()
-            : dBusObject.CustomRegisterName;
-
-        registedObjects[dBusObject] = registeredName;
+        registedObjects[dBusObject] = dBusObject.Path;
 
         return Task.Run(() => registerToConnectionTask(dBusObject));
     }
@@ -136,23 +135,8 @@ public partial class DBusMgrNew : CompositeDrawable
         if (!ConnectionReady())
             throw new Exception("Connection not ready!");
 
-        Debug.Assert(currentConnection != null, nameof(currentConnection) + " != null");
-        await currentConnection.RegisterObjectAsync(obj).ConfigureAwait(false);
-
-        string serviceName = registedObjects[obj];
-
-        if (obj.CustomRegisterName?.StartsWith('.') ?? false)
-        {
-            Logger.Log($"Not registering {obj}: A CustomRegisterName may not starts with '.'");
-            throw new Exception($"Not registering {obj}: A CustomRegisterName may not starts with '.'");
-        }
-
-        if (obj.IsService)
-            await currentConnection.RegisterServiceAsync(serviceName).ConfigureAwait(false);
-
-        await resolveOwnerTask(obj).ConfigureAwait(false);
-
-        OnObjectRegisteredToConnection?.Invoke(obj);
+        Debug.Assert(CurrentConnection != null, nameof(CurrentConnection) + " != null");
+        CurrentConnection.AddMethodHandler(obj);
     }
 
     /// <summary>
@@ -181,7 +165,7 @@ public partial class DBusMgrNew : CompositeDrawable
             throw new InvalidOperationException($"The given object ({mdBusObject}) does not exist in the current registry");
         }
 
-        this.currentConnection?.UnregisterObject(mdBusObject);
+        this.CurrentConnection?.RemoveMethodHandler(mdBusObject.Path);
 
         Task.Run(() => unRegisterFromConnectionTask(mdBusObject, srvName!));
         return RegisterResult.OK;
@@ -196,79 +180,16 @@ public partial class DBusMgrNew : CompositeDrawable
     {
         if (!ConnectionReady()) return;
 
-        this.currentConnection!.UnregisterObject(mdBusObject);
-
-        if (mdBusObject.IsService)
-            await this.currentConnection!.UnregisterServiceAsync(serviceName).ConfigureAwait(false);
-    }
-
-    #endregion
-
-    #region Object Resolving
-
-    private readonly List<string> resolvedServiceNames = new List<string>();
-
-    private async Task resolveOwnerTask(IMDBusObject obj)
-    {
-        if (!ConnectionReady())
-            return;
-
-        string serviceName = registedObjects[obj];
-
-        Debug.Assert(currentConnection != null, nameof(currentConnection) + " != null");
-
-        if (!resolvedServiceNames.Contains(serviceName))
-        {
-            await currentConnection.ResolveServiceOwnerAsync
-            (
-                serviceName,
-                onServiceNameChanged,
-                e => onServiceError(e, serviceName)
-            ).ConfigureAwait(false);
-
-            resolvedServiceNames.Add(serviceName);
-        }
-
-        Logger.Log($"为 {obj.ObjectPath} 注册 {serviceName}", level: LogLevel.Debug);
-    }
-
-    private void onServiceNameChanged(ServiceOwnerChangedEventArgs args)
-    {
-        Logger.Log($"服务 '{args.ServiceName}' 的归属现在从 '{args.OldOwner}' 变为 '{args.NewOwner}'");
-    }
-
-    private void onServiceError(Exception e, string serviceName)
-    {
-        if (e is ObjectDisposedException) return;
-
-        Logger.Error(e, $"位于 '{serviceName}' 的DBus服务出现错误");
+        this.CurrentConnection!.RemoveMethodHandler(mdBusObject.Path);
     }
 
     #endregion
 
     public Action? OnConnected;
-    public Action<IDBusObject>? OnObjectRegisteredToConnection;
-
-    /// <summary>
-    /// Gets a proxy object to the specific dbus path or service name.
-    /// </summary>
-    /// <exception cref="NotSupportedException">Connection is not ready</exception>
-    public S GetProxyObject<S>(ObjectPath path, string? name)
-        where S : IDBusObject
-    {
-        if (!ConnectionReady())
-            throw new NotSupportedException("未连接");
-
-        if (string.IsNullOrEmpty(name))
-            name = path.ToServiceName();
-
-        Debug.Assert(currentConnection != null, nameof(currentConnection) + " != null");
-        return currentConnection.CreateProxy<S>(name, path);
-    }
 
     public bool ConnectionReady()
     {
-        return this.ConnectionState == ConnectionState.Connected && this.currentConnection != null;
+        return this.CurrentConnection != null;
     }
 
     protected override void Dispose(bool isDisposing)

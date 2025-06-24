@@ -35,7 +35,7 @@ namespace M.DBus
 
         public static object GetValueFor(object source, string name, IDictionary<string, object> members)
         {
-            if (name == "members")
+            if (false && name == "members")
             {
                 Logger.Log("members属性对外不可用。");
                 return not_available;
@@ -58,7 +58,7 @@ namespace M.DBus
                 Logger.Log(e.StackTrace);
             }
 
-            return not_available;
+            return "not_available";
         }
 
         public static bool SetValueFor(object source, string name, object newValue, IDictionary<string, object> members)

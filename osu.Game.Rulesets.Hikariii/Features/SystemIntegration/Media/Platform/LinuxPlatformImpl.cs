@@ -1,11 +1,16 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using M.DBus;
+using M.DBus.Services.Mpris;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.DBus;
-using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Mpris;
-using Tmds.DBus;
+using Tmds.DBus.Protocol;
 
 namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media.Platform;
 
@@ -14,34 +19,29 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
     [Resolved]
     private DBusIntegration dbusIntegration { get; set; } = null!;
 
-    private readonly MprisPlayerService mprisPlayerService;
-
-    public LinuxPlatformImpl()
-    {
-        mprisPlayerService = new MprisPlayerService();
-    }
+    private MprisService? mprisPlayerService;
 
     [BackgroundDependencyLoader]
-    private void load(Storage storage)
+    private void load()
     {
-        mprisPlayerService.Storage = storage;
-
-        var manager = dbusIntegration.DBusManager;
-
-        Logging.Log("DBus connect status is " + manager.ConnectionState);
-
-        if (manager.ConnectionState == ConnectionState.Connected)
-            registerService();
-        else
-            manager.OnConnected += registerService;
+        var session = dbusIntegration.AcquireNewSession();
+        session.OnConnected += registerService;
+        session.Connect().Wait();
     }
 
-    private void registerService()
+    private void registerService(DBusSession session)
     {
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
+
         Logging.Log("Registering MPRIS service...");
-        var manager = dbusIntegration.DBusManager;
-        manager.OnConnected -= registerService;
-        manager.RegisterObject(mprisPlayerService).Wait();
+
+        var connection = session.CurrentConnection!;
+
+        mprisPlayerService = new MprisService(connection);
+        mprisPlayerService.register(connection);
+
+        session.RequestServiceName("org.mpris.MediaPlayer2.mfosu_hikariii").Wait();
 
         mprisPlayerService.Play += () => Schedule(() => HandlePlayPause?.Invoke(true));
         mprisPlayerService.Pause += () => Schedule(() => HandlePlayPause?.Invoke(false));
@@ -53,8 +53,8 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
         mprisPlayerService.Next += () => Schedule(() => HandleNext?.Invoke());
         mprisPlayerService.Previous += () => Schedule(() => HandlePrevious?.Invoke());
 
-        mprisPlayerService.LoopChange += b => Schedule(() => HandleLoopStatus?.Invoke(b));
-        mprisPlayerService.OnRandom += doRandom => Schedule(() => HandleShuffleStatus?.Invoke(doRandom));
+        //mprisPlayerService.LoopChange += b => Schedule(() => HandleLoopStatus?.Invoke(b));
+        //mprisPlayerService.OnRandom += doRandom => Schedule(() => HandleShuffleStatus?.Invoke(doRandom));
     }
 
     public Action<double>? HandleSeek { get; set; }
@@ -68,31 +68,111 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
 
     public WorkingBeatmap Beatmap
     {
-        set => mprisPlayerService.Beatmap = value;
+        set
+        {
+            if (mprisPlayerService == null)
+                return;
+
+            var info = value.BeatmapInfo;
+            var metadata = mprisPlayerService.Metadata;
+
+            Debug.Assert(metadata != null);
+
+            metadata["xesam:artist"] = Variant.FromArray([info.Metadata.GetArtist()]);
+            metadata["xesam:title"] = info.Metadata.GetTitle().Title;
+            metadata["xesam:album"] = info.DifficultyName;
+            metadata["xesam:audioBPM"] = info.BPM;
+
+            metadata["mpris:artUrl"] = resolveBeatmapCoverUrl(value);
+            metadata["mpris:trackid"] = new ObjectPath("/not/implemented/yet");
+
+            mprisPlayerService.Metadata = metadata;
+        }
+    }
+
+    [Resolved]
+    private Storage storage { get; set; } = null!;
+
+    private string resolveBeatmapCoverUrl(WorkingBeatmap beatmap)
+    {
+        string body;
+        string backgroundFilename = beatmap?.BeatmapInfo.Metadata.BackgroundFile;
+
+        if (!string.IsNullOrEmpty(backgroundFilename))
+        {
+            body = storage?.GetFullPath("files")
+                   + Path.DirectorySeparatorChar
+                   + (beatmap.BeatmapSetInfo.GetPathForFile(beatmap.BeatmapInfo.Metadata?.BackgroundFile)
+                      ?? string.Empty);
+
+            Logging.Log("COVER PATH IS " + body);
+        }
+        else
+        {
+            string? target = storage?.GetFiles("custom", "avatarlogo*")
+                                    .FirstOrDefault(s => s.Contains("avatarlogo"));
+
+            if (!string.IsNullOrEmpty(target))
+                body = storage.GetFullPath(target);
+            else
+                return string.Empty;
+        }
+
+        return $"file://{body}";
     }
 
     public double Progress
     {
-        set => mprisPlayerService.Progress = (long)value * 1000;
+        set
+        {
+            if (mprisPlayerService == null)
+                return;
+
+            mprisPlayerService.Progress = (long)value * 1000;
+        }
     }
 
     public double TrackLength
     {
-        set => mprisPlayerService.TrackLength = (long)value * 1000;
+        set
+        {
+            if (mprisPlayerService == null)
+                return;
+
+            mprisPlayerService.TrackLength = (long)value * 1000;
+        }
     }
 
     public bool TrackRunning
     {
-        set => mprisPlayerService.TrackRunning = value;
+        set
+        {
+            if (mprisPlayerService == null)
+                return;
+
+            mprisPlayerService.TrackRunning = value;
+        }
     }
 
     public bool TrackLooping
     {
-        set => mprisPlayerService.TrackLooping = value;
+        set
+        {
+            if (mprisPlayerService == null)
+                return;
+
+            mprisPlayerService.TrackLooping = value;
+        }
     }
 
     public bool RandomTrackEnabled
     {
-        set => mprisPlayerService.Shuffle = value;
+        set
+        {
+            if (mprisPlayerService == null)
+                return;
+
+            mprisPlayerService.Shuffle = value;
+        }
     }
 }
