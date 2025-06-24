@@ -61,7 +61,7 @@ function main()
 {
     copy "M.DBus.dll"
     copy "M.Resources.dll"
-    copy "Tmds.DBus.dll"
+    copy "Tmds.DBus.Protocol.dll"
     copy "osu.Game.Rulesets.Hikariii.dll"
     copy "zh/M.Resources.resources.dll"
 
