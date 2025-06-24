@@ -5,60 +5,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using M.DBus.Services;
-using M.DBus.Tray;
 using M.DBus.Utils;
 using osu.Framework.Logging;
 using Tmds.DBus;
 
 namespace M.DBus
 {
-    public class DBusManager : DBusManager<IDBusObject>
-    {
-        public DBusManager(bool startOnLoad, IHandleTrayManagement trayManagement, IHandleSystemNotifications systemNotifications)
-            : base(startOnLoad, trayManagement, systemNotifications)
-        {
-        }
-    }
-
     public class DBusManager<T> : IDisposable
         where T : IDBusObject
     {
         public Action OnConnected;
 
-        public Greet GreetService = new Greet();
         private Connection currentConnection;
 
-        private ConnectionState connectionState = ConnectionState.NotConnected;
+        public ConnectionState connectionState { get; private set; } = ConnectionState.NotConnected;
 
         private bool isDisposed { get; set; }
 
-        public readonly IHandleTrayManagement TrayManager;
-
-        public readonly IHandleSystemNotifications Notifications;
-
-        public DBusManager(bool startOnLoad, IHandleTrayManagement trayManagement, IHandleSystemNotifications systemNotifications)
+        public DBusManager()
         {
-            //如果在初始化时启动服务
-            if (startOnLoad)
-                Connect();
-
-            TrayManager = trayManagement;
-            Notifications = systemNotifications;
-
-            Task.Run(() => RegisterNewObject(GreetService));
         }
 
         #region Disposal
 
         public void Dispose()
         {
-            //Disconnect();
-
             currentConnection.Dispose();
 
             isDisposed = true;
-            GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -134,16 +108,6 @@ namespace M.DBus
                 await RegisterNewObject(dBusObject).ConfigureAwait(false);
         }
 
-        //bug: 注册的服务/物件在错误的dbus-send后会直接Name Lost，无法恢复
-        private async Task registerObjects()
-        {
-            Logger.Log("注册DBus物件及服务...");
-
-            //递归注册DBus服务
-            foreach (var dBusObject in registerDictionary.Keys)
-                await RegisterNewObject(dBusObject).ConfigureAwait(false);
-        }
-
         private readonly List<string> registeredServices = new List<string>();
 
         private async Task registerToConection(IDBusObject dBusObject)
@@ -171,7 +135,7 @@ namespace M.DBus
                     e => onServiceError(e, dBusObject)).ConfigureAwait(false);
             }
 
-            Logger.Log($"为{dBusObject.ObjectPath}注册{targetName}");
+            Logger.Log($"为 {dBusObject.ObjectPath} 注册 {targetName}");
         }
 
         #endregion
@@ -216,7 +180,7 @@ namespace M.DBus
 
         private string currentConnectTarget;
 
-        public void Connect(string target = null)
+        public Task Connect(string target = null)
         {
             if (isDisposed)
                 throw new ObjectDisposedException(ToString(), "已处理的对象不能再次连接。");
@@ -237,57 +201,43 @@ namespace M.DBus
             cancellationTokenSource = new CancellationTokenSource();
 
             //开始服务
-            Task.Run(() => connectTask(target), cancellationTokenSource.Token);
+            return Task.Run(async () => await connectTask(target), cancellationTokenSource.Token);
         }
 
-        private async Task connectTask(string target)
+        private Task connectTask(string target)
         {
+            if (connectionState == ConnectionState.Connected)
+                return Task.FromException(new Exception("Already connected to DBus!"));
+
             try
             {
-                switch (connectionState)
-                {
-                    case ConnectionState.NotConnected:
-                        //初始化到DBus的连接
-                        currentConnection ??= new Connection(target);
+                //初始化到DBus的连接
+                currentConnection ??= new Connection(target);
 
-                        //连接到DBus
-                        connectionState = ConnectionState.Connecting;
+                //连接到DBus
+                connectionState = ConnectionState.Connecting;
 
-                        //等待连接
-                        await currentConnection.ConnectAsync().ConfigureAwait(false);
+                //等待连接
+                currentConnection.ConnectAsync().Wait();
 
-                        //设置连接状态
-                        connectionState = ConnectionState.Connected;
+                //设置连接状态
+                connectionState = ConnectionState.Connected;
 
-                        //注册对象
-                        await registerObjects().ConfigureAwait(false);
+                OnConnected?.Invoke();
 
-                        OnConnected?.Invoke();
-                        GreetService.SwitchState(true, "Initial connect");
-                        break;
+                Logger.Log("[Hikariii DBus] Connected to DBus!");
 
-                    //case ConnectionState.Connected:
-                    //    Logger.Log($"已经连接到{currentConnectTarget}，直接注册!");
-                    //
-                    //    //直接注册
-                    //    await registerObjects().ConfigureAwait(false);
-                    //    OnConnected?.Invoke();
-                    //    GreetService.SwitchState(true, "");
-                    //    break;
-                }
+                return Task.CompletedTask;
             }
             catch (Exception e)
             {
-                Logger.Error(e, "连接到DBus时出现错误");
-                connectionState = ConnectionState.Faulted;
-
-                //Disconnect();
+                return Task.FromException(e);
             }
         }
 
         #endregion
 
-        private enum ConnectionState
+        public enum ConnectionState
         {
             NotConnected,
             Connecting,

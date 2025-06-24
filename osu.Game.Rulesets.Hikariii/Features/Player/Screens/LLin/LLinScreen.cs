@@ -45,6 +45,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin;
 using osu.Game.Rulesets.Hikariii.ppyStuffs;
 using osu.Game.Rulesets.Mods;
@@ -94,6 +95,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         #region 音频
 
+        private LLinMediaSource lLinMediaSource;
+
         public DecouplingFramedClock AudioClock { get; } = new()
         {
             AllowDecoupling = false
@@ -117,6 +120,28 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 OnSeek?.Invoke(position);
 
             return success;
+        }
+
+        public void Play()
+        {
+            if (!CurrentTrack.IsRunning)
+                audioControlPlugin.TogglePause();
+        }
+
+        public void Pause()
+        {
+            if (CurrentTrack.IsRunning)
+                audioControlPlugin.TogglePause();
+        }
+
+        public void Next()
+        {
+            audioControlPlugin.NextTrack();
+        }
+
+        public void Previous()
+        {
+            audioControlPlugin.PrevTrack();
         }
 
         public DrawableTrack CurrentTrack => musicController.CurrentTrack;
@@ -689,6 +714,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             sidebar.AddRange([settingsPage, pluginsPage]);
 
+            lLinMediaSource = new LLinMediaSource(this);
+
             functionProviders.AddRange(
             [
                 new ButtonWrapper
@@ -820,7 +847,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 },
                 nightcoreBeatContainer,
                 sidebar,
-                tabControl
+                tabControl,
+                lLinMediaSource
             ]);
 
             backgroundLayer.Add(backgroundTriangles);
@@ -1034,6 +1062,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         private DrawableTrack? prevTrack;
 
+        //todo: Replace this with a better implementation
+        private bool trackRunning;
+
         protected override void Update()
         {
             songProgressButton.Bindable.Value = CurrentTrack.IsRunning;
@@ -1045,6 +1076,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             if (currentTrack != prevTrack)
                 updateAudioClock(currentTrack);
+
+            if (trackRunning != currentTrack.IsRunning)
+            {
+                trackRunning = currentTrack.IsRunning;
+                OnTrackRunningToggle?.Invoke(!trackRunning);
+            }
         }
 
         private void updateAudioClock(DrawableTrack? currentTrack)
@@ -1056,9 +1093,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         private IReadOnlyList<Mod>? lastScreenMods;
 
+        [Resolved(CanBeNull = true)]
+        private MediaIntegration? mediaIntegration { get; set; }
+
         public override void OnEntering(ScreenTransitionEvent e)
         {
             base.OnEntering(e);
+
+            if (mediaIntegration != null)
+                mediaIntegration.MediaHandler = this.lLinMediaSource;
 
             masterContainer.FadeTo(0.01f);
 
@@ -1118,6 +1161,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             CurrentTrack.ResetSpeedAdjustments();
             CurrentTrack.Looping = false;
             Beatmap.Disabled = false;
+
+            if (mediaIntegration != null && mediaIntegration.MediaHandler == this.lLinMediaSource)
+                mediaIntegration.MediaHandler = null;
 
             this.FadeOut(300);
 

@@ -8,6 +8,8 @@ using osu.Framework.Threading;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.DBus;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
 
@@ -80,6 +82,24 @@ public partial class ListenerLoader : AbstractHandler
             depMgr.CacheAs(typeof(MConfigManager), new MConfigManager(storage));
             depMgr.Cache(plMgr);
             depMgr.Cache(featureManager);
+
+            if (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid())
+            {
+                scheduler.AddDelayed(() =>
+                {
+                    var dbusIntegration = new DBusIntegration();
+
+                    gameInstance.Add(dbusIntegration);
+                    depMgr.Cache(dbusIntegration);
+                }, 1);
+            }
+
+            scheduler.AddDelayed(() =>
+            {
+                var mediaIntegration = new MediaIntegration();
+                gameInstance.Add(mediaIntegration);
+                depMgr.Cache(mediaIntegration);
+            }, 1);
 
             scheduler.AddDelayed(() =>
             {

@@ -71,6 +71,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         /// <returns>操作是否被允许</returns>
         public bool SeekTo(double position);
 
+        public void Next();
+
+        public void Previous();
+
+        public void Play();
+
+        public void Pause();
+
         #endregion
 
         #region 其他API
