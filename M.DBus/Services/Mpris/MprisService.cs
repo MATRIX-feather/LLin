@@ -19,6 +19,8 @@ public class MprisService : IRegisterable, IMethodHandler
     public event Action? Play;
     public event Action? TogglePause;
 
+    public event Action<bool>? ShuffleChanged;
+
     public event Action<long>? Seek;
     public event Action<long>? SetPosition;
     public event Action<string>? OpenUri;
@@ -52,12 +54,25 @@ public class MprisService : IRegisterable, IMethodHandler
 
     public bool TrackLooping
     {
-        set => MprisPlayerControllerService.LoopStatus = value ? MprisStatusStrings.LOOP_STATUS_SINGLE : MprisStatusStrings.LOOP_STATUS_NONE;
+        set => MprisPlayerControllerService.LoopStatusInternal = value ? MprisStatusStrings.LOOP_STATUS_SINGLE : MprisStatusStrings.LOOP_STATUS_NONE;
     }
 
     public bool Shuffle
     {
-        set => MprisPlayerControllerService.Shuffle = value;
+        set => MprisPlayerControllerService.ShuffleInternal = value;
+    }
+
+    public bool AllowExternalControl
+    {
+        set
+        {
+            MprisPlayerControllerService.CanControl = value;
+            MprisPlayerControllerService.CanSeek = value;
+            MprisPlayerControllerService.CanPause = value;
+            MprisPlayerControllerService.CanGoNext = value;
+            MprisPlayerControllerService.CanGoPrevious = value;
+            MprisPlayerControllerService.CanPlay = value;
+        }
     }
 
     private PathHandler PathHandler;
@@ -80,6 +95,8 @@ public class MprisService : IRegisterable, IMethodHandler
         MprisPlayerControllerService.SetPosition += pos => SetPosition?.Invoke(pos);
         MprisPlayerControllerService.OpenUri += uri => OpenUri?.Invoke(uri);
         MprisPlayerControllerService.PlayPause += () => TogglePause?.Invoke();
+
+        MprisPlayerControllerService.ShuffleChanged += v => ShuffleChanged?.Invoke(v);
     }
 
     public void register(Connection connection)

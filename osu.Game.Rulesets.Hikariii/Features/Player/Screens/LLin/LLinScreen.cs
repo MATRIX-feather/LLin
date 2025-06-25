@@ -1091,7 +1091,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             base.OnEntering(e);
 
             if (mediaIntegration != null)
-                mediaIntegration.MediaHandler = this.lLinMediaSource;
+                mediaIntegration.MediaSource = this.lLinMediaSource;
 
             masterContainer.FadeTo(0.01f);
 
@@ -1152,8 +1152,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             CurrentTrack.Looping = false;
             Beatmap.Disabled = false;
 
-            if (mediaIntegration != null && mediaIntegration.MediaHandler == this.lLinMediaSource)
-                mediaIntegration.MediaHandler = null;
+            if (mediaIntegration != null && mediaIntegration.MediaSource == this.lLinMediaSource)
+                mediaIntegration.MediaSource = null;
 
             this.FadeOut(300);
 

@@ -20,13 +20,13 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
         Metadata = new();
 
         PlaybackStatus = MprisStatusStrings.PLAYBACK_PLAYING;
-        LoopStatus = MprisStatusStrings.LOOP_STATUS_NONE;
+        LoopStatusInternal = MprisStatusStrings.LOOP_STATUS_NONE;
 
         Rate = 1d;
         MaximumRate = 1d;
         MinimumRate = 1d;
 
-        Shuffle = false;
+        ShuffleInternal = false;
         Volume = 1d;
         Position = 0L;
 
@@ -74,7 +74,20 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
 
     private string? loopStatus = MprisStatusStrings.LOOP_STATUS_NONE;
 
+    /// <summary>
+    /// To set loop status, use <see cref="LoopStatusInternal"/>
+    /// </summary>
+    [Obsolete]
     public override string? LoopStatus
+    {
+        get => loopStatus;
+        set
+        {
+            // Ignore as we don't support setting loop status from media integration
+        }
+    }
+
+    public string? LoopStatusInternal
     {
         get => loopStatus;
         set
@@ -98,7 +111,21 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
 
     private bool shuffle;
 
+    /// <summary>
+    /// To set shuffle status, use <see cref="ShuffleInternal"/>
+    /// </summary>
+    [Obsolete]
     public override bool Shuffle
+    {
+        get => shuffle;
+        set
+        {
+            shuffle = value;
+            ShuffleChanged?.Invoke(value);
+        }
+    }
+
+    public bool ShuffleInternal
     {
         get => shuffle;
         set
@@ -226,6 +253,8 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
     public event Action? Stop;
     public event Action? Play;
     public event Action? PlayPause;
+
+    public event Action<bool>? ShuffleChanged;
 
     public event Action<long>? Seek;
     public event Action<long>? SetPosition;

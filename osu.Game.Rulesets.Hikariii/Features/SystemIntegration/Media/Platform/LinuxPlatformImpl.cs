@@ -54,6 +54,8 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
         mprisPlayerService.Next += () => Schedule(() => HandleNext?.Invoke());
         mprisPlayerService.Previous += () => Schedule(() => HandlePrevious?.Invoke());
 
+        mprisPlayerService.ShuffleChanged += v => Schedule(() => HandleShuffleStatus?.Invoke(v));
+
         //mprisPlayerService.LoopChange += b => Schedule(() => HandleLoopStatus?.Invoke(b));
         //mprisPlayerService.OnRandom += doRandom => Schedule(() => HandleShuffleStatus?.Invoke(doRandom));
     }
@@ -66,7 +68,6 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
     public Action? HandlePrevious { get; set; }
     public Action<bool>? HandleLoopStatus { get; set; }
     public Action<bool>? HandleShuffleStatus { get; set; }
-    public Func<long>? HandleRequestProgress { get; set; }
 
     public WorkingBeatmap Beatmap
     {
@@ -175,6 +176,17 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
                 return;
 
             mprisPlayerService.Shuffle = value;
+        }
+    }
+
+    public bool AllowExternalControl
+    {
+        set
+        {
+            if (mprisPlayerService == null)
+                return;
+
+            mprisPlayerService.AllowExternalControl = value;
         }
     }
 }

@@ -15,15 +15,15 @@ public partial class MediaIntegration : CompositeComponent
 
     public IPlatformImpl? PlatformImpl { get; private set; }
 
-    private IMediaSource? handler;
+    private IMediaSource? source;
 
-    public IMediaSource? MediaHandler
+    public IMediaSource? MediaSource
     {
-        get => handler;
+        get => source;
         set
         {
             value ??= DefaultMediaSource;
-            var last = handler;
+            var last = source;
 
             if (last != null)
             {
@@ -36,10 +36,12 @@ public partial class MediaIntegration : CompositeComponent
                 last.OnProgressUpdate -= onProgressChange;
                 last.OnTrackLengthUpdate -= onTrackLengthChange;
 
+                value.OnControlStatusChange -= onControlStatusChange;
+
                 last.OnSwitchedAway();
             }
 
-            handler = value;
+            source = value;
 
             value.OnBeatmapChange += onBeatmapChanged;
             value.OnPlayPauseUpdate += onPlayPauseUpdate;
@@ -49,6 +51,8 @@ public partial class MediaIntegration : CompositeComponent
 
             value.OnProgressUpdate += onProgressChange;
             value.OnTrackLengthUpdate += onTrackLengthChange;
+
+            value.OnControlStatusChange += onControlStatusChange;
 
             if (value is Drawable drawable)
             {
@@ -60,7 +64,7 @@ public partial class MediaIntegration : CompositeComponent
                 {
                     drawable.OnLoadComplete += d =>
                     {
-                        if (handler == value)
+                        if (source == value)
                             value.OnApply();
                     };
                 }
@@ -72,6 +76,12 @@ public partial class MediaIntegration : CompositeComponent
 
             Logging.Log($"MediaHandler has been switched to {value}");
         }
+    }
+
+    private void onControlStatusChange(bool allow)
+    {
+        if (PlatformImpl != null)
+            PlatformImpl.AllowExternalControl = allow;
     }
 
     private void onShuffleUpdate(bool shuffle)
@@ -115,22 +125,22 @@ public partial class MediaIntegration : CompositeComponent
 
         if (impl != null)
         {
-            impl.HandleSeek += offset => MediaHandler?.OnExternalSeek(offset);
-            impl.HandleSetProgress += time => MediaHandler?.OnExternalSetTime(time);
+            impl.HandleSeek += offset => MediaSource?.OnExternalSeek(offset);
+            impl.HandleSetProgress += time => MediaSource?.OnExternalSetTime(time);
 
-            impl.HandlePlayPause += b => MediaHandler?.OnExternalPlayPause(b);
-            impl.HandleNext += () => MediaHandler?.OnExternalNext();
-            impl.HandlePrevious += () => MediaHandler?.OnExternalPrevious();
+            impl.HandlePlayPause += b => MediaSource?.OnExternalPlayPause(b);
+            impl.HandleNext += () => MediaSource?.OnExternalNext();
+            impl.HandlePrevious += () => MediaSource?.OnExternalPrevious();
 
-            impl.HandleTogglePause += () => MediaHandler?.OnExternalTogglePause();
+            impl.HandleTogglePause += () => MediaSource?.OnExternalTogglePause();
 
-            impl.HandleLoopStatus += loop => MediaHandler?.OnExternalLoopSet(loop);
-            impl.HandleShuffleStatus += shuffle => MediaHandler?.OnExternalShuffleSet(shuffle);
+            impl.HandleLoopStatus += loop => MediaSource?.OnExternalLoopSet(loop);
+            impl.HandleShuffleStatus += shuffle => MediaSource?.OnExternalShuffleSet(shuffle);
         }
 
         LoadComponent(DefaultMediaSource);
         AddInternal(DefaultMediaSource);
-        MediaHandler = DefaultMediaSource;
+        MediaSource = DefaultMediaSource;
     }
 
     private void onBeatmapChanged(WorkingBeatmap beatmap)

@@ -79,4 +79,9 @@ public interface IPlatformImpl
     /// Update whether we're playing random tracks to the system
     /// </summary>
     bool RandomTrackEnabled { set; }
+
+    /// <summary>
+    /// Update whether we allow media controls from the system
+    /// </summary>
+    bool AllowExternalControl { set; }
 }

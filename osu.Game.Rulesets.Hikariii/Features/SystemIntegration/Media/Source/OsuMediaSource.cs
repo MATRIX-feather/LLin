@@ -20,7 +20,7 @@ public partial class OsuMediaSource : CompositeDrawable, IMediaSource
     {
         OnBeatmapChange?.Invoke(beatmap.Value);
         OnShuffleUpdate?.Invoke(musicController.Shuffle.Value);
-        OnBeatmapChange?.Invoke(beatmap.Value);
+        OnControlStatusChange?.Invoke(musicController.AllowTrackControl.Value);
     }
 
     public virtual void OnSwitchedAway()
@@ -65,6 +65,7 @@ public partial class OsuMediaSource : CompositeDrawable, IMediaSource
 
     public virtual void OnExternalLoopSet(bool looping)
     {
+        // We don't handle loop status update right now.
     }
 
     public virtual void OnExternalShuffleSet(bool shuffle)
@@ -103,6 +104,11 @@ public partial class OsuMediaSource : CompositeDrawable, IMediaSource
             var track = musicController.CurrentTrack;
             updateTrackLength(track.Length);
             doUpdateProgress(musicController.CurrentTrack.CurrentTime);
+        });
+
+        musicController.AllowTrackControl.BindValueChanged(v =>
+        {
+            OnControlStatusChange?.Invoke(v.NewValue);
         });
     }
 
@@ -151,4 +157,5 @@ public partial class OsuMediaSource : CompositeDrawable, IMediaSource
     public Action<bool>? OnPlayPauseUpdate { get; set; }
     public Action<bool>? OnLoopUpdate { get; set; }
     public Action<bool>? OnShuffleUpdate { get; set; }
+    public Action<bool>? OnControlStatusChange { get; set; }
 }

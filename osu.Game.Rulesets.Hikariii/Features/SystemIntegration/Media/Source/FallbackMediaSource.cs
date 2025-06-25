@@ -28,6 +28,7 @@ public class FallbackMediaSource : IMediaSource
         };
 
         OnBeatmapChange?.Invoke(dummy);
+        OnControlStatusChange?.Invoke(false);
     }
 
     public void OnSwitchedAway()
@@ -74,4 +75,5 @@ public class FallbackMediaSource : IMediaSource
     public Action<bool>? OnPlayPauseUpdate { get; set; }
     public Action<bool>? OnLoopUpdate { get; set; }
     public Action<bool>? OnShuffleUpdate { get; set; }
+    public Action<bool>? OnControlStatusChange { get; set; }
 }

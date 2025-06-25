@@ -30,4 +30,6 @@ public interface IMediaSource
     Action<bool>? OnLoopUpdate { get; set; }
 
     Action<bool>? OnShuffleUpdate { get; set; }
+
+    Action<bool>? OnControlStatusChange { get; set; }
 }

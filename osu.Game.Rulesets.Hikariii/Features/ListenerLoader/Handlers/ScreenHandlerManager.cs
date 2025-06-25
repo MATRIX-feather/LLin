@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
@@ -13,6 +14,8 @@ public partial class ScreenHandlerManager : AbstractHandler
     private OsuScreenStack? screenStack;
 
     private readonly List<AbstractScreenHandler> handlers = new();
+
+    public event Action<(IScreen last, IScreen next)>? OnScreenChanged;
 
     [BackgroundDependencyLoader]
     private void load()
@@ -76,5 +79,7 @@ public partial class ScreenHandlerManager : AbstractHandler
 
         foreach (var screenHandler in handlers)
             screenHandler.Handle(lastscreen, newscreen);
+
+        OnScreenChanged?.Invoke((lastscreen, newscreen));
     }
 }
