@@ -39,7 +39,7 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
         var connection = session.CurrentConnection!;
 
         mprisPlayerService = new MprisService(connection);
-        mprisPlayerService.register(connection);
+        mprisPlayerService.Register(connection);
 
         session.RequestServiceName("org.mpris.MediaPlayer2.mfosu_hikariii").Wait();
 

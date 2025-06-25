@@ -37,11 +37,13 @@ public partial class DBusIntegration : CompositeComponent
         if (session == null)
             throw new ArgumentNullException(nameof(session));
 
-        session.RequestServiceName("xyz.nifeather.mfosu").Wait();
         var connection = session.CurrentConnection!;
 
-        var greeter = new GreeterService();
-        greeter.register(connection);
+        var greeter = new GreeterService("llin");
+        greeter.Register(connection);
+
+        session.RequestServiceName("xyz.nifeather.mfosu").Wait();
+        Logging.Log("Registered DBus greeter service.");
     }
 
     //public Action<DBusMgrNew>? OnDBusConnected;

@@ -2,13 +2,13 @@ using Tmds.DBus.Protocol;
 
 namespace M.DBus.Services;
 
-public class GreeterService : IRegisterable
+public class GreeterService(string host)
 {
-    private Greet greet;
+    private Greet? greet;
 
-    public void register(Connection connection)
+    public void Register(Connection connection)
     {
-        greet ??= new Greet(connection);
-        connection.AddMethodHandler(greet);
+        greet ??= new Greet(connection, host);
+        connection.AddMethodHandler(greet.PathHandler!);
     }
 }

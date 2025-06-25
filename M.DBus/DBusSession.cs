@@ -6,17 +6,12 @@ using Tmds.DBus.Protocol;
 
 namespace M.DBus;
 
-public class DBusSession
+public class DBusSession(string address)
 {
     public Connection? CurrentConnection { get; private set; }
     public DBusAccess? DBusAccess { get; private set; }
 
-    public readonly string TargetAddress;
-
-    public DBusSession(string address)
-    {
-        TargetAddress = address;
-    }
+    public readonly string TargetAddress = address;
 
     public event Action<DBusSession>? OnConnected;
 

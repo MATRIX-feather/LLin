@@ -4,7 +4,7 @@ using Tmds.DBus.SourceGenerator;
 
 namespace M.DBus.Services
 {
-    internal class Greet : IoMatrixFeatherMfosuGreeterHandler, IMDBusObject
+    internal class Greet : IoMatrixFeatherMfosuGreeterHandler
     {
         private readonly string host;
 

@@ -47,7 +47,6 @@ public partial class FeatureManager : CompositeDrawable
             {
                 // 尝试访问Tmds.DBus和M.DBus中的值，如果访问成功则代表安装了DBus集成
                 string? tmdsDBusSystrmAddr = Address.System;
-                var mDbus = new M.DBus.ServiceUtils();
             }
             catch (Exception e)
             {

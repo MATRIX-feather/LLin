@@ -7,7 +7,7 @@ using Tmds.DBus.SourceGenerator;
 
 namespace M.DBus.Services.Mpris;
 
-public class MprisService : IRegisterable, IMethodHandler
+public class MprisService : IMethodHandler
 {
     internal readonly MprisPlayerImpl MprisPlayerService;
     internal readonly MprisPlayerControllerImpl MprisPlayerControllerService;
@@ -99,7 +99,7 @@ public class MprisService : IRegisterable, IMethodHandler
         MprisPlayerControllerService.ShuffleChanged += v => ShuffleChanged?.Invoke(v);
     }
 
-    public void register(Connection connection)
+    public void Register(Connection connection)
     {
         connection.AddMethodHandlers([this]);
     }
