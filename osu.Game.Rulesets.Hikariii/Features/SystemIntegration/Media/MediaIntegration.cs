@@ -3,7 +3,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Beatmaps;
-using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media.Platform;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media.Source;
 
@@ -78,8 +77,12 @@ public partial class MediaIntegration : CompositeComponent
         }
     }
 
+    private bool allowExternalControls;
+
     private void onControlStatusChange(bool allow)
     {
+        allowExternalControls = allow;
+
         if (PlatformImpl != null)
             PlatformImpl.AllowExternalControl = allow;
     }
@@ -118,24 +121,30 @@ public partial class MediaIntegration : CompositeComponent
         PlatformImpl.Progress = current;
     }
 
+    private void executeIfAllowControl(Action action)
+    {
+        if (allowExternalControls)
+            action();
+    }
+
     [BackgroundDependencyLoader]
-    private void load(MusicController musicController)
+    private void load()
     {
         var impl = selectImplementation();
 
         if (impl != null)
         {
-            impl.HandleSeek += offset => MediaSource?.OnExternalSeek(offset);
-            impl.HandleSetProgress += time => MediaSource?.OnExternalSetTime(time);
+            impl.HandleSeek += offset => executeIfAllowControl(() => MediaSource?.OnExternalSeek(offset));
+            impl.HandleSetProgress += time => executeIfAllowControl(() => MediaSource?.OnExternalSetTime(time));
 
-            impl.HandlePlayPause += b => MediaSource?.OnExternalPlayPause(b);
-            impl.HandleNext += () => MediaSource?.OnExternalNext();
-            impl.HandlePrevious += () => MediaSource?.OnExternalPrevious();
+            impl.HandlePlayPause += b => executeIfAllowControl(() => MediaSource?.OnExternalPlayPause(b));
+            impl.HandleNext += () => executeIfAllowControl(() => MediaSource?.OnExternalNext());
+            impl.HandlePrevious += () => executeIfAllowControl(() => MediaSource?.OnExternalPrevious());
 
-            impl.HandleTogglePause += () => MediaSource?.OnExternalTogglePause();
+            impl.HandleTogglePause += () => executeIfAllowControl(() => MediaSource?.OnExternalTogglePause());
 
-            impl.HandleLoopStatus += loop => MediaSource?.OnExternalLoopSet(loop);
-            impl.HandleShuffleStatus += shuffle => MediaSource?.OnExternalShuffleSet(shuffle);
+            impl.HandleLoopStatus += loop => executeIfAllowControl(() => MediaSource?.OnExternalLoopSet(loop));
+            impl.HandleShuffleStatus += shuffle => executeIfAllowControl(() => MediaSource?.OnExternalShuffleSet(shuffle));
         }
 
         LoadComponent(DefaultMediaSource);
