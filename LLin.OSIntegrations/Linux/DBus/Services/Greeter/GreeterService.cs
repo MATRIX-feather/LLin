@@ -1,6 +1,6 @@
 using Tmds.DBus.Protocol;
 
-namespace M.DBus.Services;
+namespace LLin.OSIntegrations.Linux.DBus.Services.Greeter;
 
 public class GreeterService(string host)
 {

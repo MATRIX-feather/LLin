@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Mpris;
+namespace LLin.OSIntegrations.Linux.DBus.Services.Mpris;
 
 public class MprisStatusStrings
 {

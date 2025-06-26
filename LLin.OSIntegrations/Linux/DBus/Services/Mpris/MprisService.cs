@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Mpris;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
-namespace M.DBus.Services.Mpris;
+namespace LLin.OSIntegrations.Linux.DBus.Services.Mpris;
 
 public class MprisService : IMethodHandler
 {

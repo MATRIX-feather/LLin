@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 
 #if WINDOWS
-using M.SMTC;
+using LLin.OSIntegrations.Windows;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 #endif
 

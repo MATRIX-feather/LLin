@@ -58,18 +58,21 @@ function copy()
         die "Invalid usage! No file input."
     fi
 
-    cp "${BUILD_RESULT_DIR}/${fileName}" "${OUTPUT_DIR}/${fileName}"
+    if ! cp "${BUILD_RESULT_DIR}/${fileName}" "${OUTPUT_DIR}/${fileName}";then
+        echo "Failed copy ${fileName}";
+        return 1;
+    fi
+
     echo "Done! '${BUILD_RESULT_DIR}/${fileName}' --> '${OUTPUT_DIR}/${fileName}'"
 }
 
 function main()
 {
-    copy "M.DBus.dll"
-    copy "M.Resources.dll"
+    copy "LLin.OSIntegrations.dll"
     copy "Tmds.DBus.Protocol.dll"
+    copy "M.Resources.dll"
     copy "osu.Game.Rulesets.Hikariii.dll"
     copy "zh/M.Resources.resources.dll"
-    copy "M.SMTC.dll"
 
     copy "Microsoft.Windows.SDK.NET.dll" || echo "Ignoring WindowsSDK..."
     copy "WinRT.Runtime.dll" || echo "Ignoring WinRT..."

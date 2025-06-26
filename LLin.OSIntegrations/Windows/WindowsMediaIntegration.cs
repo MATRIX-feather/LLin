@@ -5,7 +5,7 @@ using Windows.Media;
 using Windows.Media.Playback;
 #endif
 
-namespace M.SMTC;
+namespace LLin.OSIntegrations.Windows;
 
 public class WindowsMediaIntegration
 {

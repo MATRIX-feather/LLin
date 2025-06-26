@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using M.DBus.Services;
+using LLin.OSIntegrations.Linux.DBus.Services.DBusAccess;
 using osu.Framework.Logging;
 using Tmds.DBus.Protocol;
 
-namespace M.DBus;
+namespace LLin.OSIntegrations.Linux.DBus;
 
 public class DBusSession(string address)
 {

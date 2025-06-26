@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>
+            net8.0-windows10.0.22621.0;
+            net8.0
+        </TargetFrameworks>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <Authors>LLin Devs</Authors>
+        <Copyright>LLin Devs</Copyright>
+        <PackageProjectUrl>https://github.com/matrix-feather/osu</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/matrix-feather/osu</RepositoryUrl>
+        <PackageTags />
+        <Company>NiFeather</Company>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+  <ItemGroup>
+    <!-- <PackageReference Include="Tmds.DBus" Version="0.21.2" /> -->
+    <PackageReference Include="ppy.osu.Framework" Version="2025.625.0" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.2" />
+    <PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.20">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="DBusXml/org.mpris.MediaPlayer2.xml" DBusGeneratorMode="Handler" />
+    <AdditionalFiles Include="DBusXml/org.mpris.MediaPlayer2.Player.xml" DBusGeneratorMode="Handler" />
+    <AdditionalFiles Include="DBusXml/xyz.nifeather.llin.greeter.xml" DBusGeneratorMode="Handler" />
+    <AdditionalFiles Include="DBusXml/org.freedesktop.DBus.xml" DBusGeneratorMode="Proxy" />
+</ItemGroup>
+</Project>

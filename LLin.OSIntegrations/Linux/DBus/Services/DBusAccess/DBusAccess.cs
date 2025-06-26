@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace M.DBus.Services;
+namespace LLin.OSIntegrations.Linux.DBus.Services.DBusAccess;
 
 public class DBusAccess
 {

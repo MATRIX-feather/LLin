@@ -20,9 +20,8 @@
     <PackageReference Include="ppy.osu.Game" Version="2025.605.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\M.DBus\M.DBus.csproj" />
+    <ProjectReference Include="..\LLin.OSIntegrations\LLin.OSIntegrations.csproj" />
     <ProjectReference Include="..\M.Resources\M.Resources.csproj" />
-    <ProjectReference Include="..\M.SMTC\M.SMTC.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="osu.Framework">

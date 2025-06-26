@@ -1,6 +1,6 @@
 using System;
-using M.DBus;
-using M.DBus.Services;
+using LLin.OSIntegrations.Linux.DBus;
+using LLin.OSIntegrations.Linux.DBus.Services.Greeter;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Containers;
 using Tmds.DBus.Protocol;

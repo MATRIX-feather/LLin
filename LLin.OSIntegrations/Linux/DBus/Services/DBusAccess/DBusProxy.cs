@@ -1,7 +1,7 @@
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
-namespace M.DBus.Services;
+namespace LLin.OSIntegrations.Linux.DBus.Services.DBusAccess;
 
 internal class DBusProxy : OrgFreedesktopDBusProxy
 {

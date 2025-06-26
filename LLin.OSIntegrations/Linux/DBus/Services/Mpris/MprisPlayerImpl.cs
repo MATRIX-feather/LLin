@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Tmds.DBus.Protocol;
 using Tmds.DBus.SourceGenerator;
 
-namespace M.DBus.Services.Mpris;
+namespace LLin.OSIntegrations.Linux.DBus.Services.Mpris;
 
 internal class MprisPlayerImpl : OrgMprisMediaPlayer2Handler
 {
