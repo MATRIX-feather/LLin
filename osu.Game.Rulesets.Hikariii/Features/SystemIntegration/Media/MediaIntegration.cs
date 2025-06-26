@@ -171,6 +171,16 @@ public partial class MediaIntegration : CompositeComponent
             return linuxImpl;
         }
 
+        if (OperatingSystem.IsWindows())
+        {
+            var windowsImpl = new WindowsPlatformImpl();
+            LoadComponent(windowsImpl);
+            AddInternal(windowsImpl);
+
+            PlatformImpl = windowsImpl;
+            return windowsImpl;
+        }
+
         Logging.Log("System media integration is not available for this OS yet. Sorry!");
         return null;
     }

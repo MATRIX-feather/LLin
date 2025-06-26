@@ -1,8 +1,13 @@
 #!/bin/bash
 
 readonly DIR="${1:-???}"
-readonly RUNTIME="${2:-net8.0}"
+RUNTIME="${2:-net8.0}"
 
+if [ "${RUNTIME}" == "windows" ];then
+    RUNTIME="net8.0-windows10.0.22621.0";
+fi
+
+readonly RUNTIME
 
 function die()
 {
@@ -64,6 +69,10 @@ function main()
     copy "Tmds.DBus.Protocol.dll"
     copy "osu.Game.Rulesets.Hikariii.dll"
     copy "zh/M.Resources.resources.dll"
+    copy "M.SMTC.dll"
+
+    copy "Microsoft.Windows.SDK.NET.dll" || echo "Ignoring WindowsSDK..."
+    copy "WinRT.Runtime.dll" || echo "Ignoring WinRT..."
 
     cp "${PWD}/README.md" "${OUTPUT_DIR}" || echo "Unable to copy README.md, ignoring..."
 

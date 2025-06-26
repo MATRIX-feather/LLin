@@ -12,6 +12,8 @@ public class MprisService : IMethodHandler
     internal readonly MprisPlayerImpl MprisPlayerService;
     internal readonly MprisPlayerControllerImpl MprisPlayerControllerService;
 
+    //region Controls
+
     public event Action? Next;
     public event Action? Previous;
     public event Action? Pause;
@@ -74,6 +76,8 @@ public class MprisService : IMethodHandler
             MprisPlayerControllerService.CanPlay = value;
         }
     }
+
+    //endregion Controls
 
     private PathHandler PathHandler;
 

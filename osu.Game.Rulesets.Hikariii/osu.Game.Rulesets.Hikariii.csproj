@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Project">
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>
+      net8.0;
+      net8.0-windows10.0.22621.0
+    </TargetFrameworks>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <AssemblyTitle>osu.Game.Rulesets.IGPlayer</AssemblyTitle>
     <OutputType>Library</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -18,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\M.DBus\M.DBus.csproj" />
     <ProjectReference Include="..\M.Resources\M.Resources.csproj" />
+    <ProjectReference Include="..\M.SMTC\M.SMTC.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="osu.Framework">
