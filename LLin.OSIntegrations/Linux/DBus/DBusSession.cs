@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using LLin.OSIntegrations.Linux.DBus.Services.DBusAccess;
-using osu.Framework.Logging;
 using Tmds.DBus.Protocol;
 
 namespace LLin.OSIntegrations.Linux.DBus;
@@ -31,8 +30,6 @@ public class DBusSession(string address)
         DBusAccess = new DBusAccess(new DBusProxy(connection));
 
         OnConnected?.Invoke(this);
-
-        Logger.Log("Successfully connected to DBus!");
 
         return Task.CompletedTask;
     }
