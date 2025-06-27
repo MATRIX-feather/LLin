@@ -1,4 +1,7 @@
-﻿namespace BuildHikariii;
+﻿using System;
+using System.Threading;
+
+namespace BuildHikariii.Windows;
 
 public class PlayerLoaderDummyClass
 {

@@ -102,6 +102,15 @@ public partial class AccentColorIntegration : CompositeDrawable
             return impl;
         }
 
+        if (OperatingSystem.IsWindows())
+        {
+            var impl = new WindowsAccentColorImpl();
+            LoadComponent(impl);
+            AddInternal(impl);
+
+            return impl;
+        }
+
         Logging.Log("Platform accent colorizer not supported");
         return null;
     }
