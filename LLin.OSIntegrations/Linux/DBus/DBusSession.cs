@@ -5,7 +5,7 @@ using Tmds.DBus.Protocol;
 
 namespace LLin.OSIntegrations.Linux.DBus;
 
-public class DBusSession(string address)
+public class DBusSession(string address) : IDisposable
 {
     public Connection? CurrentConnection { get; private set; }
     public DBusAccess? DBusAccess { get; private set; }
@@ -38,5 +38,10 @@ public class DBusSession(string address)
     {
         return DBusAccess?.RequestName(serviceName, 0)
                ?? Task.FromException(new Exception("DBus access not initialized."));
+    }
+
+    public void Dispose()
+    {
+        CurrentConnection?.Dispose();
     }
 }

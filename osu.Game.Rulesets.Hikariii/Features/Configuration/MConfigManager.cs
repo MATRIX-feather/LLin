@@ -100,6 +100,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             SetDefault(MSetting.MvisEnableAdvancedEnterLeaveAnimation, true);
 
             SetDefault(MSetting.InjectButtonToNewSongSelect, true);
+
+            SetDefault(MSetting.UsePlatformAccentColor, true);
         }
 
         public Color4 GetCustomLoaderColor()
@@ -172,7 +174,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
 
         MvisEnableAdvancedEnterLeaveAnimation,
 
-        InjectButtonToNewSongSelect
+        InjectButtonToNewSongSelect,
+
+        UsePlatformAccentColor
     }
 
     public enum GamemodeActivateCondition

@@ -4,7 +4,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics.Containers;
-using osu.Game.Overlays;
+using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics;
@@ -24,6 +24,7 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
 
     protected readonly Container ContentContainer;
     protected readonly Container BackgroundContainer;
+    private Box backgroundBox;
 
     [Resolved(canBeNull: true)]
     private OsuGame? game { get; set; }
@@ -31,9 +32,9 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
     protected OsuGame? Game => game;
 
     [Resolved]
-    private OverlayColourProvider colourProvider { get; set; } = null!;
+    private CustomColourProvider colourProvider { get; set; } = null!;
 
-    protected OverlayColourProvider ColourProvider => colourProvider;
+    protected CustomColourProvider ColourProvider => colourProvider;
 
     protected virtual float TargetHeight => 200;
 
@@ -43,6 +44,12 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
     /// 是否在进出动画缩放底BottomLine
     /// </summary>
     protected virtual bool ResizeBarOnAnimation => true;
+
+    protected virtual void OnColorUpdated()
+    {
+        backgroundBox.Colour = ColourProvider.Background5;
+        BottomLine.Colour = ColourProvider.Content2;
+    }
 
     public BasicDropdownContainer()
     {
@@ -67,10 +74,9 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
     {
         InternalChildren =
         [
-            new Box
+            backgroundBox = new Box
             {
                 Name = "Basic Background",
-                Colour = ColourProvider.Background5,
                 RelativeSizeAxes = Axes.Both,
             },
             new Container
@@ -89,11 +95,18 @@ public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
                 Name = "Bottom Bar",
                 Height = 5,
                 RelativeSizeAxes = Axes.X,
-                Colour = ColourProvider.Content2,
                 Anchor = Anchor.BottomLeft,
                 Origin = Anchor.BottomLeft,
             }
         ];
+
+        colourProvider.HueColour.BindValueChanged(_ => OnColorUpdated());
+    }
+
+    protected override void LoadComplete()
+    {
+        base.LoadComplete();
+        OnColorUpdated();
     }
 
     protected Box BottomLine { get; set; }

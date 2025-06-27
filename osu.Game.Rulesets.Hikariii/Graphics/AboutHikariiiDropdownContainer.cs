@@ -15,6 +15,7 @@ using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Users.Drawables;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics;
 
@@ -35,6 +36,14 @@ public partial class AboutHikariiiDropdownContainer : BasicDropdownContainer
         };
     }
 
+    protected override void OnColorUpdated()
+    {
+        base.OnColorUpdated();
+
+        gradientFillFlow.Colour = ColourProvider.Background5;
+        backgroundMask.Colour = ColourProvider.Background5.Opacity(0.9f);
+    }
+
     private partial class HoverBox : Box
     {
         protected override bool OnHover(HoverEvent e)
@@ -53,6 +62,7 @@ public partial class AboutHikariiiDropdownContainer : BasicDropdownContainer
     private LoopingContainer loopingContainer;
     private Box backgroundMask;
     private Box dimBox;
+    private FillFlowContainer gradientFillFlow;
 
     [BackgroundDependencyLoader]
     private void load()
@@ -69,7 +79,7 @@ public partial class AboutHikariiiDropdownContainer : BasicDropdownContainer
                 Origin = Anchor.TopRight,
                 Masking = true
             },
-            new FillFlowContainer
+            gradientFillFlow = new FillFlowContainer
             {
                 RelativeSizeAxes = Axes.Both,
                 Direction = FillDirection.Horizontal,
@@ -80,31 +90,29 @@ public partial class AboutHikariiiDropdownContainer : BasicDropdownContainer
                     {
                         RelativeSizeAxes = Axes.Y,
                         Width = 1200,
-                        Colour = ColourProvider.Background5,
                     },
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
                         Width = 0.1f,
-                        Colour = ColourInfo.GradientHorizontal(ColourProvider.Background5, ColourProvider.Background5.Opacity(0.666f)),
+                        Colour = ColourInfo.GradientHorizontal(Color4.White, Color4.White.Opacity(0.666f)),
                     },
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
                         Width = 0.1f,
-                        Colour = ColourInfo.GradientHorizontal(ColourProvider.Background5.Opacity(0.666f), ColourProvider.Background5.Opacity(0.333f)),
+                        Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0.666f), Color4.White.Opacity(0.333f)),
                     },
                     new Box
                     {
                         RelativeSizeAxes = Axes.Both,
                         Width = 0.1f,
-                        Colour = ColourInfo.GradientHorizontal(ColourProvider.Background5.Opacity(0.333f), ColourProvider.Background5.Opacity(0f)),
+                        Colour = ColourInfo.GradientHorizontal(Color4.White.Opacity(0.333f), Color4.White.Opacity(0f)),
                     }
                 ]
             },
             backgroundMask = new HoverBox
             {
-                Colour = ColourProvider.Background5.Opacity(0.9f),
                 RelativeSizeAxes = Axes.Both,
                 Anchor = Anchor.TopRight,
                 Origin = Anchor.TopRight,

@@ -84,8 +84,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         [Resolved]
         private MusicController musicController { get; set; } = null!;
 
-        [Cached]
-        private readonly CustomColourProvider colourProvider = new();
+        [Resolved]
+        private CustomColourProvider colourProvider { get; set; }
 
         [Cached]
         private BeatmapHashResolver hashResolver = new();
@@ -703,8 +703,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         [BackgroundDependencyLoader]
         private void load(MConfigManager config, IdleTracker idleTracker, FrameworkConfigManager fcm)
         {
-            masterContainer.Add(colourProvider);
-
             inputManager = GetContainingInputManager();
 
             sidebar.Header = tabControl;

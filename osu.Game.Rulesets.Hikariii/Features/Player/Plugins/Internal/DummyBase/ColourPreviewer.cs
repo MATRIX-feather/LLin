@@ -141,7 +141,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
 
         private void updateColor()
         {
-            provider.UpdateHueColor(iR.Value, iG.Value, iB.Value);
+            provider.UpdateHueColor(new Color4(iR.Value, iG.Value, iB.Value, 1));
 
             bg5.Colour = provider.Background5;
             bg4.Colour = provider.Background4;
@@ -155,7 +155,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
             l3.Colour = provider.Light3;
             c2.Colour = provider.Content2;
 
-            hueText.Text = $"Hue: {(provider.HueColour.Value * 360):#0.00}";
+            hueText.Text = $"Hue: {(provider.HueColour.Value):#0.00}";
         }
     }
 }

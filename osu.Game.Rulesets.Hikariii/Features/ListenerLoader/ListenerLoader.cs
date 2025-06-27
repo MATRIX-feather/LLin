@@ -8,6 +8,8 @@ using osu.Framework.Threading;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.DBus;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media;
 
@@ -99,6 +101,13 @@ public partial class ListenerLoader : AbstractHandler
                 var mediaIntegration = new MediaIntegration();
                 gameInstance.Add(mediaIntegration);
                 depMgr.Cache(mediaIntegration);
+
+                var customColors = new CustomColourProvider();
+                depMgr.Cache(customColors);
+
+                var accentColorIntegration = new AccentColorIntegration();
+                gameInstance.Add(accentColorIntegration);
+                depMgr.Cache(accentColorIntegration);
             }, 1);
 
             scheduler.AddDelayed(() =>

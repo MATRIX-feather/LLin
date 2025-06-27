@@ -10,7 +10,6 @@ using osu.Framework.Screens;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Rulesets.Hikariii.Graphics;
 using osu.Game.Screens.Menu;
@@ -26,16 +25,17 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
     private IBindable<RulesetInfo>? ruleset { get; set; }
 
     [Resolved]
-    private Bindable<WorkingBeatmap> beatmap { get; set; }
+    private Bindable<WorkingBeatmap> beatmap { get; set; } = null!;
 
-    [Cached]
-    private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+    [Resolved]
+    private CustomColourProvider colourProvider { get; set; } = null!;
 
     private BasicDropdownContainer? featureHeaderOverlay;
 
     private Container contentContainer;
     private OsuSpriteText timeDisplay;
     private OsuSpriteText weekDisplay;
+    private Box background;
 
     protected override void Update()
     {
@@ -53,13 +53,13 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
         Container masterContainer;
         Game.Add(masterContainer = new Container
         {
+            Name = "HikariiiFeatureBoxBackground",
             RelativeSizeAxes = Axes.Both,
             Alpha = 0,
             Children =
             [
-                new Box
+                background = new Box
                 {
-                    Colour = colourProvider.Background6.Opacity(0.8f),
                     RelativeSizeAxes = Axes.Both
                 },
                 contentContainer = new Container
@@ -132,6 +132,15 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
 
             this.featureHeaderOverlay?.Show();
         });
+    }
+
+    protected override void LoadComplete()
+    {
+        base.LoadComplete();
+        colourProvider.HueColour.BindValueChanged(_ =>
+        {
+            background.Colour = colourProvider.Background6.Opacity(0.8f);
+        }, true);
     }
 
     private BasicDropdownContainer createFeatureMenu()
