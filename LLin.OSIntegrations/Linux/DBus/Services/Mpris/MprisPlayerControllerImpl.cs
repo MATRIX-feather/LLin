@@ -62,7 +62,9 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
         writer.WriteArray(new[] { "" });
 
         if (!Connection.TrySendMessage(writer.CreateMessage()))
-            throw new Exception("Can't send notify!");
+        {
+            //throw new Exception("Can't send notify!");
+        }
 
         writer.Dispose();
     }
