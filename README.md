@@ -18,4 +18,4 @@
 
 ## 第三方开源许可
 - SandboxToPanel插件：[EVAST9919/lazer-sandbox](https://github.com/EVAST9919/lazer-sandbox) --> [LICENSE](./osu.Game.Rulesets.Hikariii/Features/Player/Plugins/Bundle/SandboxToPanel/LICENSE)
-- `osu.Game.Rulesets.Hikariii/RulesetStuffs`下的基础组件：[ppy/osu](https://github.com/ppy/osu) --> [LICENCE](./osu.Game.Rulesets.Hikariii/RulesetStuffs/LICENCE)
+- `osu.Game.Rulesets.Hikariii/ppyStuffs`下的组件：[ppy/osu](https://github.com/ppy/osu) --> [LICENCE](./osu.Game.Rulesets.Hikariii/ppyStuffs/LICENCE)
