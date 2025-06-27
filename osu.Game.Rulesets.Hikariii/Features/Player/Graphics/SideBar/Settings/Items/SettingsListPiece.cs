@@ -85,7 +85,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
                         Y = -5,
                         RelativeSizeAxes = Axes.X
                     };
-                    AddInternal(currentText);
+
+                    Schedule(() => AddInternal(currentText));
 
                     currentText.MoveToY(0, 200, Easing.OutQuint)
                                .FadeIn(200, Easing.OutQuint);
