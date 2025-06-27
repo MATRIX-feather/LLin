@@ -4,6 +4,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics.Settings.Sections;
@@ -37,7 +38,29 @@ public partial class GeneralHikariiiSettingsSection : SettingsSection
                 LabelText = "启用系统主题色支持",
                 TooltipText = "如果当前系统受支持，则会基于系统主题色设定播放器的界面主题色",
                 Current = config.GetBindable<bool>(MSetting.UsePlatformAccentColor)
-            }
+            },
+            new SettingsSlider<float>
+            {
+                LabelText = "界面主题色（红）",
+                TooltipText = "若没有平台主题色可用，将根据这些设置设定界面主体色",
+                Current = config.GetBindable<float>(MSetting.MvisInterfaceRed),
+                KeyboardStep = 1f
+            },
+            new SettingsSlider<float>
+            {
+                LabelText = "界面主题色（绿）",
+                TooltipText = "若没有平台主题色可用，将根据这些设置设定界面主体色",
+                Current = config.GetBindable<float>(MSetting.MvisInterfaceGreen),
+                KeyboardStep = 1f
+            },
+            new SettingsSlider<float>
+            {
+                LabelText = "界面主题色（蓝）",
+                TooltipText = "若没有平台主题色可用，将根据这些设置设定界面主体色",
+                Current = config.GetBindable<float>(MSetting.MvisInterfaceBlue),
+                KeyboardStep = 1f
+            },
+            new ColourPreviewer()
         ];
     }
 }

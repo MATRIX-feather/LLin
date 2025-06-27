@@ -32,25 +32,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
             {
                 new NumberSettingsEntry<float>
                 {
-                    Name = "界面主题色(红)",
-                    Bindable = config.GetBindable<float>(MSetting.MvisInterfaceRed),
-                    KeyboardStep = 1
-                },
-                new NumberSettingsEntry<float>
-                {
-                    Name = "界面主题色(绿)",
-                    Bindable = config.GetBindable<float>(MSetting.MvisInterfaceGreen),
-                    KeyboardStep = 1
-                },
-                new NumberSettingsEntry<float>
-                {
-                    Name = "界面主题色(蓝)",
-                    Bindable = config.GetBindable<float>(MSetting.MvisInterfaceBlue),
-                    KeyboardStep = 1
-                },
-                new ColorPreviewEntry(),
-                new NumberSettingsEntry<float>
-                {
                     Name = "背景模糊",
                     Bindable = config.GetBindable<float>(MSetting.MvisBgBlur),
                     DisplayAsPercentage = true,
@@ -150,12 +131,5 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
         }
 
         public override int Version { get; }
-
-        private class ColorPreviewEntry : SettingsEntry
-        {
-            public override Drawable ToSettingsItem() => new ColourPreviewer();
-
-            public override Drawable? ToLLinSettingsItem() => null;
-        }
     }
 }
