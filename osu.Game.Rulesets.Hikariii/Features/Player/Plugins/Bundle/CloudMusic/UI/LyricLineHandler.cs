@@ -63,7 +63,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.U
                         Y = -5,
                         Anchor = configDirection.Value,
                         Origin = configDirection.Value,
-                        Font = OsuFont.GetFont(size: 30, weight: FontWeight.Black),
+                        Font = OsuFont.GetFont(size: 30),
                         Margin = getMargin(false)
                     }, text =>
                     {
@@ -107,7 +107,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.U
                         Text = value,
                         Alpha = 0,
                         Y = -5,
-                        Font = OsuFont.GetFont(size: 30, weight: FontWeight.Black),
+                        Font = OsuFont.GetFont(size: 30),
                         Anchor = configDirection.Value,
                         Origin = configDirection.Value,
                         Margin = getMargin(true)
