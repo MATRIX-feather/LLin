@@ -75,6 +75,9 @@ public partial class AccentColorIntegration : CompositeDrawable
             if (v.NewValue)
             {
                 var newImpl = selectImplementation();
+                if (newImpl == null)
+                    Logging.Log("Platform accent colorizer not supported");
+
                 PlatformAccentColorImpl = newImpl;
             }
             else
@@ -104,6 +107,12 @@ public partial class AccentColorIntegration : CompositeDrawable
 
         if (OperatingSystem.IsWindows())
         {
+            if (!WindowsAccentColorImpl.Available())
+            {
+                Logging.Log("Detected Windows, but this version of LLin has not been built with Windows integration!");
+                return null;
+            }
+
             var impl = new WindowsAccentColorImpl();
             LoadComponent(impl);
             AddInternal(impl);
@@ -111,7 +120,6 @@ public partial class AccentColorIntegration : CompositeDrawable
             return impl;
         }
 
-        Logging.Log("Platform accent colorizer not supported");
         return null;
     }
 

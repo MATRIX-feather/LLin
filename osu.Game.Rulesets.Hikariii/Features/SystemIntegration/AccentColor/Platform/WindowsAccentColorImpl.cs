@@ -22,14 +22,16 @@ public partial class WindowsAccentColorImpl : Drawable, IPlatformAccentColorImpl
         windowsUISettings = new UISettings();
 
         var windowsAccentColor = windowsUISettings.GetColorValue(UIColorType.Accent);
-        this.cachedAccentColor = convertColor(windowsAccentColor);
+        cachedAccentColor = convertColor(windowsAccentColor);
 
-        windowsUISettings.ColorValuesChanged += (_, _) =>
-        {
-            var convertedColor = convertColor(windowsUISettings.GetColorValue(UIColorType.Accent));
-            this.cachedAccentColor = convertedColor;
-            OnNewColorSet?.Invoke(convertedColor);
-        };
+        windowsUISettings.ColorValuesChanged += onWindowsColorChanged;
+    }
+
+    private void onWindowsColorChanged(UISettings uiSettings, object args)
+    {
+        var convertedColor = convertColor(uiSettings.GetColorValue(UIColorType.Accent));
+        this.cachedAccentColor = convertedColor;
+        OnNewColorSet?.Invoke(convertedColor);
     }
 
     private Color4 convertColor(Color windowsColor)
@@ -37,7 +39,23 @@ public partial class WindowsAccentColorImpl : Drawable, IPlatformAccentColorImpl
         return new Color4(windowsColor.R, windowsColor.G, windowsColor.B, windowsColor.A);
     }
 
+    protected override void Dispose(bool isDisposing)
+    {
+        base.Dispose(isDisposing);
+
+        if (windowsUISettings != null)
+            windowsUISettings.ColorValuesChanged += onWindowsColorChanged;
+    }
 #endif
+
+    public static bool Available()
+    {
+#if WINDOWS
+        return true;
+#else
+        return false;
+#endif
+    }
 
     private Color4? cachedAccentColor;
 
