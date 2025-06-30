@@ -8,6 +8,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
+using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Graphics.Containers;
@@ -408,7 +409,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (!loadingList.Contains(pl) || !pluginManager.GetAllPlugins(false).Contains(pl)) return false;
 
             loadingList.Remove(pl);
-            if (loadingList.Count == 0) loadingIndicator.Hide();
+
+            // workaround: Dispose时会对loadingIndicator作变换，如果我们不在更新线程上，则不要执行
+            if (loadingList.Count == 0 && ThreadSafety.IsUpdateThread)
+                loadingIndicator.Hide();
+
             return true;
         }
 
@@ -639,9 +644,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         #endregion
 
-        private readonly Container masterContainer;
-        private readonly EnterExitAnimation enterExitAnimation;
-
         public int SessionMagicCode { get; }
 
         public LLinScreen()
@@ -650,52 +652,34 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             InternalChildren =
             [
-                enterExitAnimation = new EnterExitAnimation
-                {
-                    Depth = -100,
-                },
-                masterContainer = new Container
+                tracker,
+                hashResolver,
+                backgroundLayer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Name = "LLin Master Container",
-
+                    Name = "背景层",
                     Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-
+                    Origin = Anchor.Centre
+                },
+                foregroundLayer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Name = "前景层",
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre
+                },
+                overlayLayer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Depth = float.MinValue,
+                    Name = "覆盖层",
                     Children =
                     [
-                        tracker,
-                        hashResolver,
-                        backgroundLayer = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Name = "背景层",
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        },
-                        foregroundLayer = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Name = "前景层",
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre
-                        },
-                        overlayLayer = new Container
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Depth = float.MinValue,
-                            Name = "覆盖层",
-                            Children =
-                            [
-                                new GlobalScrollAdjustsVolume()
-                            ]
-                        }
+                        new GlobalScrollAdjustsVolume()
                     ]
                 }
             ];
         }
-
-        private readonly BindableBool enableEnterLeaveAnimation = new(true);
 
         [Cached(type: typeof(ISamplePlaybackDisabler))]
         public readonly HikariiiSamplePlaybackAntiDisabler samplePlaybackAntiDisabler = new HikariiiSamplePlaybackAntiDisabler();
@@ -858,7 +842,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             config.BindWith(MSetting.MvisAdjustMusicWithFreq, adjustFreq);
             config.BindWith(MSetting.MvisEnableNightcoreBeat, nightcoreBeat);
             config.BindWith(MSetting.MvisAutoVSync, autoVsync);
-            config.BindWith(MSetting.MvisEnableAdvancedEnterLeaveAnimation, enableEnterLeaveAnimation);
             currentAudioControlProviderSetting = config.GetBindable<string>(MSetting.MvisCurrentAudioProvider);
             currentFunctionbarSetting = config.GetBindable<string>(MSetting.MvisCurrentFunctionBar);
 
@@ -952,7 +935,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             rsInput.Add(rsInputHandler);
             rulesetInput = rsInputHandler;
 
-            masterContainer.Add(rsInput);
+            AddInternal(rsInput);
 
             //当插件卸载时调用onPluginUnload
             pluginManager.OnPluginUnLoad += onPluginUnLoad;
@@ -1091,13 +1074,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (mediaIntegration != null)
                 mediaIntegration.MediaSource = this.lLinMediaSource;
 
-            masterContainer.FadeTo(0.01f);
-
-            if (enableEnterLeaveAnimation.Value)
-                enterExitAnimation.PlayShow("HIKARIII PLAYER", () => masterContainer.FadeIn());
-            else
-                masterContainer.FadeIn();
-
             //保存上个屏幕的Mods
             lastScreenMods = Mods.Value;
 
@@ -1116,31 +1092,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             tryMakeActive(true);
         }
 
-        private bool alreadyPlayingExit;
-
+        [Obsolete]
         public void PlayExit(Action? then)
         {
-            if (alreadyPlayingExit)
-                return;
+            then?.Invoke();
 
-            alreadyPlayingExit = true;
-
-            if (!enableEnterLeaveAnimation.Value)
-            {
-                if (this.IsCurrentScreen())
-                    this.Exit();
-
-                return;
-            }
-
-            enterExitAnimation.PlayHide("Leaving Hikariii", () =>
-            {
-                masterContainer.FadeOut();
-                then?.Invoke();
-
-                if (this.IsCurrentScreen())
-                    this.Exit();
-            });
+            if (this.IsCurrentScreen())
+                this.Exit();
         }
 
         public override bool OnExiting(ScreenExitEvent e)
@@ -1168,7 +1126,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             foregroundLayer.ScaleTo(0, 300, Easing.OutQuint);
             currentFunctionBar.Hide();
 
-            masterContainer.FadeOut(500, Easing.OutQuint);
+            this.FadeOut(500, Easing.OutQuint);
 
             Exiting?.Invoke();
 

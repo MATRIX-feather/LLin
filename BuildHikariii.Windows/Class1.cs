@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading;
-
-namespace BuildHikariii.Windows;
+﻿namespace BuildHikariii.Windows;
 
 public class PlayerLoaderDummyClass
 {
-    public static void Main()
+    static void Main(string[] args)
     {
         Console.WriteLine("This program is not intended to run directly.");
         Console.WriteLine("Please drop this into your osu!'s ruleset folder.");

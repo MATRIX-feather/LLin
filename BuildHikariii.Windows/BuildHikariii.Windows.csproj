@@ -6,11 +6,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <OutputType>Library</OutputType>
+        <OutputType>Exe</OutputType>
+        <PublishTrimmed>true</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\osu.Game.Rulesets.Hikariii\osu.Game.Rulesets.Hikariii.csproj" />
+      <TrimmerRootAssembly Include="osu.Game.Rulesets.Hikariii"/>
     </ItemGroup>
 
 </Project>

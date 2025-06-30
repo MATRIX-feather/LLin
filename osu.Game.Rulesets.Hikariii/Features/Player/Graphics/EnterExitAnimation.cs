@@ -165,14 +165,6 @@ public partial class EnterExitAnimation : InputBlockingContainer
 
         nowPlayingText.Text = beatmap.Value.Metadata.GetDisplayTitleRomanisable();
 
-/*
-        bottomMovingLine.FadeIn()
-                        .ResizeHeightTo(1)
-                        .Then()
-                        .Delay(line_animation_start_time)
-                        .ResizeHeightTo(0, move_duration, Easing.OutQuint);
-*/
-
         const float move_duration = 300f;
         const float wait_duration = 0f;
         const float total_duration = move_duration * 2 + wait_duration;
@@ -191,14 +183,14 @@ public partial class EnterExitAnimation : InputBlockingContainer
             .FadeOut();
     }
 
-    public void PlayShow(LocalisableString text, Action onMasked)
+    public void AppearFromBottom(LocalisableString text, Action onMasked)
     {
         this.Y = 1;
 
         this.Show();
 
         titleText.Text = text;
-        movingContainer.Y = 0;
+        movingContainer.Y = 30;
 
         nowPlayingText.Text = beatmap.Value.Metadata.GetDisplayTitleRomanisable();
 
@@ -209,10 +201,7 @@ public partial class EnterExitAnimation : InputBlockingContainer
 
         // 底边往上延展扩展的线
         bottomMovingLine.FadeIn()
-                        .ResizeHeightTo(0)
-                        .Then()
-                        .Delay(move_duration + wait_duration)
-                        .ResizeHeightTo(1, 500, Easing.OutQuint);
+                        .ResizeHeightTo(0);
 
         // 顶端往上收回的线
         topMovingLine.ResizeHeightTo(1)
@@ -221,15 +210,24 @@ public partial class EnterExitAnimation : InputBlockingContainer
                      .ResizeHeightTo(0.0f, 500, Easing.OutQuint);
 
         // 谱面背景的动画
-        movingContainer.MoveToY(-30, total_duration);
+        movingContainer.MoveToY(-30, 5000, Easing.InOutSine)
+                       .Then()
+                       .MoveToY(30, 5000, Easing.InOutSine)
+                       .Loop();
 
         // 整体移动
         this.MoveToY(0, move_duration, Easing.OutQuint)
             .Then()
             .Delay(wait_duration)
-            .Schedule(onMasked)
-            .MoveToY(-1, move_duration, Easing.InQuint)
-            .Then()
-            .FadeOut();
+            .Schedule(onMasked);
+    }
+
+    public void FoldToTop()
+    {
+        const float move_duration = 500f;
+        const float wait_duration = 600f;
+
+        bottomMovingLine.ResizeHeightTo(1, 500, Easing.OutQuint);
+        this.MoveToY(-1, move_duration, Easing.InQuint);
     }
 }
