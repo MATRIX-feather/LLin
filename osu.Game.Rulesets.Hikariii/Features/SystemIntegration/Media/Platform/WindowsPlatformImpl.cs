@@ -95,7 +95,7 @@ public partial class WindowsPlatformImpl : Drawable, IPlatformImpl
             windowsIntegration.Title = info.Metadata.GetTitle().Title;
             windowsIntegration.Artist = info.Metadata.GetArtist();
             windowsIntegration.Album = info.DifficultyName;
-            windowsIntegration.CoverUrl = resolveBeatmapCoverUrl(value);
+            windowsIntegration.CoverPath = resolveBeatmapCoverPath(value);
 #endif
         }
     }
@@ -103,7 +103,7 @@ public partial class WindowsPlatformImpl : Drawable, IPlatformImpl
     [Resolved]
     private Storage storage { get; set; } = null!;
 
-    private string resolveBeatmapCoverUrl(WorkingBeatmap beatmap)
+    private string resolveBeatmapCoverPath(WorkingBeatmap beatmap)
     {
         string path;
         string backgroundFilename = beatmap.BeatmapInfo.Metadata.BackgroundFile;
@@ -126,9 +126,8 @@ public partial class WindowsPlatformImpl : Drawable, IPlatformImpl
                 return string.Empty;
         }
 
-        var uri = new Uri(new Uri("file://"), path);
-        Logging.Log("File URI is " + uri.ToString());
-        return uri.ToString();
+        Logging.Log($"Path is '{path}'");
+        return path;
     }
 
     public WindowsPlatformImpl()

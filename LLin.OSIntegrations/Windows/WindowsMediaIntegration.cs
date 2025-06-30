@@ -3,6 +3,8 @@
 #if WINDOWS
 using Windows.Media;
 using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Storage.Streams;
 #endif
 
 namespace LLin.OSIntegrations.Windows;
@@ -58,33 +60,34 @@ public class WindowsMediaIntegration
         }
     }
 
+    private readonly SystemMediaTransportControlsTimelineProperties timelineProperties = new();
+
     private void updateTimelineProperties()
     {
-        var properties = new SystemMediaTransportControlsTimelineProperties
-        {
-            EndTime = TimeSpan.FromMilliseconds(lastValidTrackLengthMillisecond),
-            StartTime = TimeSpan.FromSeconds(0),
-            MinSeekTime = TimeSpan.FromMilliseconds(100),
-            MaxSeekTime = TimeSpan.FromSeconds(10),
-            Position = TimeSpan.FromMilliseconds(lastValidPositionMillisecond),
-        };
+        timelineProperties.EndTime = TimeSpan.FromMilliseconds(lastValidTrackLengthMillisecond);
+        timelineProperties.StartTime = TimeSpan.FromMilliseconds(0);
+        timelineProperties.Position = TimeSpan.FromMilliseconds(lastValidPositionMillisecond);
 
-        smtc.UpdateTimelineProperties(properties);
+        timelineProperties.MinSeekTime = TimeSpan.FromMilliseconds(0);
+        timelineProperties.MaxSeekTime = TimeSpan.FromMilliseconds(lastValidTrackLengthMillisecond);
+
+        smtc.UpdateTimelineProperties(timelineProperties);
     }
 
-    public string CoverUrl
+    public string CoverPath
     {
         set
         {
-            //TODO: figure out how to set cover/thumbnail for SMTC
-            /*
             if (string.IsNullOrEmpty(value))
                 return;
 
             updateDisplay(display =>
             {
-                display.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(value));
-            });*/
+                var storageFile = StorageFile.GetFileFromPathAsync(value).GetAwaiter().GetResult();
+
+                if (storageFile != null)
+                    display.Thumbnail = RandomAccessStreamReference.CreateFromFile(storageFile);
+            });
         }
     }
 
@@ -114,7 +117,10 @@ public class WindowsMediaIntegration
     {
         this.media = new MediaPlayer();
         this.smtc = media.SystemMediaTransportControls;
+
         media.CommandManager.IsEnabled = false;
+        media.PlaybackRate = 1d;
+        media.PlaybackSession.Position = TimeSpan.FromSeconds(10);
 
         smtc.IsEnabled = true;
         smtc.DisplayUpdater.Type = MediaPlaybackType.Music;
@@ -129,6 +135,14 @@ public class WindowsMediaIntegration
         smtc.ButtonPressed += smtcButtonPressed;
         smtc.PropertyChanged += smtcPropertyChanged;
         smtc.PlaybackPositionChangeRequested += smtcPlaybackPositionChangeRequested;
+
+        smtc.PlaybackRate = 1d;
+        smtc.PlaybackRateChangeRequested += smtcPlaybackRateChangeRequested;
+    }
+
+    private void smtcPlaybackRateChangeRequested(SystemMediaTransportControls sender,
+                                                 PlaybackRateChangeRequestedEventArgs args)
+    {
     }
 
     private void smtcPlaybackPositionChangeRequested(SystemMediaTransportControls sender,
