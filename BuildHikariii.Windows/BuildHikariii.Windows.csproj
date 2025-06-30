@@ -6,8 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <OutputType>Exe</OutputType>
-        <PublishTrimmed>true</PublishTrimmed>
+        <OutputType>Library</OutputType>
+        <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
