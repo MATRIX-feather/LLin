@@ -16,7 +16,7 @@
   <ItemGroup>
     <!-- <PackageReference Include="Tmds.DBus" Version="0.21.2" /> -->
     <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.2" />
-    <PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.20">
+    <PackageReference Include="Tmds.DBus.SourceGenerator" Version="0.0.21" PrivateAssets="all">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

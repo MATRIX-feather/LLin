@@ -37,29 +37,81 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
         CanControl = true;
     }
 
-    public string Path { get; } = "/org/mpris/MediaPlayer2";
+    internal static readonly string[] EMPTY_STRING_ARRAY = [""];
 
     protected void NotifyChange<T>(string name, T val)
+        where T : notnull
     {
-        Dictionary<string, Variant> dict;
+        Dictionary<string, VariantValue> dict = new Dictionary<string, VariantValue>();
 
-        if (val is Dictionary<string, Variant> d)
+        switch (val)
         {
-            dict = d;
-        }
-        else
-        {
-            dict = new Dictionary<string, Variant>
+            case Dictionary<string, VariantValue> d:
             {
-                [name] = Variant.FromStruct(new Struct<T>(val))
-            };
+                var dbusDict = new Dict<string, VariantValue>(d);
+                dict[name] = dbusDict.AsVariantValue();
+                break;
+            }
+
+            case string s:
+            {
+                dict[name] = VariantValue.String(s);
+                break;
+            }
+
+            case short ss:
+            {
+                dict[name] = VariantValue.Int16(ss);
+                break;
+            }
+
+            case int i:
+            {
+                dict[name] = VariantValue.Int32(i);
+                break;
+            }
+
+            case long l:
+            {
+                dict[name] = VariantValue.Int64(l);
+                break;
+            }
+
+            case float f:
+            {
+                dict[name] = VariantValue.Double(f);
+                break;
+            }
+
+            case double d:
+            {
+                dict[name] = VariantValue.Double(d);
+                break;
+            }
+
+            case bool b:
+            {
+                dict[name] = VariantValue.Bool(b);
+                break;
+            }
+
+            case byte bb:
+            {
+                dict[name] = VariantValue.Byte(bb);
+                break;
+            }
+
+            default:
+            {
+                throw new NotSupportedException($"{val.GetType()} is not supported yet, this might be a bug!");
+            }
         }
 
         MessageWriter writer = Connection.GetMessageWriter();
-        writer.WriteSignalHeader(null, Path, "org.freedesktop.DBus.Properties", "PropertiesChanged", "sa{sv}as");
+        writer.WriteSignalHeader(null, "/org/mpris/MediaPlayer2", "org.freedesktop.DBus.Properties", "PropertiesChanged", "sa{sv}as");
         writer.WriteString("org.mpris.MediaPlayer2.Player");
         writer.WriteDictionary(dict);
-        writer.WriteArray(new[] { "" });
+        writer.WriteArray(EMPTY_STRING_ARRAY);
 
         if (!Connection.TrySendMessage(writer.CreateMessage()))
         {
@@ -94,7 +146,9 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
         set
         {
             loopStatus = value;
-            NotifyChange(nameof(LoopStatus), value);
+
+            if (value != null)
+                NotifyChange(nameof(LoopStatus), value);
         }
     }
 
@@ -178,13 +232,15 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
         }
     }
 
-    public new Dictionary<string, Variant>? Metadata
+    public new Dictionary<string, VariantValue>? Metadata
     {
         get => base.Metadata;
         set
         {
             base.Metadata = value;
-            NotifyChange(nameof(Metadata), Metadata);
+
+            if (value != null)
+                NotifyChange(nameof(Metadata), value);
         }
     }
 
@@ -260,8 +316,6 @@ internal partial class MprisPlayerControllerImpl : OrgMprisMediaPlayer2PlayerHan
     public event Action<long>? Seek;
     public event Action<long>? SetPosition;
     public event Action<string>? OpenUri;
-
-    public static readonly string PATH = "/org/mpris/MediaPlayer2";
 
     protected override ValueTask OnNextAsync(Message request)
     {

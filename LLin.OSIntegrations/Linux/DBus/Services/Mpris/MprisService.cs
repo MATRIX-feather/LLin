@@ -26,7 +26,7 @@ public class MprisService : IMethodHandler
     public event Action<long>? SetPosition;
     public event Action<string>? OpenUri;
 
-    public Dictionary<string, Variant>? Metadata
+    public Dictionary<string, VariantValue>? Metadata
     {
         get => MprisPlayerControllerService.Metadata;
         set => MprisPlayerControllerService.Metadata = value;

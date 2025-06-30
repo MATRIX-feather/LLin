@@ -81,7 +81,7 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
 
             Debug.Assert(metadata != null);
 
-            metadata["xesam:artist"] = Variant.FromArray([info.Metadata.GetArtist()]);
+            metadata["xesam:artist"] = VariantValue.Array(new[] { info.Metadata.GetArtist() });
             metadata["xesam:title"] = info.Metadata.GetTitle().Title;
             metadata["xesam:album"] = info.DifficultyName;
             metadata["xesam:audioBPM"] = info.BPM;
