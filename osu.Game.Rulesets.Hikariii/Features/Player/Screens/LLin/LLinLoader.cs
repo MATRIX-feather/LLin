@@ -96,7 +96,7 @@ public partial class LLinLoader : OsuScreen
         else
             screenMasked = true;
 
-        this.Delay(1500).Schedule(() => canPush = true);
+        this.Delay(600).Schedule(() => canPush = true);
         this.Delay(2500).Schedule(() =>
         {
             if (TargetScreen != null && TargetScreen.LoadState < LoadState.Ready)
