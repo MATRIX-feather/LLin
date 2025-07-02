@@ -16,8 +16,7 @@
     <EmbeddedResource Include="Textures\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NLua" Version="1.6.2" />
-    <PackageReference Include="ppy.osu.Game" Version="2025.605.1" />
+    <PackageReference Include="ppy.osu.Game" Version="2025.618.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LLin.OSIntegrations\LLin.OSIntegrations.csproj" />
