@@ -86,8 +86,7 @@ public partial class PlaySongSelectHandler : AbstractScreenHandler
     {
         Game.PerformFromScreen(s => s.Push(new LLinLoader(() => new LLinScreen())), new[]
         {
-            typeof(MainMenu),
-            typeof(PlaySongSelect)
+            typeof(MainMenu)
         });
     }
 }

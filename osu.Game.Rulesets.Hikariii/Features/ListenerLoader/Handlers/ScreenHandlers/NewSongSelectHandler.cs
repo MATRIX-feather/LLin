@@ -11,7 +11,6 @@ using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Screens.Footer;
 using osu.Game.Screens.Menu;
-using osu.Game.Screens.Select;
 using osu.Game.Screens.SelectV2;
 using BindingFlags = System.Reflection.BindingFlags;
 
@@ -114,9 +113,7 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
     {
         Game.PerformFromScreen(s => s.Push(new LLinLoader(() => new LLinScreen())), new[]
         {
-            typeof(MainMenu),
-            typeof(PlaySongSelect),
-            typeof(SoloSongSelect)
+            typeof(MainMenu)
         });
     }
 }
