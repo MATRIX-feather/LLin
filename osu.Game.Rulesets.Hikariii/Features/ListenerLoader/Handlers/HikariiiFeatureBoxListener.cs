@@ -13,6 +13,7 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Rulesets.Hikariii.Graphics;
 using osu.Game.Screens.Menu;
+using osu.Game.Screens.SelectV2;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
@@ -161,7 +162,8 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
                 {
                     Game.PerformFromScreen(s => s.Push(new LLinLoader(() => new LLinScreen())), new[]
                     {
-                        typeof(MainMenu)
+                        typeof(MainMenu),
+                        typeof(SoloSongSelect)
                     });
 
                     overlay.Hide();
