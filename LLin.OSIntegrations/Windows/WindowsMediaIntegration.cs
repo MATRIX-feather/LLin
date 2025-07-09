@@ -108,7 +108,8 @@ public class WindowsMediaIntegration
 
     public bool AllowExternalControl
     {
-        set => smtc.IsEnabled = value;
+        // set => smtc.IsEnabled = value;
+        get; set;
     }
 
     //endregion Controls
@@ -148,7 +149,8 @@ public class WindowsMediaIntegration
     private void smtcPlaybackPositionChangeRequested(SystemMediaTransportControls sender,
                                                      PlaybackPositionChangeRequestedEventArgs args)
     {
-        SetPosition?.Invoke(args.RequestedPlaybackPosition.Milliseconds);
+        if (AllowExternalControl)
+            SetPosition?.Invoke(args.RequestedPlaybackPosition.Milliseconds);
     }
 
     private void smtcPropertyChanged(SystemMediaTransportControls sender,
@@ -160,6 +162,8 @@ public class WindowsMediaIntegration
     private void smtcButtonPressed(SystemMediaTransportControls sender,
                                    SystemMediaTransportControlsButtonPressedEventArgs args)
     {
+        if (!AllowExternalControl)
+            return;
         switch (args.Button)
         {
             case SystemMediaTransportControlsButton.Play:
