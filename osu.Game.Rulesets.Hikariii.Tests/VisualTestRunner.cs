@@ -12,7 +12,10 @@ namespace osu.Game.Rulesets.Hikariii.Tests
         [STAThread]
         public static int Main(string[] args)
         {
-            using (DesktopGameHost host = Host.GetSuitableDesktopHost(@"osu", new HostOptions { }))
+            using (DesktopGameHost host = Host.GetSuitableDesktopHost(@"osu-hikariii-tests", new HostOptions
+                   {
+                       FriendlyGameName = "Hikariii Visual Tests"
+                   }))
             {
                 host.Run(new HikariiiTestBrowser());
                 return 0;
