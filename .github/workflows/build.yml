@@ -1,16 +1,30 @@
-name: dotnet
+name: Build
 on:
   push:
-    branches: [ "ruleset" ]
+    branches: ['ruleset']
   pull_request:
-    branches: [ "ruleset" ]
+    branches: ['ruleset']
+  workflow_dispatch:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         dotnet-version: ['8.0.x']
+
+    env:
+      ARTIFACT_PATH: |
+        tmp/M.*.dll
+        tmp/*/M.*.dll
+        tmp/LLin.*.dll
+        tmp/osu.Game.Rulesets.*.dll
+        tmp/Tmds.DBus.*.dll
+        tmp/Microsoft.Windows.SDK.NET.dll
+        tmp/WinRT.Runtime.dll
+        tmp/README.md
 
     steps:
       - uses: actions/checkout@v4
@@ -20,23 +34,31 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
-      - name: Resolve dependencies
-        run: dotnet restore BuildHikariii
-
-      - name: Build
+      - name: Build Hikariii (Common)
         run: dotnet publish BuildHikariii -c Release
 
-      - name: Copy README.md
-        run: cp 'README.md' BuildHikariii/bin/Release/net8.0/publish
+      - name: Copy artifacts (Common)
+        run: |
+          cp -r BuildHikariii/bin/Release/net8.0/publish tmp
+          cp README.md tmp
 
-      - name: Upload artifacts
+      - name: Upload artifacts (Common)
         uses: actions/upload-artifact@v4
         with:
-          path: |
-            BuildHikariii/bin/Release/net8.0/publish/M.*.dll
-            BuildHikariii/bin/Release/net8.0/publish/*/M.*.dll
-            BuildHikariii/bin/Release/net8.0/publish/osu.Game.Rulesets.*.dll
-            BuildHikariii/bin/Release/net8.0/publish/Tmds.*.dll
-            BuildHikariii/bin/Release/net8.0/publish/*.md
-            BuildHikariii/bin/Release/net8.0/publish/NetCoreServ*.dll
-            !BuildHikariii/bin/Release/net8.0/publish/*.txt
+          name: common
+          path: ${{ env.ARTIFACT_PATH }}
+
+      - name: Build Hikariii (Windows)
+        run: dotnet publish BuildHikariii.Windows -c Release
+
+      - name: Copy artifacts (Windows)
+        run: |
+          rm -rf tmp
+          cp -r BuildHikariii.Windows/bin/Release/net8.0*/publish tmp
+          cp README.md tmp
+
+      - name: Upload artifacts (Windows)
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: ${{ env.ARTIFACT_PATH }}
