@@ -134,18 +134,20 @@ public partial class WindowsPlatformImpl : Drawable, IPlatformImpl
     {
         if (!OperatingSystem.IsWindows())
             throw new PlatformNotSupportedException("Platform not Windows, may not use SMTC integration.");
+
+#if WINDOWS
+        windowsIntegration = new WindowsMediaIntegration();
+#endif
     }
 
 #if WINDOWS
-    private WindowsMediaIntegration windowsIntegration;
+    private readonly WindowsMediaIntegration windowsIntegration;
 
     [BackgroundDependencyLoader]
     private void load()
     {
         if (!OperatingSystem.IsWindows())
             throw new NotSupportedException("Platform not Windows, may not use SMTC integration.");
-
-        windowsIntegration = new WindowsMediaIntegration();
 
         windowsIntegration.Play += () => Schedule(() => HandlePlayPause?.Invoke(true));
         windowsIntegration.Pause += () => Schedule(() => HandlePlayPause?.Invoke(false));

@@ -94,14 +94,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             SetDefault(MSetting.MprisUseAvatarlogoAsCover, true);
             SetDefault(MSetting.MprisUpdateInterval, 500d, 100d, 1000d);
 
-            //排行榜
-            //SetDefault(MSetting.InGameLeaderboardState, LeaderboardState.Fold);
-
             SetDefault(MSetting.MvisEnableAdvancedEnterLeaveAnimation, true);
 
             SetDefault(MSetting.InjectButtonToNewSongSelect, true);
 
             SetDefault(MSetting.UsePlatformAccentColor, true);
+
+            SetDefault(MSetting.IgnoreMediaControlWhenFocused, OperatingSystem.IsWindows());
         }
 
         public Color4 GetCustomLoaderColor()
@@ -176,7 +175,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
 
         InjectButtonToNewSongSelect,
 
-        UsePlatformAccentColor
+        UsePlatformAccentColor,
+        IgnoreMediaControlWhenFocused
     }
 
     public enum GamemodeActivateCondition
