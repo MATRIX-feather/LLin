@@ -265,6 +265,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         {
             try
             {
+                if (!File.Exists(blockedPluginFilePath))
+                    File.Create(blockedPluginFilePath);
+
                 using var writer = new StreamReader(File.OpenRead(blockedPluginFilePath));
 
                 var obj = JsonConvert.DeserializeObject<List<string>>(writer.ReadToEnd());
