@@ -1,8 +1,10 @@
 using System;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media.Platform;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media.Source;
 
@@ -123,13 +125,23 @@ public partial class MediaIntegration : CompositeComponent
 
     private void executeIfAllowControl(Action action)
     {
+        if (ignoreMediaControlWhenFocused.Value && game.Window.IsActive.Value)
+            return;
+
         if (allowExternalControls)
             action();
     }
 
+    [Resolved]
+    private OsuGame game { get; set; } = null!;
+
+    private readonly BindableBool ignoreMediaControlWhenFocused = new(false);
+
     [BackgroundDependencyLoader]
-    private void load()
+    private void load(MConfigManager config)
     {
+        config.BindWith(MSetting.IgnoreMediaControlWhenFocused, ignoreMediaControlWhenFocused);
+
         var impl = selectImplementation();
 
         if (impl != null)

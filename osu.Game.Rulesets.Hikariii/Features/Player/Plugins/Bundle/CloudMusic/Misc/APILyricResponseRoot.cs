@@ -84,9 +84,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.M
                     break;
                 }
 
-                if (DebugUtils.IsDebugBuild)
-                    Logging.Log($"DEBUG GET PROPERTY '{property}' :: {exceedRawLyricLimit}");
-
                 // 处理property
                 Lyric initialLyric = new Lyric();
 

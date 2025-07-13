@@ -39,6 +39,12 @@ public partial class GeneralHikariiiSettingsSection : SettingsSection
                 TooltipText = "如果当前系统受支持，则会基于系统主题色设定播放器的界面主题色",
                 Current = config.GetBindable<bool>(MSetting.UsePlatformAccentColor)
             },
+            new SettingsCheckbox
+            {
+                LabelText = "取得焦点时不要响应系统媒体按键",
+                TooltipText = "当窗口取得焦点时，Hikariii 将不会对系统媒体按键做出响应\n修复一些平台上按下媒体按键会响应两次的问题",
+                Current = config.GetBindable<bool>(MSetting.IgnoreMediaControlWhenFocused)
+            },
             new SettingsSlider<float>
             {
                 LabelText = "界面主题色（红）",

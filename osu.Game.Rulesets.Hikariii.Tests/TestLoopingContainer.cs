@@ -2,6 +2,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Overlays;
+using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Rulesets.Hikariii.Graphics;
 using osu.Game.Tests.Visual;
 using osuTK;
@@ -20,7 +21,7 @@ public partial class TestAboutHikariiiContainer : OsuTestScene
 
     private BasicDropdownContainer? featureDropdownContainer;
 
-    private readonly OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Pink);
+    private readonly CustomColourProvider colourProvider = new(OverlayColourScheme.Pink.GetHue());
 
     private void createLoopContainer()
     {
