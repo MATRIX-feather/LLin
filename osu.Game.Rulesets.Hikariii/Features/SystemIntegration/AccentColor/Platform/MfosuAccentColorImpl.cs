@@ -3,6 +3,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor.Platform;
@@ -41,6 +42,9 @@ public partial class MfosuAccentColorImpl : Drawable, IPlatformAccentColorImpl
 
     private void updateColor()
     {
-        OnNewColorSet?.Invoke(GetAccentColor());
+        var hslColor = Color4.ToHsl(GetAccentColor());
+        var finalColor = Color4.FromHsl(new Vector4(hslColor.X, 1f, 0.7f, 1f));
+
+        OnNewColorSet?.Invoke(finalColor);
     }
 }

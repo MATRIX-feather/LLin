@@ -14,10 +14,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar.Bu
 
         public bool Default { get; set; }
 
-        protected Color4 ActivateColor => ColourProvider.Highlight1;
-        protected Color4 InActivateColor => ColourProvider.Background3;
+        protected Color4 ActivateColor => ColourProvider.AccentColor;
+        protected Color4 InActivateColor => ColourProvider.Background3; // ActivateColor.Darken(0.75f);
         protected Color4 ActivateColorBorder => ActivateColor.Lighten(0.25f);
-        protected Colour4 InActivateColorBorder => ColourProvider.Background1;
+        protected Colour4 InActivateColorBorder => InActivateColor.Darken(0.25f);
 
         public BottomBarSwitchButton(IToggleableFunctionProvider provider)
             : base(provider)
@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar.Bu
             {
                 case true:
                     BgBox.FadeColour(ActivateColor, duration, Easing.OutQuint);
-                    ContentFillFlow.FadeColour(Colour4.Black, duration, Easing.OutQuint);
+                    ContentFillFlow.FadeColour(ColourProvider.ForegroundTextColor, duration, Easing.OutQuint);
                     outerContent!.BorderColour = ColourInfo.GradientVertical(ActivateColor, ActivateColorBorder);
 
                     if (animate)

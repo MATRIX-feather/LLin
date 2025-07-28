@@ -83,7 +83,7 @@ public partial class LinuxAccentColorImpl : Drawable, IPlatformAccentColorImpl
             return;
         }
 
-        var newColor = new Color4(red, green, blue, 255);
+        var newColor = new Color4(red, green, blue, 1);
         cachedLastValidColor = newColor;
         OnNewColorSet?.Invoke(newColor);
         return;

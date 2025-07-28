@@ -25,7 +25,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
         [Resolved]
         private CustomColourProvider colourProvider { get; set; }
 
-        private Color4 activeColor => colourProvider.Highlight1;
+        private Color4 iconActiveColor => colourProvider.ForegroundTextColor;
+        private Color4 activeColor => colourProvider.AccentColor;
         private Color4 inActiveColor => colourProvider.Dark4.Opacity(0);
 
         public TabControlItem(ISidebarContent content)
@@ -68,7 +69,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
             colourProvider.HueColour.BindValueChanged(_ =>
             {
                 activeBox.Colour = isActive ? activeColor : inActiveColor;
-                icon.Colour = isActive ? Color4.Black : Color4.White;
+                icon.Colour = isActive ? iconActiveColor : Color4.White;
             }, true);
 
             base.LoadComplete();
@@ -90,7 +91,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
         {
             isActive = true;
             activeBox.FadeColour(activeColor, 300, Easing.OutQuint);
-            icon.Colour = Color4.Black;
+            icon.Colour = iconActiveColor;
             icon.RotateTo(25, 150, Easing.OutQuint)
                 .Then()
                 .RotateTo(-15, 150, Easing.OutQuint)

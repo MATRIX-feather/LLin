@@ -91,8 +91,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
 
             colourProvider.HueColour.BindValueChanged(_ =>
             {
-                fgBox.Colour = IsMouseIndicator ? colourProvider.Highlight1 : colourProvider.Background4;
-                text.Colour = IsMouseIndicator ? Color4.Black : Color4.White;
+                fgBox.Colour = IsMouseIndicator ? colourProvider.AccentColor : colourProvider.Background4;
+                text.Colour = IsMouseIndicator ? colourProvider.ForegroundTextColor : Color4.White;
             }, true);
         }
 

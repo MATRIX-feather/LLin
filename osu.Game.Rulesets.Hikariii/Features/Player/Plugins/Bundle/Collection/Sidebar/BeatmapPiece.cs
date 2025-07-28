@@ -164,7 +164,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
                 if (Active.Value)
                 {
                     content.BorderColour = IsCurrent
-                        ? colourProvider.Highlight1
+                        ? colourProvider.AccentColor
                         : colourProvider.Light2;
                 }
                 else
@@ -178,7 +178,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
             {
                 case true:
                     content.BorderColour = IsCurrent
-                        ? colourProvider.Highlight1
+                        ? colourProvider.AccentColor
                         : colourProvider.Light2;
                     maskBox.FadeOut(500);
                     flash.Show();
