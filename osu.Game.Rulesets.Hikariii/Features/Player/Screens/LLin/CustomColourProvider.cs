@@ -2,7 +2,7 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Theme;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
@@ -33,12 +33,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         }
 
         [Resolved]
-        private AccentColorIntegration accentColor { get; set; } = null!;
+        private SystemThemeIntegration systemThemeIntegration { get; set; } = null!;
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            UpdateHueColor(accentColor.GetAccentColor());
+            UpdateHueColor(systemThemeIntegration.GetAccentColor());
         }
 
         // 出于兼容性保留

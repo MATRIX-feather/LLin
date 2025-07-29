@@ -1,16 +1,15 @@
 using System;
+#if WINDOWS
+using Windows.UI;
+using Windows.UI.ViewManagement;
+using osu.Framework.Allocation;
+#endif
 using osu.Framework.Graphics;
 using osuTK.Graphics;
 
-#if WINDOWS
-using osu.Framework.Allocation;
-using Windows.UI;
-using Windows.UI.ViewManagement;
-#endif
+namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Theme.Platform;
 
-namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor.Platform;
-
-public partial class WindowsAccentColorImpl : Drawable, IPlatformAccentColorImpl
+public partial class WindowsThemeImpl : Drawable, IPlatformThemeImpl
 {
 #if WINDOWS
 
@@ -58,11 +57,19 @@ public partial class WindowsAccentColorImpl : Drawable, IPlatformAccentColorImpl
     }
 
     private Color4? cachedAccentColor;
+    private ColorScheme? cachedAccentColorScheme;
 
     public event Action<Color4>? OnNewColorSet;
+    public event Action<ColorScheme>? OnColorSchemeSet;
 
     public Color4 GetAccentColor()
     {
         return cachedAccentColor ?? Color4.White;
+    }
+
+    public ColorScheme GetColorScheme()
+    {
+        // todo: Implement this
+        return cachedAccentColorScheme ?? ColorScheme.NONE;
     }
 }
