@@ -103,7 +103,7 @@ public partial class LinuxThemeImpl : Drawable, IPlatformThemeImpl
             _ => throw new ParseException($"Invalid color scheme {scheme}")
         };
 
-        Logging.Log("AAAAAA COLOR SCHEME IS " + schemeEnum);
+        //Logging.Log("AAAAAA COLOR SCHEME IS " + schemeEnum);
 
         var lastValue = cachedLastValidColorScheme ?? null;
         cachedLastValidColorScheme = schemeEnum;
