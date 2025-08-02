@@ -13,6 +13,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.C
         protected override void InitialiseDefaults()
         {
             SetDefault(CollectionSettings.EnablePlugin, false);
+            SetDefault(CollectionSettings.EnableRandom, false);
             base.InitialiseDefaults();
         }
 
@@ -21,6 +22,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.C
 
     public enum CollectionSettings
     {
-        EnablePlugin
+        EnablePlugin,
+        EnableRandom
     }
 }
