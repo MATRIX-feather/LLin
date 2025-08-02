@@ -220,12 +220,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 
             this.beatmapChooser?.Deactivate();
             beatmapChooser = chooser;
-            this.UpdateBeatmaps();
+            chooser.Activate(cachedCollectionContent);
             chooser.OnExternalChoose(b.Value);
         }
 
         [Resolved]
         private BeatmapHashResolver hashResolver { get; set; } = null!;
+
+        private readonly List<IBeatmapSetInfo> cachedCollectionContent = [];
 
         ///<summary>
         ///用来更新<see cref="beatmapList"/>
@@ -255,6 +257,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
                 if (!beatmaps.Contains(currentSet))
                     beatmaps.Add(currentSet);
             }
+
+            cachedCollectionContent.Clear();
+            cachedCollectionContent.AddRange(beatmaps);
 
             beatmapChooser?.Activate(beatmaps);
         }
