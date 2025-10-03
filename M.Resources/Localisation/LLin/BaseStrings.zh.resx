@@ -49,9 +49,12 @@
         <value>侧边栏</value>
     </data>
     <data name="audio_control_requested_main" xml:space="preserve">
-        <value>请求接手音频控制。</value>
+        <value>{0}请求接手音频控制。</value>
     </data>
     <data name="audio_control_requested_sub" xml:space="preserve">
         <value>原因是: {0}</value>
+    </data>
+    <data name="okay" xml:space="preserve">
+        <value>好</value>
     </data>
 </root>

@@ -22,7 +22,8 @@
         <value>请先选择一个！</value>
     </data>
     <data name="audio_control_request" xml:space="preserve">
-        <value>激活以确保插件可以发挥功能\n本提示在本次会话中不会出现第二次。</value>
+        <value>激活以确保插件可以发挥功能
+本提示在本次会话中不会出现第二次。</value>
     </data>
     <data name="entry_tooltip" xml:space="preserve">
         <value>浏览收藏夹</value>

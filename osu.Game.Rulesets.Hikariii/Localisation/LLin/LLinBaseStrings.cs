@@ -28,9 +28,12 @@ namespace osu.Game.Rulesets.Hikariii.Localisation.LLin
 
         public static LocalisableString OpenSidebar => new TranslatableString(getKey(@"open_sidebar"), @"Open sidebar");
 
-        public static LocalisableString AudioControlRequestedMain => new TranslatableString(getKey(@"audio_control_requested_main"), @" requested audio control");
+        public static LocalisableString AudioControlRequestedMain(LocalisableString source) =>
+            new TranslatableString(getKey(@"audio_control_requested_main"), @"{0} requested audio control", source);
 
         public static LocalisableString AudioControlRequestedSub(LocalisableString reason) => new TranslatableString(getKey(@"audio_control_requested_sub"), @"Reason: {0}", reason);
+
+        public static LocalisableString Okay => new TranslatableString(getKey(@"okay"), "Okay");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
