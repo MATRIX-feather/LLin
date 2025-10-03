@@ -29,7 +29,6 @@ using osu.Game.Input;
 using osu.Game.Input.Bindings;
 using osu.Game.Localisation;
 using osu.Game.Overlays;
-using osu.Game.Overlays.Dialog;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Overlays.Volume;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
@@ -150,11 +149,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         {
             if (!(pacp is LLinPlugin mpl)) return;
 
-            dialog.Push(new ConfirmDialog(
-                mpl.ToString()
-                + LLinBaseStrings.AudioControlRequestedMain
-                + "\n"
-                + LLinBaseStrings.AudioControlRequestedSub(message.ToString()),
+            dialog.Push(new AudioControlRequestDialog(mpl.ToString(), message,
                 () =>
                 {
                     changeAudioControlProvider(pacp);
