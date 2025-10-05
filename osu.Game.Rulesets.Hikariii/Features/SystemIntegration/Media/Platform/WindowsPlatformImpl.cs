@@ -127,6 +127,13 @@ public partial class WindowsPlatformImpl : Drawable, IPlatformImpl
         }
 
         Logging.Log($"Path is '{path}'");
+
+        if (!File.Exists(path))
+        {
+            Logging.Log("File doesn't exist! ignoring");
+            return string.Empty;
+        }
+
         return path;
     }
 
