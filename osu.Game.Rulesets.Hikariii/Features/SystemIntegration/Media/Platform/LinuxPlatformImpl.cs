@@ -119,10 +119,10 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
                 return string.Empty;
         }
 
-        Logging.Log("COVER PATH IS " + body);
+        //Logging.Log("COVER PATH IS " + body);
         if (!File.Exists(body))
         {
-            Logging.Log("File doesn't exist! ignoring");
+            //Logging.Log("File doesn't exist! ignoring");
             return string.Empty;
         }
 
