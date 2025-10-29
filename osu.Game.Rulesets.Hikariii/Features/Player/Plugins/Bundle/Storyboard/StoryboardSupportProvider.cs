@@ -5,5 +5,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
     public class StoryboardPluginProvider : LLinPluginProvider
     {
         public override LLinPlugin CreatePlugin => new BackgroundStoryBoardLoader();
+
+        public override string Identifier() => "storyboard_loader";
     }
 }

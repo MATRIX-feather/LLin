@@ -13,9 +13,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
     {
         private readonly OsuGameBase gameBase;
         private readonly Storage customStorage;
-        private readonly Dictionary<Assembly, Type> loadedAssemblies = new Dictionary<Assembly, Type>();
+        private readonly Dictionary<Assembly, Type> loadedAssemblies = new();
 
-        public List<LLinPluginProvider> LoadedPluginProviders = new List<LLinPluginProvider>();
+        public List<LLinPluginProvider> LoadedPluginProviders = new();
 
         public PluginStore(Storage storage, OsuGameBase gameBase)
             : base(new StorageBackedResourceStore(storage), "custom")

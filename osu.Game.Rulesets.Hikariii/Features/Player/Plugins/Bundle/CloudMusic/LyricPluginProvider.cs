@@ -6,5 +6,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
     {
         //在这里制定该Provider要提供的插件
         public override LLinPlugin CreatePlugin => new LyricPlugin();
+
+        public override string Identifier() => "lyrics";
     }
 }

@@ -6,5 +6,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
     {
         //在这里制定该Provider要提供的插件
         public override LLinPlugin CreatePlugin => new YaspPlugin();
+
+        public override string Identifier() => "yasp";
     }
 }

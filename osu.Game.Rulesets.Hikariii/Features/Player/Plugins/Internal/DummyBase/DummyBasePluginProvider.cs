@@ -15,5 +15,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
         }
 
         public override LLinPlugin CreatePlugin => new DummyBasePlugin(config, plmgr);
+
+        public override string Identifier() => "dummybase";
     }
 }

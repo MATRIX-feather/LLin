@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
@@ -33,10 +32,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
     {
         #region 插件管理
 
+        private readonly Dictionary<string, LLinPluginProvider> providerMap = new();
+
         private readonly BindableList<LLinPlugin> avaliablePlugins = new BindableList<LLinPlugin>();
         private readonly BindableList<LLinPlugin> activePlugins = new BindableList<LLinPlugin>();
-        private readonly List<LLinPluginProvider> providers = new List<LLinPluginProvider>();
-        private readonly List<string> blockedProviders = new List<string>();
 
         private readonly LLinPluginResolver resolver;
 
@@ -102,6 +101,29 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 
         private bool platformSupportsDBus => RuntimeInfo.OS == RuntimeInfo.Platform.Linux && (FeatureManager.Instance?.CanUseDBus.Value ?? false);
 
+        public X? AcquireProvider<X>(string identifier)
+            where X : LLinPluginProvider
+        {
+            var provider = providerMap!.GetValueOrDefault(identifier, null);
+
+            if (provider is X x)
+                return x;
+
+            return null;
+        }
+
+        public bool RegisterProvider(LLinPluginProvider provider)
+        {
+            if (providerMap.ContainsKey(provider.Identifier()))
+            {
+                Logging.Log($"We already have a provider with the same identifier '{provider.Identifier()}'!");
+                return false;
+            }
+
+            providerMap[provider.Identifier()] = provider;
+            return true;
+        }
+
         internal bool AddPlugin(LLinPlugin? pl)
         {
             if (pl == null || avaliablePlugins.Contains(pl)) return false;
@@ -115,58 +137,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             OnPluginAdd?.Invoke(pl);
 
             pl.PluginManager = this;
-            return true;
-        }
-
-        internal bool UnLoadPlugin(LLinPlugin? pl, bool blockFromFutureLoad = false)
-        {
-            if (pl == null || !avaliablePlugins.Contains(pl)) return false;
-
-            var provider = providers.Find(p => p.CreatePlugin.GetType() == pl.GetType());
-
-            activePlugins.Remove(pl);
-            avaliablePlugins.Remove(pl);
-
-            if (provider != null)
-                providers.Remove(provider);
-
-            try
-            {
-                if (pl is IFunctionBarProvider functionBarProvider)
-                    resolver.RemoveFunctionBarProvider(functionBarProvider);
-
-                if (pl is IProvideAudioControlPlugin provideAudioControlPlugin)
-                    resolver.RemoveAudioControlProvider(provideAudioControlPlugin);
-
-                pl.UnLoad();
-                OnPluginUnLoad?.Invoke(pl);
-
-                var providerAssembly = provider?.GetType().Assembly;
-                var gameAssembly = GetType().Assembly;
-
-                if (providerAssembly != null && providerAssembly != gameAssembly && blockFromFutureLoad)
-                {
-                    blockedProviders.Add(providerAssembly.ToString());
-
-                    using (var writer = new StreamWriter(File.OpenWrite(blockedPluginFilePath)))
-                    {
-                        string serializedString = JsonConvert.SerializeObject(blockedProviders);
-                        writer.Write(serializedString);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logging.LogError(e, $"卸载插件时出现了问题: {e.Message}");
-
-                //直接dispose掉插件
-                if (pl.Parent is Container container)
-                    container.Remove(pl, true);
-
-                //刷新列表
-                resolver.UpdatePluginDictionary(GetAllPlugins(false));
-            }
-
             return true;
         }
 
@@ -238,7 +208,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 //bug: 直接调用Dispose会导致快速进出时抛出Disposed drawabled may never in the scene graph
                 ExpireOldPlugins();
 
-                foreach (var p in providers)
+                foreach (var p in providerMap.Values)
                 {
                     avaliablePlugins.Add(p.CreatePlugin);
                 }
@@ -263,6 +233,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         [BackgroundDependencyLoader]
         private void load(OsuGameBase gameBase, MConfigManager config)
         {
+            // Uncomment if we ever want blocking plugins feature back again
+            /*
             try
             {
                 if (!File.Exists(blockedPluginFilePath))
@@ -279,7 +251,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             {
                 if (e is not FileNotFoundException)
                     Logging.LogError(e, "读取黑名单插件列表时出现了问题");
-            }
+            }*/
 
             try
             {
@@ -294,13 +266,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             // 内置插件
             DummyBasePluginProvider dbpp;
             DummyAudioPluginProvider dapp;
-            //LuaPluginProvider luapp;
-            providers.AddRange(new LLinPluginProvider[]
-            {
-                dbpp = new DummyBasePluginProvider(config, this),
-                dapp = new DummyAudioPluginProvider(config, this),
-                //luapp = new LuaPluginProvider()
-            });
+            RegisterProvider(dbpp = new DummyBasePluginProvider(config, this));
+            RegisterProvider(dapp = new DummyAudioPluginProvider(config, this));
 
             AddPlugin(dbpp.CreatePlugin);
             AddPlugin(dapp.CreatePlugin);
@@ -320,18 +287,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 //new NewBottomBarProvider()
             };
 
-            providers.AddRange(bundledPlugins);
+            bundledPlugins.ForEach(p => RegisterProvider(p));
 
             foreach (var lLinPluginProvider in bundledPlugins)
                 AddPlugin(lLinPluginProvider.CreatePlugin);
 
             if (PluginStore != null)
             {
-                foreach (LLinPluginProvider? provider in PluginStore.LoadedPluginProviders
-                                                                    .Where(provider => !blockedProviders.Contains(provider.GetType().Assembly.ToString())))
+                foreach (LLinPluginProvider provider in PluginStore.LoadedPluginProviders)
                 {
+                    RegisterProvider(provider);
                     AddPlugin(provider.CreatePlugin);
-                    providers.Add(provider);
                 }
             }
 

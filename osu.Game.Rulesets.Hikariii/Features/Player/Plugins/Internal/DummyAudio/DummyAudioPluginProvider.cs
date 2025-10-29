@@ -15,5 +15,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyAudio
         }
 
         public override LLinPlugin CreatePlugin => new DummyAudioPlugin(config, plmgr);
+
+        public override string Identifier() => "dummyaudio";
     }
 }
