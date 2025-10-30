@@ -264,16 +264,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         {
             bool alreadyRegistered = onBeatmapChangedAction?.GetInvocationList().Contains(action) ?? false;
 
-            if (sender.GetType().IsSubclassOf(typeof(LLinPlugin))
-                && runOnce
-                && alreadyRegistered)
+            switch (alreadyRegistered)
             {
-                action.Invoke(Beatmap.Value);
-                return;
-            }
+                case true when runOnce:
+                    action.Invoke(Beatmap.Value);
+                    return;
 
-            if (alreadyRegistered)
-                throw new InvalidOperationException($"{sender}已经注册过一个相同的{action}了。");
+                case true:
+                    throw new InvalidOperationException($"{sender}已经注册过一个相同的{action}了。");
+            }
 
             onBeatmapChangedAction += action;
 
