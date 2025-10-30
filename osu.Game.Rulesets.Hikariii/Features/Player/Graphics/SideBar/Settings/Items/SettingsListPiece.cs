@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Localisation;
@@ -28,7 +29,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
 
         protected override Drawable CreateSideDrawable() => valueText;
 
-        protected virtual string GetValueText(T newValue) => newValue?.ToString() ?? "无值";
+        protected virtual LocalisableString GetValueText(T newValue) => newValue?.GetLocalisableDescription() ?? "无值";
 
         [BackgroundDependencyLoader]
         private void load()

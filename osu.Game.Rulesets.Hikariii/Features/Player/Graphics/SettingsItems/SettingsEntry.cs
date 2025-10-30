@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 {
@@ -149,7 +152,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
         }
     }
 
-    public class ListSettingsEntry<T> : SettingsEntry
+    public partial class ListSettingsEntry<T> : SettingsEntry
     {
         public IEnumerable<T>? Values;
 
@@ -160,12 +163,35 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 
         public override Drawable ToSettingsItem()
         {
-            return new SettingsDropdown<T>
+            return new MOsuSettingsDropdown<T>
             {
                 LabelText = Name,
                 Current = (Bindable<T>)Bindable.GetBoundCopy(),
                 Items = Values
             };
+        }
+
+        public partial class MOsuSettingsDropdown<X> : SettingsDropdown<X>
+        {
+            public override IEnumerable<LocalisableString> FilterTerms => Control.Items.Select(x => x.GetLocalisableDescription());
+
+            protected override OsuDropdown<X> CreateDropdown() => new MOsuDropdown<X>();
+        }
+
+        public partial class MOsuDropdown<X> : OsuDropdown<X>
+        {
+            public MOsuDropdown()
+            {
+                RelativeSizeAxes = Axes.X;
+            }
+
+            protected override LocalisableString GenerateItemText(X item)
+            {
+                if (item is LLinPluginProvider provider)
+                    return provider.GetLocalisableDescription();
+
+                return base.GenerateItemText(item);
+            }
         }
 
         public override Drawable? ToLLinSettingsItem()

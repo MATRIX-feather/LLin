@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         public virtual void EarlyInitSettingEntries(IPluginConfigManager config)
         {
         }
-
+/*
         /// <summary>
         /// workaround: List entries
         /// </summary>
@@ -55,6 +55,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             var desc = GetDescription();
 
             return $"{desc.Name} ({desc.AuthorString()})";
-        }
+        }*/
     }
 }

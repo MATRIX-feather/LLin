@@ -1,6 +1,8 @@
+using osu.Framework.Localisation;
+
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 
-public record PluginDescription(string Name, string Description, string[] Authors)
+public record PluginDescription(LocalisableString Name, LocalisableString Description, string[] Authors)
 {
     public string AuthorString() => string.Join(", ", Authors);
 }

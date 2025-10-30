@@ -2,6 +2,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Online.Placeholders;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
@@ -113,7 +114,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics
             }, true);
         }
 
-        public string Title { get; }
+        public LocalisableString Title { get; }
         public IconUsage Icon { get; set; } = FontAwesome.Solid.Plug;
     }
 }

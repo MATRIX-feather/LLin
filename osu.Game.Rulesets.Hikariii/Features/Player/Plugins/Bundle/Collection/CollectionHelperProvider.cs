@@ -1,16 +1,19 @@
+using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Localisation.LLin;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 {
+    [LocalisableDescription(typeof(LLinPluginNameString), nameof(LLinPluginNameString.CollectionMusicController))]
     public class CollectionHelperProvider : LLinPluginProvider
     {
         public override LLinPlugin CreatePlugin() => new CollectionHelper(this);
 
-        public override PluginDescription GetDescription() => new("收藏夹集成", "将收藏夹作为歌单播放", ["mfosu"]);
+        public override PluginDescription GetDescription() => new(LLinPluginNameString.CollectionMusicController, "将收藏夹作为歌单播放", ["mfosu"]);
 
         public override CollectionHelperConfigManager CreateConfigManager(Storage storage)
         {

@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
 {
@@ -29,6 +30,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
         {
             ListSettingsEntry<LLinPluginProvider> listEntry;
             var functionBarBindable = new Bindable<LLinPluginProvider>();
+
+            ListSettingsEntry<LLinPluginProvider> audioEntry;
+            var audioPluginBindable = new Bindable<LLinPluginProvider>();
 
             entries =
             [
@@ -83,17 +87,75 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
                     DisplayAsPercentage = true,
                     KeyboardStep = 0.01f,
                     CommitOnMouseRelease = true
+                },
+                audioEntry = new ListSettingsEntry<LLinPluginProvider>
+                {
+                    Name = "音乐控制插件",
+                    Bindable = audioPluginBindable
+                },
+                new NumberSettingsEntry<double>
+                {
+                    Name = "播放速度",
+                    Bindable = config.GetBindable<double>(MSetting.MvisMusicSpeed),
+                    KeyboardStep = 0.01f,
+                    DisplayAsPercentage = true,
+                    //TransferValueOnCommit = true
+                },
+                new BooleanSettingsEntry
+                {
+                    Name = "调整音调",
+                    Bindable = config.GetBindable<bool>(MSetting.MvisAdjustMusicWithFreq),
+                    Description = "暂不支持调整故事版的音调"
+                },
+                new BooleanSettingsEntry
+                {
+                    Name = "夜核节拍器",
+                    Bindable = config.GetBindable<bool>(MSetting.MvisEnableNightcoreBeat),
+                    Description = "动次打次动次打次"
                 }
             ];
 
-            var plugins = plmgr.GetAllFunctionBarProviders();
+            //region audio
+
+            var audioPlugins = plmgr.GetAllAudioControlPlugin();
+
+            foreach (LLinPluginProvider provider in audioPlugins.Where(provider => config.Get<string>(MSetting.MvisCurrentAudioProvider) == provider.Identifier()))
+            {
+                audioPluginBindable.Value = provider;
+                break;
+            }
+
+            var osuAudio = plmgr.AcquireProviderOrThrow<OsuAudioPluginProvider>(OsuAudioPluginProvider.ID);
+
+            // workaround: 收藏夹在默认插件的上面
+            if (audioPlugins.Contains(osuAudio))
+            {
+                audioPlugins.Remove(osuAudio);
+                audioPlugins.Insert(0, osuAudio);
+            }
+
+            audioEntry.Values = audioPlugins;
+            audioPluginBindable.Default = osuAudio;
+
+            audioPluginBindable.BindValueChanged(v =>
+            {
+                var pl = v.NewValue ?? this;
+
+                config.SetValue(MSetting.MvisCurrentAudioProvider, pl.Identifier());
+            });
+
+            //endregion audio
+
+            //region function bar
+
+            var functionBarPlugins = plmgr.GetAllFunctionBarProviders();
 
             string currentFunctionBar = config.Get<string>(MSetting.MvisCurrentFunctionBar);
 
-            foreach (LLinPluginProvider pl in plugins.Where(pl => currentFunctionBar == pl.Identifier()))
+            foreach (LLinPluginProvider pl in functionBarPlugins.Where(pl => currentFunctionBar == pl.Identifier()))
                 functionBarBindable.Value = pl;
 
-            listEntry.Values = plugins;
+            listEntry.Values = functionBarPlugins;
             functionBarBindable.Default = plmgr.AcquireProviderOrThrow<StandardBottomBarProvider>(StandardBottomBarProvider.ID);
 
             functionBarBindable.BindValueChanged(v =>
@@ -102,6 +164,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
 
                 config.SetValue(MSetting.MvisCurrentFunctionBar, pl.Identifier());
             });
+
+            //endregion function bar
         }
 
         public override LLinPlugin CreatePlugin() => new DummyBasePlugin(config, plmgr, this);

@@ -2,6 +2,7 @@ using System;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osuTK;
@@ -10,9 +11,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.S
 {
     public abstract partial class Section : CompositeDrawable, ISidebarContent
     {
-        public string Title
+        public LocalisableString Title
         {
-            get => title.Text.ToString();
+            get => title.Text;
             set => title.Text = value;
         }
 
