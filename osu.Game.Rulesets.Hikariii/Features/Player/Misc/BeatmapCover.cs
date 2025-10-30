@@ -91,8 +91,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
                     oldCover?.FadeOut(300);
                     oldCover?.Expire();
 
+                    newCover.Y = 0.01f;
+                    AddInternal(newCover);
                     cover = newCover;
-                    AddInternal(cover);
                 }, changeCoverTask.Token);
             }
             else
