@@ -12,7 +12,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 {
-    internal partial class LegacyBottomBar : LLinPlugin, IFunctionBarProvider
+    internal partial class StandardBottomBar : LLinPlugin, IFunctionBarProvider
     {
         protected override Drawable CreateContent() => new PlaceHolder();
 
@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
         public override TargetLayer Target => TargetLayer.FunctionBar;
 
-        public LegacyBottomBar(LLinPluginProvider provider)
+        public StandardBottomBar(LLinPluginProvider provider)
             : base(provider)
         {
             Name = "底栏";

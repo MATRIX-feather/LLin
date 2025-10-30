@@ -232,7 +232,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             //不要在此功能条禁用时再调用onFunctionBarPluginDisable
             if (currentFunctionBar != null)
+            {
                 currentFunctionBar.OnDisable -= onFunctionBarDisable;
+
+                if (currentFunctionBar is LLinPlugin oldAsPlugin)
+                    RemoveBottomSafeArea(oldAsPlugin);
+            }
 
             //如果新的目标是null，则使用后备功能条
             newProvider ??= sessionPluginManager.GetPluginWithTypeOrThrow<IFunctionBarProvider>(FallbackFunctionBarProvider.ID);
@@ -248,7 +253,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 currentFunctionbarSetting.Value = plugin.Provider.Identifier();
 
             //添加新的功能条
-            overlayLayer.Add((Drawable)newProvider);
+            if (newProvider is Drawable nextAsDrawable && nextAsDrawable.Parent == null)
+                overlayLayer.Add(nextAsDrawable);
+
+            newProvider.Show();
+
+            if (controlDisplayTemp.Value > 0f)
+                newProvider.ShowFunctionControl();
             //Logging.Log($"更改底栏到{newProvider}");
         }
 
@@ -967,15 +978,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             //更新当前音乐控制插件
             currentAudioControlProviderSetting.BindValueChanged(v =>
             {
-                //获取与新值匹配的控制插件
-                changeAudioControlProvider(sessionPluginManager.GetPluginWithType<IProvideAudioControlPlugin>(v.NewValue));
+                Schedule(() => changeAudioControlProvider(sessionPluginManager.GetPluginWithType<IProvideAudioControlPlugin>(v.NewValue)));
             }, true);
 
             //更新当前功能条
             currentFunctionbarSetting.BindValueChanged(v =>
             {
-                //获取与新值匹配的控制插件
-                changeFunctionBarProvider(sessionPluginManager.GetPluginWithType<IFunctionBarProvider>(v.NewValue));
+                Schedule(() => changeFunctionBarProvider(sessionPluginManager.GetPluginWithType<IFunctionBarProvider>(v.NewValue)));
             }, true);
 
             blackBackground.BindValueChanged(_ => applyBackgroundBrightness());

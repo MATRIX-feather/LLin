@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 {
     public class StandardBottomBarProvider : LLinPluginProvider
     {
-        public override LLinPlugin CreatePlugin() => new LegacyBottomBar(this);
+        public override LLinPlugin CreatePlugin() => new StandardBottomBar(this);
 
         public override PluginDescription GetDescription() => new("标准底栏", "Hikariii 预装的标准底栏", ["mfosu"]);
 

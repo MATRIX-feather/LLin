@@ -10,7 +10,7 @@ public class FallbackFunctionBarProvider : LLinPluginProvider
 
     public override PluginDescription GetDescription() => new("后备底栏", "当没有其他底栏能用时会用他", ["mfosu"]);
 
-    public override LLinPlugin CreatePlugin() => new FunctionBar(this);
+    public override LLinPlugin CreatePlugin() => new FallbackFunctionBar(this);
 
     public override string Identifier() => ID;
 
