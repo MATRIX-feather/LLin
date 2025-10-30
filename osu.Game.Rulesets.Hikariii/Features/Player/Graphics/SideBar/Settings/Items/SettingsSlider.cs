@@ -81,7 +81,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
         protected override void UpdateValue(float value)
         {
             circle.MoveToX(value, 250, Easing.OutExpo);
-            circle.ScaleTo(value + 0.2f, 250, Easing.OutBack);
+            circle.ScaleTo(value * 0.75f + 0.25f, 250, Easing.OutBack);
         }
     }
 }
