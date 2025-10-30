@@ -2,18 +2,13 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
-using osu.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic;
@@ -22,9 +17,9 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyAudio;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 {
@@ -33,20 +28,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         #region 插件管理
 
         private readonly Dictionary<string, LLinPluginProvider> providerMap = new();
-
-        private readonly BindableList<LLinPlugin> avaliablePlugins = new BindableList<LLinPlugin>();
-        private readonly BindableList<LLinPlugin> activePlugins = new BindableList<LLinPlugin>();
-
         private readonly LLinPluginResolver resolver;
-
-        private string blockedPluginFilePath => storage.GetFullPath("custom/blocked_plugins.json");
 
         #endregion
 
         #region 插件配置
 
-        private readonly ConcurrentDictionary<Type, IPluginConfigManager> configManagers = new ConcurrentDictionary<Type, IPluginConfigManager>();
-        private readonly ConcurrentDictionary<Type, SettingsEntry[]> entryMap = new ConcurrentDictionary<Type, SettingsEntry[]>();
+        private readonly ConcurrentDictionary<string, IPluginConfigManager> configManagers = new();
+        private readonly ConcurrentDictionary<string, SettingsEntry[]> entryMap = new();
 
         #endregion
 
@@ -55,51 +44,29 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         [Resolved]
         private Storage storage { get; set; } = null!;
 
-        public readonly IProvideAudioControlPlugin DefaultAudioController = new OsuMusicControllerWrapper();
-
-        public readonly TypeWrapper DefaultFunctionBarType = new TypeWrapper
+        public OsuMusicControllerWrapper AcquireOsuAudioController()
         {
-            Type = typeof(FunctionBar),
-            Name = "默认底栏"
-        };
-
-        public readonly TypeWrapper DefaultAudioControllerType = new TypeWrapper
-        {
-            Type = typeof(OsuMusicControllerWrapper),
-            Name = "osu!"
-        };
+            return (OsuMusicControllerWrapper)AcquireProviderOrThrow<OsuAudioPluginProvider>(OsuAudioPluginProvider.ID).CreatePlugin();
+        }
 
         #endregion
 
         #region 内部方法/参数
 
-        internal Action<LLinPlugin>? OnPluginAdd;
-        internal Action<LLinPlugin>? OnPluginUnLoad;
-
         internal static int LatestPluginVersion => 10;
 
-        internal SettingsEntry[]? GetSettingsFor(LLinPlugin pl)
-        {
-            if (!entryMap.ContainsKey(pl.GetType()))
-                Logging.Log($"entryMap中没有和{pl}有关的数据。");
+        public SettingsEntry[] GetSettingsFor(string id) => entryMap.GetValueOrDefault(id, []);
+        public SettingsEntry[] GetSettingsFor(LLinPluginProvider provider) => GetSettingsFor(provider.Identifier());
 
-            return entryMap.ContainsKey(pl.GetType()) ? entryMap[pl.GetType()] : null;
-        }
+        internal List<LLinPluginProvider> GetAllFunctionBarProviders() => resolver.GetAllFunctionBarProviders();
 
-        internal List<TypeWrapper> GetAllFunctionBarProviders() => resolver.GetAllFunctionBarProviders();
+        internal List<LLinPluginProvider> GetAllAudioControlPlugin() => resolver.GetAllAudioControlPlugin();
 
-        internal List<TypeWrapper> GetAllAudioControlPlugin() => resolver.GetAllAudioControlPlugin();
+        internal IProvideAudioControlPlugin? GetAudioControlByID(string id)
+            => (IProvideAudioControlPlugin?)resolver.GetAudioControlPluginByID(id)?.CreatePlugin();
 
-        internal Type? GetAudioControlTypeByPath([NotNull] string path) => resolver.GetAudioControlPluginByPath(path);
-        internal Type? GetFunctionBarProviderTypeByPath([NotNull] string path) => resolver.GetFunctionBarProviderByPath(path);
-
-        internal IProvideAudioControlPlugin? GetAudioControlByPath([NotNull] string path)
-            => (IProvideAudioControlPlugin?)avaliablePlugins.FirstOrDefault(pl => pl is IProvideAudioControlPlugin && resolver.ToPath(pl) == path);
-
-        internal IFunctionBarProvider? GetFunctionBarProviderByPath([NotNull] string path)
-            => (IFunctionBarProvider?)avaliablePlugins.FirstOrDefault(pl => pl is IFunctionBarProvider && resolver.ToPath(pl) == path);
-
-        private bool platformSupportsDBus => RuntimeInfo.OS == RuntimeInfo.Platform.Linux && (FeatureManager.Instance?.CanUseDBus.Value ?? false);
+        internal IFunctionBarProvider? GetFunctionBarProviderByID(string id)
+            => (IFunctionBarProvider?)resolver.GetFunctionBarProviderByID(id)?.CreatePlugin();
 
         public X? AcquireProvider<X>(string identifier)
             where X : LLinPluginProvider
@@ -110,6 +77,16 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 return x;
 
             return null;
+        }
+
+        public X AcquireProviderOrThrow<X>(string identifier)
+            where X : LLinPluginProvider
+        {
+            var result = AcquireProvider<X>(identifier);
+            if (result == null)
+                throw new Exception($"Expected an instance of {identifier}, but got null.");
+
+            return result;
         }
 
         public bool RegisterProvider(LLinPluginProvider provider)
@@ -124,64 +101,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             return true;
         }
 
-        internal bool AddPlugin(LLinPlugin? pl)
-        {
-            if (pl == null || avaliablePlugins.Contains(pl)) return false;
-
-            if (pl.Version < MinimumPluginVersion)
-                Logging.Log($"插件 \"{pl.Name}\" 是为旧版本的mf-osu打造的, 继续使用可能会导致意外情况的发生!", LoggingTarget.Runtime, LogLevel.Important);
-            else if (pl.Version > PluginVersion)
-                Logging.Log($"插件 \"{pl.Name}\" 是为更高版本的mf-osu打造的, 继续使用可能会导致意外情况的发生!", LoggingTarget.Runtime, LogLevel.Important);
-
-            avaliablePlugins.Add(pl);
-            OnPluginAdd?.Invoke(pl);
-
-            pl.PluginManager = this;
-            return true;
-        }
-
-        internal bool ActivePlugin(LLinPlugin pl)
-        {
-            if (!avaliablePlugins.Contains(pl) || activePlugins.Contains(pl) || pl == null) return false;
-
-            if (!activePlugins.Contains(pl))
-                activePlugins.Add(pl);
-
-            bool success = pl.Enable();
-
-            if (!success)
-                activePlugins.Remove(pl);
-
-            return success;
-        }
-
-        internal bool DisablePlugin(LLinPlugin pl)
-        {
-            if (!avaliablePlugins.Contains(pl) || !activePlugins.Contains(pl) || pl == null) return false;
-
-            activePlugins.Remove(pl);
-            bool success = pl.Disable();
-
-            if (!success)
-            {
-                activePlugins.Add(pl);
-                Logging.Log($"卸载插件\"${pl.Name}\"失败");
-            }
-
-            return success;
-        }
-
-        internal void ExpireOldPlugins()
-        {
-            foreach (var pl in avaliablePlugins)
-            {
-                activePlugins.Remove(pl);
-                pl.Expire();
-            }
-
-            avaliablePlugins.Clear();
-        }
-
         #endregion
 
         #region API相关
@@ -189,34 +108,19 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         public int PluginVersion => LatestPluginVersion;
         public int MinimumPluginVersion => 9;
 
-        public IPluginConfigManager GetConfigManager(LLinPlugin pl) =>
-            configManagers.GetOrAdd(pl.GetType(), _ => pl.CreateConfigManager(storage));
-
-        public List<LLinPlugin> GetActivePlugins() => activePlugins.ToList();
-
-        /// <summary>
-        /// 获取所有插件
-        /// </summary>
-        /// <param name="newInstance">
-        /// 是否处理当前所有插件并创建新插件本体<br/>
-        /// </param>
-        /// <returns>所有已加载且可用的插件</returns>
-        public List<LLinPlugin> GetAllPlugins(bool newInstance)
+        public IPluginConfigManager GetConfigManager(string id)
         {
-            if (newInstance)
-            {
-                //bug: 直接调用Dispose会导致快速进出时抛出Disposed drawabled may never in the scene graph
-                ExpireOldPlugins();
+            var provider = providerMap!.GetValueOrDefault(id, null);
+            return provider == null
+                ? throw new Exception("The given ID doesn't match any providers")
+                : configManagers.GetOrAdd(id, _ => provider.CreateConfigManager(storage));
+        }
 
-                foreach (var p in providerMap.Values)
-                {
-                    avaliablePlugins.Add(p.CreatePlugin);
-                }
+        public IPluginConfigManager GetConfigManager(LLinPluginProvider provider) => GetConfigManager(provider.Identifier());
 
-                resolver.UpdatePluginDictionary(avaliablePlugins.ToList());
-            }
-
-            return avaliablePlugins.ToList();
+        public Dictionary<string, LLinPluginProvider> GetAllPluginProviders()
+        {
+            return new Dictionary<string, LLinPluginProvider>(providerMap);
         }
 
         #endregion
@@ -226,8 +130,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         public LLinPluginManager()
         {
             resolver = new LLinPluginResolver(this);
-
-            InternalChild = (OsuMusicControllerWrapper)DefaultAudioController;
         }
 
         [BackgroundDependencyLoader]
@@ -263,21 +165,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 PluginStore = null;
             }
 
-            // 内置插件
-            DummyBasePluginProvider dbpp;
-            DummyAudioPluginProvider dapp;
-            RegisterProvider(dbpp = new DummyBasePluginProvider(config, this));
-            RegisterProvider(dapp = new DummyAudioPluginProvider(config, this));
-
-            AddPlugin(dbpp.CreatePlugin);
-            AddPlugin(dapp.CreatePlugin);
-            //AddPlugin(luapp.CreatePlugin);
-
             // 随Ruleset附送
             var bundledPlugins = new LLinPluginProvider[]
             {
+                new DummyBasePluginProvider(config, this),
+                new OsuAudioPluginProvider(config, this),
+                new FallbackFunctionBarProvider(),
+
                 new SandboxPanelProvider(),
-                new BottomBarProvider(),
+                new StandardBottomBarProvider(),
                 new CollectionHelperProvider(),
                 new StoryboardPluginProvider(),
 
@@ -289,30 +185,23 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 
             bundledPlugins.ForEach(p => RegisterProvider(p));
 
-            foreach (var lLinPluginProvider in bundledPlugins)
-                AddPlugin(lLinPluginProvider.CreatePlugin);
-
             if (PluginStore != null)
             {
                 foreach (LLinPluginProvider provider in PluginStore.LoadedPluginProviders)
-                {
                     RegisterProvider(provider);
-                    AddPlugin(provider.CreatePlugin);
-                }
             }
 
-            resolver.UpdatePluginDictionary(GetAllPlugins(false));
+            var providers = GetAllPluginProviders().Values.ToList();
 
-            foreach (var pl in this.GetAllPlugins(false))
+            resolver.UpdatePluginDictionary(providers);
+
+            foreach (var pl in providers)
             {
                 try
                 {
-                    var oldEntries = pl.GetSettingEntries();
-
-                    if (oldEntries != null)
-                        entryMap[pl.GetType()] = oldEntries;
-                    else
-                        entryMap[pl.GetType()] = pl.GetSettingEntries(GetConfigManager(pl));
+                    var pluginConfigManager = GetConfigManager(pl.Identifier());
+                    pl.EarlyInitSettingEntries(pluginConfigManager);
+                    entryMap[pl.Identifier()] = pl.GetSettingEntries(pluginConfigManager);
                 }
                 catch (Exception e)
                 {
@@ -322,7 +211,5 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 }
             }
         }
-
-        public string ToPath([NotNull] object target) => resolver.ToPath(target);
     }
 }

@@ -23,7 +23,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
         private readonly Box idleIndicator;
         private readonly Box hideIndicator;
 
-        public FunctionBar()
+        public override TargetLayer Target => TargetLayer.FunctionBar;
+
+        public FunctionBar(LLinPluginProvider provider)
+            : base(provider)
         {
             Height = 40;
             RelativeSizeAxes = Axes.X;
@@ -76,8 +79,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
         protected override bool OnContentLoaded(Drawable content) => true;
 
         protected override bool PostInit() => true;
-
-        public override int Version => 0;
 
         [BackgroundDependencyLoader]
         private void load()

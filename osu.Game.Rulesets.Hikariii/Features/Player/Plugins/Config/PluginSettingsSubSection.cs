@@ -1,42 +1,19 @@
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config
 {
-    [Obsolete("请使用GetSettingEntries")]
-    public abstract partial class PluginSettingsSubSection : SettingsSubsection
-    {
-        private readonly LLinPlugin plugin;
-        protected IPluginConfigManager ConfigManager = null!;
-
-        protected override LocalisableString Header => plugin.Name;
-
-        protected PluginSettingsSubSection(LLinPlugin plugin)
-        {
-            this.plugin = plugin;
-        }
-
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-        {
-            var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
-            ConfigManager = dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
-            return dependencies;
-        }
-    }
-
     public partial class PluginSettingsSubsection : SettingsSection
     {
-        private readonly LLinPlugin plugin;
+        private readonly LLinPluginProvider provider;
 
-        public PluginSettingsSubsection(LLinPlugin plugin)
+        public PluginSettingsSubsection(LLinPluginProvider plugin)
         {
-            this.plugin = plugin;
+            this.provider = plugin;
             Name = $"{plugin}的subsection";
 
             AutoSizeAxes = Axes.Y;
@@ -52,14 +29,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config
             };
         }
 
-        public override LocalisableString Header => plugin.Name;
+        public override LocalisableString Header => provider.GetDescription().Name;
 
         [BackgroundDependencyLoader]
         private void load(LLinPluginManager pluginManager)
         {
-            var entries = pluginManager.GetSettingsFor(plugin);
-
-            if (entries == null) return;
+            var entries = pluginManager.GetSettingsFor(provider);
 
             foreach (var se in entries)
                 Add(se.ToSettingsItem());

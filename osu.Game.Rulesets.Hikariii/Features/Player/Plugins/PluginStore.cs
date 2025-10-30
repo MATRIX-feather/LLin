@@ -110,6 +110,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 {
                     //Logging.Log($"case: 尝试加载 {type}");
 
+                    //todo: I don't know if this really work in C#
                     if (type.IsSubclassOf(typeof(LLinPluginProvider)))
                     {
                         loadedAssemblies[assembly] = type;

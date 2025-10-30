@@ -7,6 +7,8 @@ using osu.Framework.Configuration;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Configuration
@@ -59,8 +61,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             SetDefault(MSetting.MvisInterfaceRed, value: 0, 0, 255f);
             SetDefault(MSetting.MvisInterfaceGreen, value: 119f, 0, 255f);
             SetDefault(MSetting.MvisInterfaceBlue, value: 255f, 0, 255f);
-            SetDefault(MSetting.MvisCurrentAudioProvider, "DummyAudioPlugin@osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyAudio");
-            SetDefault(MSetting.MvisCurrentFunctionBar, "LegacyBottomBar@osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar");
+            SetDefault(MSetting.MvisCurrentAudioProvider, OsuAudioPluginProvider.ID);
+            SetDefault(MSetting.MvisCurrentFunctionBar, StandardBottomBarProvider.ID);
 
             // Obsolete
             SetDefault(MSetting.MvisTabControlPosition, TabControlPosition.Right);

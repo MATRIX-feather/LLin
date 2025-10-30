@@ -1,10 +1,7 @@
-#nullable disable
-
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Logging;
 using osu.Game.Online.Placeholders;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
@@ -35,7 +32,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics
         /// 获取侧边栏入口
         /// </summary>
         /// <returns>一个侧边栏插件功能控制器</returns>
-        public virtual IPluginFunctionProvider GetFunctionEntry() => null;
+        public virtual IPluginFunctionProvider? GetFunctionEntry() => null;
 
         /// <summary>
         /// 激活快捷键
@@ -52,19 +49,19 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics
         /// <summary>
         /// 插件的ConfigManager
         /// </summary>
-        protected IPluginConfigManager Config => Dependencies.Get<LLinPluginManager>().GetConfigManager(Plugin);
+        protected IPluginConfigManager Config => Dependencies.Get<LLinPluginManager>().GetConfigManager(Plugin.Provider);
 
-        [Resolved]
-        private LLinPluginManager pluginManager { get; set; }
+        [Resolved(canBeNull: true)]
+        private SessionPluginManager? pluginManager { get; set; }
 
-        protected PluginSidebarPage(LLinPlugin plugin, float resizeWidth = -1)
+        protected PluginSidebarPage(LLinPlugin plugin)
         {
             Plugin = plugin;
             Title = plugin.Name;
             RelativeSizeAxes = Axes.Both;
 
-            InternalChildren = new Drawable[]
-            {
+            InternalChildren =
+            [
                 content = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -74,12 +71,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Action = () => pluginManager?.ActivePlugin(Plugin),
+                    Action = () => pluginManager?.EnablePlugin(Plugin),
                     Scale = new Vector2(1.25f)
                 }
-            };
-
-            if (resizeWidth != -1) Logging.Log("resizeWidth已废弃", level: LogLevel.Important);
+            ];
         }
 
         private DependencyContainer dependencies;
@@ -95,7 +90,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics
         {
             dependencies.Cache(this);
             dependencies.Cache(Plugin);
-            dependencies.Cache(Dependencies.Get<LLinPluginManager>().GetConfigManager(Plugin));
+            dependencies.Cache(Dependencies.Get<LLinPluginManager>().GetConfigManager(Plugin.Provider));
 
             Plugin.Disabled.BindValueChanged(v =>
             {

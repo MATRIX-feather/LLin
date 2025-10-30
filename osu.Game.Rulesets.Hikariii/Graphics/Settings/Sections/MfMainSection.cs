@@ -7,6 +7,7 @@ using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Settings;
+using osu.Game.Rulesets.Hikariii.Graphics.Settings.Sections;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics.Settings
 {

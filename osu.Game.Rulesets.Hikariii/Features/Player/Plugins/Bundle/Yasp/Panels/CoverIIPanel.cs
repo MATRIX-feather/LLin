@@ -79,7 +79,7 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
     [BackgroundDependencyLoader]
     private void load(YaspPlugin plugin)
     {
-        var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
+        var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin.Provider.Identifier());
         config.BindWith(YaspSettings.CoverIIUseUserAvatar, useUserAvatar);
 
         Anchor = Anchor.Centre;

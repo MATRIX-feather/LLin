@@ -5,41 +5,20 @@ using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Sections;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config
 {
-    [Obsolete("请使用GetSettingEntries")]
-    public abstract partial class PluginSidebarSettingsSection : Section
-    {
-        private readonly LLinPlugin plugin;
-        protected IPluginConfigManager ConfigManager = null!;
-
-        protected PluginSidebarSettingsSection(LLinPlugin plugin)
-        {
-            this.plugin = plugin;
-            Title = plugin.Name;
-        }
-
-        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
-        {
-            var dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
-            ConfigManager = dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
-            return dependencies;
-        }
-    }
-
     [Cached]
     public partial class NewPluginSettingsSection : Section
     {
-        private readonly LLinPlugin plugin;
+        private readonly LLinPluginProvider provider;
 
         private readonly BindableFloat fillFlowMaxWidth = new BindableFloat();
 
-        public NewPluginSettingsSection(LLinPlugin plugin)
+        public NewPluginSettingsSection(LLinPluginProvider plugin)
         {
-            this.plugin = plugin;
-            Title = plugin.Name;
+            this.provider = plugin;
+            Title = plugin.GetDescription().Name;
 
             Alpha = 0.02f;
         }
@@ -49,7 +28,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config
         {
             config.BindWith(MSetting.MvisPlayerSettingsMaxWidth, fillFlowMaxWidth);
 
-            foreach (var se in pluginManager.GetSettingsFor(plugin)!)
+            foreach (var se in pluginManager.GetSettingsFor(provider))
             {
                 var item = se.ToLLinSettingsItem();
                 if (item != null) Add(item);

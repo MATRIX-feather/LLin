@@ -3,12 +3,10 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
-using osu.Game.Rulesets.Hikariii.Graphics.Settings.Sections;
 
-namespace osu.Game.Rulesets.Hikariii.Graphics.Settings;
+namespace osu.Game.Rulesets.Hikariii.Graphics.Settings.Sections;
 
 public partial class HikariiiSettingsSubPanel : SettingsSubPanel
 {
@@ -22,7 +20,7 @@ public partial class HikariiiSettingsSubPanel : SettingsSubPanel
     {
         AddSection(new GeneralHikariiiSettingsSection());
 
-        foreach (LLinPlugin pl in manager.GetAllPlugins(false).Where(pl => manager.GetSettingsFor(pl)?.Length > 0))
+        foreach (var pl in manager.GetAllPluginProviders().Values.Where(pl => manager.GetSettingsFor(pl)?.Length > 0))
             AddSection(new PluginSettingsSubsection(pl));
     }
 }

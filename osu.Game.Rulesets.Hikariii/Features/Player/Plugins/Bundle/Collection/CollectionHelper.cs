@@ -5,20 +5,17 @@ using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Database;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
-using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Chooser;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sidebar;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
 using Realms;
 
@@ -48,38 +45,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 
         protected override bool PostInit() => true;
 
-        public override int Version => 10;
-
         public override PluginSidebarPage CreateSidebarPage()
             => new CollectionPluginPage(this);
 
-        public override IPluginConfigManager CreateConfigManager(Storage storage)
-            => new CollectionHelperConfigManager(storage);
-
-        public override SettingsEntry[] GetSettingEntries(IPluginConfigManager pluginConfigManager)
-        {
-            var config = (CollectionHelperConfigManager)pluginConfigManager;
-            return
-            [
-                new BooleanSettingsEntry
-                {
-                    Name = "启用随机播放",
-                    Bindable = config.GetBindable<bool>(CollectionSettings.EnableRandom)
-                }
-            ];
-        }
-
-        public CollectionHelper()
+        public CollectionHelper(LLinPluginProvider provider)
+            : base(provider)
         {
             Name = "收藏夹";
-            Description = "将收藏夹作为歌单播放音乐!";
-            Author = "mf-osu";
 
-            Flags.AddRange(new[]
-            {
-                LLinPlugin.PluginFlags.CanDisable,
-                LLinPlugin.PluginFlags.CanUnload
-            });
+            Flags.AddRange([
+                PluginFlags.CanDisable
+            ]);
         }
 
         private bool trackChangedAfterDisable = true;
@@ -89,7 +65,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
         [BackgroundDependencyLoader]
         private void load()
         {
-            var config = (CollectionHelperConfigManager)DependenciesContainer.Get<LLinPluginManager>().GetConfigManager(this);
+            var config = (CollectionHelperConfigManager)DependenciesContainer.Get<LLinPluginManager>().GetConfigManager(Provider.Identifier());
             config.BindWith(CollectionSettings.EnablePlugin, Enabled);
             config.BindWith(CollectionSettings.EnableRandom, enableRandom);
 
@@ -187,6 +163,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
                 isCurrent = value;
             }
         }
+
+        public bool AllowOsuControls { get; } = false;
 
         private bool changeBeatmap(WorkingBeatmap? working)
         {

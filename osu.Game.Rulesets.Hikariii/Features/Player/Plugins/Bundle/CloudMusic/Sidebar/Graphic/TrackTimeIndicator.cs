@@ -8,7 +8,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Sidebar.Graphic
@@ -41,9 +40,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
         [BackgroundDependencyLoader]
         private void load(CustomColourProvider provider)
         {
-            var config = (LyricConfigManager)Dependencies.Get<LLinPluginManager>()
-                                                         .GetConfigManager(sidebarPage.Plugin);
-
             BorderColour = provider.Content2;
 
             InternalChild = fillFlow = new FillFlowContainer

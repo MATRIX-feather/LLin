@@ -18,7 +18,6 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
@@ -49,9 +48,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
         private DelayedLoadUnloadWrapper textureWrapper;
 
         [Resolved]
-        private LLinPluginManager manager { get; set; }
-
-        private bool activeListContainsPlugin => manager?.GetActivePlugins().Contains(Plugin) ?? false;
+        private SessionPluginManager manager { get; set; }
 
         [BackgroundDependencyLoader]
         private void load()
@@ -67,6 +64,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
             BorderColour = Color4.White;
 
             Anchor = Origin = Anchor.TopCentre;
+
+            var desc = Plugin.Provider.GetDescription();
 
             InternalChildren = new Drawable[]
             {
@@ -93,12 +92,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight
                 },
-                statusCircle = new Circle
-                {
-                    Margin = new MarginPadding(13),
-                    Size = new Vector2(7),
-                    Colour = colourProvider.Background5
-                },
                 new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.X,
@@ -113,41 +106,46 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                             Name = "信息FillFlow",
                             AutoSizeAxes = Axes.Y,
                             RelativeSizeAxes = Axes.X,
+                            Direction = FillDirection.Vertical,
                             Children = new Drawable[]
                             {
-                                new OsuSpriteText
+                                new FillFlowContainer
                                 {
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
-                                    Text = string.IsNullOrEmpty(Plugin.Name) ? Plugin.GetType().Name : Plugin.Name,
+                                    AutoSizeAxes = Axes.Y,
+                                    RelativeSizeAxes = Axes.X,
+                                    Spacing = new Vector2(5),
+
+                                    Children =
+                                    [
+                                        statusCircle = new Circle
+                                        {
+                                            Anchor = Anchor.CentreLeft,
+                                            Origin = Anchor.CentreLeft,
+                                            Size = new Vector2(7),
+                                            Colour = colourProvider.Background5
+                                        },
+                                        new OsuSpriteText
+                                        {
+                                            Anchor = Anchor.CentreLeft,
+                                            Origin = Anchor.CentreLeft,
+                                            Text = desc.Name,
+                                            Font = OsuFont.GetFont(size: 19)
+                                        }
+                                    ]
+                                },
+                                new TruncatingSpriteText
+                                {
+                                    Text = desc.Description,
+                                    Anchor = Anchor.TopLeft,
+                                    Origin = Anchor.TopLeft,
                                     Font = OsuFont.GetFont(size: 19)
                                 },
                                 new TruncatingSpriteText
                                 {
-                                    Text = string.IsNullOrEmpty(Plugin.Author) ? " " : Plugin.Author,
-                                    RelativeSizeAxes = Axes.X,
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
+                                    Text = desc.AuthorString(),
+                                    Anchor = Anchor.TopLeft,
+                                    Origin = Anchor.TopLeft,
                                     Font = OsuFont.GetFont(size: 19)
-                                },
-                                new TruncatingSpriteText
-                                {
-                                    Text = string.IsNullOrEmpty(Plugin.Description) ? " " : Plugin.Description,
-                                    RelativeSizeAxes = Axes.X,
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight,
-                                    Font = OsuFont.GetFont(size: 19)
-                                },
-                                new OsuSpriteText
-                                {
-                                    Colour = Color4.Gold,
-                                    Text = Plugin.Version != manager.PluginVersion
-                                        ? Plugin.Version < manager.PluginVersion ? "为历史版本打造" : "为未来版本打造"
-                                        : " ",
-                                    Alpha = Plugin.Version != manager.PluginVersion ? 1 : 0,
-                                    Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 19),
-                                    Anchor = Anchor.TopRight,
-                                    Origin = Anchor.TopRight
                                 }
                             }
                         },
@@ -177,7 +175,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                                         RelativeSizeAxes = Axes.X,
                                         Width = 0.95f,
                                         Text = "启用此插件",
-                                        Action = () => manager.ActivePlugin(Plugin),
+                                        Action = () => manager.EnablePlugin(Plugin),
                                         Enabled = { Value = false },
                                         Anchor = Anchor.BottomCentre,
                                         Origin = Anchor.BottomCentre,
@@ -202,29 +200,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                         ? colourProvider.Background5
                         : colourProvider.Light2, 200, Easing.OutQuint);
                     TooltipText = string.Empty;
-
-                    switch (v.NewValue)
-                    {
-                        case true:
-                            if (activeListContainsPlugin)
-                            {
-                                TooltipText = "该插件报告它已被禁用, 但我们在已启用的插件中找到了它。";
-
-                                statusCircle.FadeColour(Color4.Gold, 200, Easing.OutQuint);
-                            }
-
-                            break;
-
-                        case false:
-                            if (!activeListContainsPlugin)
-                            {
-                                TooltipText = "该插件报告它已被启用, 但我们没有在已启用的插件中找到它。";
-
-                                statusCircle.FadeColour(Color4.Gold, 200, Easing.OutQuint);
-                            }
-
-                            break;
-                    }
                 }, true);
             }
             else
@@ -244,14 +219,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
 
             BorderColour = HasFocus ? colourProvider.Light2 : Color4.White;
 
-            if ((Plugin.Disabled.Value && activeListContainsPlugin) || (!Plugin.Disabled.Value && !activeListContainsPlugin))
-            {
-                statusCircle.Colour = Color4.Gold;
-            }
-            else
-            {
-                statusCircle.Colour = (Plugin.Disabled.Value ? colourProvider.Background5 : colourProvider.Light2);
-            }
+            statusCircle.Colour = (Plugin.Disabled.Value ? colourProvider.Background5 : colourProvider.Light2);
         }
 
         public override void Hide()

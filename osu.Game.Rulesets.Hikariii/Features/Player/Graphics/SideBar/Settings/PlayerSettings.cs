@@ -37,9 +37,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings
             RelativeSizeAxes = Axes.Both;
             Add(fillFlow);
 
-            foreach (var pl in pluginManager.GetAllPlugins(false))
+            foreach (var pl in pluginManager.GetAllPluginProviders().Values)
             {
-                if (pluginManager.GetSettingsFor(pl)?.Length > 0)
+                if (pluginManager.GetSettingsFor(pl).Length > 0)
                     AddSection(new NewPluginSettingsSection(pl));
             }
         }

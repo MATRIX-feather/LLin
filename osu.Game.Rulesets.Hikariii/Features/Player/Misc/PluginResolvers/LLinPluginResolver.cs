@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
@@ -6,95 +5,53 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers
 {
-    public class LLinPluginResolver
+    public class LLinPluginResolver(LLinPluginManager pluginManager)
     {
-        private readonly LLinPluginManager pluginManager;
+        private readonly LLinPluginManager pluginManager = pluginManager;
 
-        public LLinPluginResolver(LLinPluginManager pluginManager)
-        {
-            this.pluginManager = pluginManager;
-        }
+        private readonly ConcurrentDictionary<string, LLinPluginProvider> audioPluginDictionary = new();
+        private readonly ConcurrentDictionary<string, LLinPluginProvider> functionBarDictionary = new();
 
-        public string ToPath(object target)
-        {
-            Type targetType;
-
-            if (target is Type) targetType = (Type)target;
-            else if (target is TypeWrapper) targetType = ((TypeWrapper)target).Type;
-            else targetType = target.GetType();
-
-            return targetType.Name + "@" + targetType.Namespace;
-        }
-
-        internal bool RemoveFunctionBarProvider(IFunctionBarProvider functionBarProvider)
-            => functionBarDictionary.Remove(ToPath(functionBarProvider), out _);
-
-        internal bool RemoveAudioControlProvider(IProvideAudioControlPlugin provideAudioControlPlugin)
-            => audioPluginDictionary.Remove(ToPath(provideAudioControlPlugin), out _);
-
-        private readonly ConcurrentDictionary<string, TypeWrapper> audioPluginDictionary = new ConcurrentDictionary<string, TypeWrapper>();
-        private readonly ConcurrentDictionary<string, TypeWrapper> functionBarDictionary = new ConcurrentDictionary<string, TypeWrapper>();
-
-        internal void UpdatePluginDictionary(List<LLinPlugin> newPluginList)
+        internal void UpdatePluginDictionary(List<LLinPluginProvider> newPluginList)
         {
             functionBarDictionary.Clear();
             audioPluginDictionary.Clear();
 
-            foreach (var plugin in newPluginList)
+            foreach (var provider in newPluginList)
             {
-                string pluginPath = ToPath(plugin);
+                var plugin = provider.CreatePlugin();
+                string id = provider.Identifier();
 
-                if (plugin is IFunctionBarProvider functionBarProvider)
+                switch (plugin)
                 {
-                    var typeWrapper = new TypeWrapper
-                    {
-                        Type = functionBarProvider.GetType(),
-                        Name = $"{plugin.Name} ({plugin.Author})"
-                    };
-                    functionBarDictionary[pluginPath] = typeWrapper;
-                }
+                    case IFunctionBarProvider:
+                        Logging.Log($"Adding function bar {id}");
+                        functionBarDictionary[id] = provider;
+                        break;
 
-                if (plugin is IProvideAudioControlPlugin audioControlPlugin)
-                {
-                    var typeWrapper = new TypeWrapper
-                    {
-                        Type = audioControlPlugin.GetType(),
-                        Name = $"{plugin.Name} ({plugin.Author})"
-                    };
-                    audioPluginDictionary[pluginPath] = typeWrapper;
+                    case IProvideAudioControlPlugin:
+                        Logging.Log($"Adding audio control plugin {id}");
+                        audioPluginDictionary[id] = provider;
+                        break;
                 }
             }
-
-            var defaultAudio = pluginManager.DefaultAudioControllerType;
-            var defaultFunctionbar = pluginManager.DefaultFunctionBarType;
-
-            audioPluginDictionary[ToPath(defaultAudio)] = defaultAudio;
-            functionBarDictionary[ToPath(defaultFunctionbar)] = defaultFunctionbar;
         }
 
-        internal Type? GetAudioControlPluginByPath(string path)
+        internal LLinPluginProvider? GetAudioControlPluginByID(string id)
         {
-            TypeWrapper? result;
-            if (audioPluginDictionary.TryGetValue(path, out result))
-                return result.Type;
-
-            return null;
+            return audioPluginDictionary.GetValueOrDefault(id);
         }
 
-        internal Type? GetFunctionBarProviderByPath(string path)
+        internal LLinPluginProvider? GetFunctionBarProviderByID(string id)
         {
-            TypeWrapper? result;
-            if (functionBarDictionary.TryGetValue(path, out result))
-                return result.Type;
-
-            return null;
+            return functionBarDictionary.GetValueOrDefault(id);
         }
 
-        private List<TypeWrapper>? cachedAudioControlPluginList;
+        private List<LLinPluginProvider>? cachedAudioControlPluginList;
 
-        internal List<TypeWrapper> GetAllAudioControlPlugin()
+        internal List<LLinPluginProvider> GetAllAudioControlPlugin()
         {
-            var list = new List<TypeWrapper>();
+            var list = new List<LLinPluginProvider>();
 
             foreach (var keyPair in audioPluginDictionary)
             {
@@ -107,11 +64,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers
             return list;
         }
 
-        private List<TypeWrapper>? cachedFunctionBarPluginList;
+        private List<LLinPluginProvider>? cachedFunctionBarPluginList;
 
-        internal List<TypeWrapper> GetAllFunctionBarProviders()
+        internal List<LLinPluginProvider> GetAllFunctionBarProviders()
         {
-            var list = new List<TypeWrapper>();
+            var list = new List<LLinPluginProvider>();
 
             foreach (var keyPair in functionBarDictionary)
             {

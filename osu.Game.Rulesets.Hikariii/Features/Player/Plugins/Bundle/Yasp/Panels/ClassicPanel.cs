@@ -22,7 +22,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Panels
         [BackgroundDependencyLoader]
         private void load(YaspPlugin plugin)
         {
-            var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin);
+            var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin.Provider.Identifier());
             config.BindWith(YaspSettings.Scale, scaleBindable);
             scaleBindable.BindValueChanged(v =>
             {

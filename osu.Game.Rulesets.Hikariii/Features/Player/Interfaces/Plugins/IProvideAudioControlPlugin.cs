@@ -31,5 +31,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         /// 是否被选中为Mvis音频控制器
         /// </summary>
         bool IsCurrent { get; set; }
+
+        /// <summary>
+        /// 是否允许通过 osu 的音频控制改变音轨
+        /// </summary>
+        bool AllowOsuControls { get; }
     }
 }

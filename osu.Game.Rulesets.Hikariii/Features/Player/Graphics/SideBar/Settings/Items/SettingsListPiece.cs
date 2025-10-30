@@ -46,6 +46,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
 
         protected override void OnLeftClick()
         {
+            if (Values.Count == 0) return;
+
             currentIndex++;
             if (currentIndex >= Values.Count) currentIndex = 0;
 
@@ -54,6 +56,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
 
         protected override void OnRightClick()
         {
+            if (Values.Count == 0) return;
+
             currentIndex--;
             if (currentIndex < 0) currentIndex = Values.Count - 1;
 
