@@ -31,6 +31,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
             Size = new Vector2(25)
         };
 
+        protected GridContainer FirstLineGrid { get; private set; }
+
         public virtual LocalisableString Description
         {
             get => description;
@@ -91,14 +93,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
                     RelativeSizeAxes = Axes.Both,
                     Depth = float.MaxValue
                 },
-                new Container
-                {
-                    RelativeSizeAxes = Axes.X,
-                    Height = 25,
-                    Margin = new MarginPadding { Top = 10 },
-                    Padding = new MarginPadding { Left = 10 + 25 + 5 },
-                    Child = CreateSideDrawable()
-                },
                 FillFlow = new FillFlowContainer
                 {
                     AutoSizeAxes = Axes.Y,
@@ -108,7 +102,33 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
                     Spacing = new Vector2(5),
                     Children = new Drawable[]
                     {
-                        SpriteIcon,
+                        FirstLineGrid = new GridContainer
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            RowDimensions = [new Dimension(GridSizeMode.AutoSize)],
+                            ColumnDimensions =
+                            [
+                                new Dimension(GridSizeMode.AutoSize),
+                                new Dimension(),
+                            ],
+                            Content = new[]
+                            {
+                                new Drawable[]
+                                {
+                                    SpriteIcon,
+                                    CreateSideDrawable().With(d =>
+                                    {
+                                        d.Anchor = Anchor.CentreLeft;
+                                        d.Origin = Anchor.CentreLeft;
+                                        d.Margin = new MarginPadding
+                                        {
+                                            Horizontal = 5,
+                                        };
+                                    }),
+                                },
+                            },
+                        },
                         SpriteText,
                     }
                 },
