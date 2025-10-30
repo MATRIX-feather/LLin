@@ -19,7 +19,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
 
         private readonly CurrentValueText valueText = new CurrentValueText
         {
-            RelativeSizeAxes = Axes.X
+            RelativeSizeAxes = Axes.X,
+            Anchor = Anchor.CentreLeft,
+            Origin = Anchor.CentreLeft,
         };
 
         public List<T> Values { get; set; }
@@ -87,7 +89,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
                         Alpha = 0,
                         Font = OsuFont.GetFont(size: 20),
                         Y = -5,
-                        RelativeSizeAxes = Axes.X
+                        RelativeSizeAxes = Axes.X,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
                     };
 
                     Schedule(() => AddInternal(currentText));

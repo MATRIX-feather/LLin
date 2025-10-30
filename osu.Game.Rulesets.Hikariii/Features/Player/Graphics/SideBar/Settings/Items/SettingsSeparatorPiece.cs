@@ -21,10 +21,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
             RelativeSizeAxes = Axes.X;
             Width = 1;
 
-            SpriteText.Anchor = SpriteText.Origin = SpriteIcon.Anchor = SpriteIcon.Origin = Anchor.BottomRight;
+            SpriteText.Anchor = SpriteText.Origin = FirstLineGrid.Anchor = FirstLineGrid.Origin = Anchor.BottomRight;
             FillFlow.Direction = FillDirection.Horizontal;
 
-            SpriteIcon.Hide();
+            FirstLineGrid.Hide();
         }
 
         protected override void OnColorChanged()
