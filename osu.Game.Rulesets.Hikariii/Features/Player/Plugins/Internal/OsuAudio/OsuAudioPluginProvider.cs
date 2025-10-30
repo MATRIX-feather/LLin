@@ -64,6 +64,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio
                 break;
             }
 
+            // workaround: 收藏夹在默认插件的上面
+            if (plugins.Contains(this))
+            {
+                plugins.Remove(this);
+                plugins.Insert(0, this);
+            }
+
             audioEntry.Values = plugins;
             audioPluginBindable.Default = this;
 
