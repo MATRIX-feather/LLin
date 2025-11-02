@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
         private readonly Box idleIndicator;
         private readonly Box hideIndicator;
 
-        public override TargetLayer Target => TargetLayer.FunctionBar;
+        public override ContentLayer Target => ContentLayer.Overlay;
 
         public FallbackFunctionBar(LLinPluginProvider provider)
             : base(provider)

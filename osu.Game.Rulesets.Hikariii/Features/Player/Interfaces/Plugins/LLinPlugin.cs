@@ -52,9 +52,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
 
         /// <summary>
         /// 目标位置，决定插件要在哪里被添加
-        /// <seealso cref="TargetLayer"/>
+        /// <seealso cref="ContentLayer"/>
         /// </summary>
-        public virtual TargetLayer Target => TargetLayer.Background;
+        public virtual ContentLayer Target => ContentLayer.Background;
 
         [Resolved(canBeNull: true)]
         private IImplementLLin? llin { get; set; }
@@ -222,11 +222,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         /// Background - 背景<br/>
         /// Foreground - 前景
         /// </summary>
-        public enum TargetLayer
+        public enum ContentLayer
         {
             Background,
             Foreground,
-            FunctionBar
+            Overlay
         }
 
         protected override void Dispose(bool isDisposing)

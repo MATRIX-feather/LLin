@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
         private readonly SongProgressBar progressBar;
         private readonly Container contentContainer;
 
-        public override TargetLayer Target => TargetLayer.FunctionBar;
+        public override ContentLayer Target => ContentLayer.Overlay;
 
         public StandardBottomBar(LLinPluginProvider provider)
             : base(provider)

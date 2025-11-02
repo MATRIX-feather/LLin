@@ -15,9 +15,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
         private Drawable? currentContent;
 
         /// <summary>
-        /// 请参阅 <see cref="LLinPlugin.TargetLayer"/>
+        /// 请参阅 <see cref="LLinPlugin.ContentLayer"/>
         /// </summary>
-        public override TargetLayer Target => TargetLayer.Foreground;
+        public override ContentLayer Target => ContentLayer.Foreground;
 
         public YaspPlugin(LLinPluginProvider provider)
             : base(provider)

@@ -19,9 +19,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
     public partial class LyricPlugin : BindableControlledPlugin
     {
         /// <summary>
-        /// 请参阅 <see cref="LLinPlugin.TargetLayer"/>
+        /// 请参阅 <see cref="LLinPlugin.ContentLayer"/>
         /// </summary>
-        public override LLinPlugin.TargetLayer Target => LLinPlugin.TargetLayer.Foreground;
+        public override LLinPlugin.ContentLayer Target => LLinPlugin.ContentLayer.Foreground;
 
         public static bool DisableCloudLookup => false;
 

@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
     [Cached]
     public partial class SandboxPlugin : BindableControlledPlugin
     {
-        public override LLinPlugin.TargetLayer Target => LLinPlugin.TargetLayer.Foreground;
+        public override LLinPlugin.ContentLayer Target => LLinPlugin.ContentLayer.Foreground;
         public Bindable<WorkingBeatmap> CurrentBeatmap = new Bindable<WorkingBeatmap>();
 
         public SandboxPlugin(LLinPluginProvider provider)

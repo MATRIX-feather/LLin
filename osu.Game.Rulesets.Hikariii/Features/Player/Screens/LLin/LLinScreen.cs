@@ -893,11 +893,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     //决定要把插件放在何处
                     switch (pl.Target)
                     {
-                        case LLinPlugin.TargetLayer.Background:
+                        case LLinPlugin.ContentLayer.Background:
                             backgroundLayer.Add(pl);
                             break;
 
-                        case LLinPlugin.TargetLayer.Foreground:
+                        case LLinPlugin.ContentLayer.Foreground:
                             foregroundLayer.Add(pl);
                             break;
                     }
