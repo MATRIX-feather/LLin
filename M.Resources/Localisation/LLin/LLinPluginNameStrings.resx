@@ -15,16 +15,4 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="fallback_funtion_bar" xml:space="preserve">
-        <value>Fallback control bar</value>
-    </data>
-    <data name="standard_bottom_bar" xml:space="preserve">
-        <value>Default control bar</value>
-    </data>
-    <data name="osu_music_controller" xml:space="preserve">
-        <value>osu! music controller</value>
-    </data>
-    <data name="collection_music_controller" xml:space="preserve">
-        <value>Collection music controller</value>
-    </data>
 </root>
