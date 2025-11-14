@@ -103,6 +103,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             SetDefault(MSetting.UsePlatformAccentColor, true);
 
             SetDefault(MSetting.IgnoreMediaControlWhenFocused, OperatingSystem.IsWindows());
+            SetDefault(MSetting.EnableOSDoNotDisturbWhenPlaying, true);
         }
 
         public Color4 GetCustomLoaderColor()
@@ -178,7 +179,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
         InjectButtonToNewSongSelect,
 
         UsePlatformAccentColor,
-        IgnoreMediaControlWhenFocused
+        IgnoreMediaControlWhenFocused,
+        EnableOSDoNotDisturbWhenPlaying
     }
 
     public enum GamemodeActivateCondition

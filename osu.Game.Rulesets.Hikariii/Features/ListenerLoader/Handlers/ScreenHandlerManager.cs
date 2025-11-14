@@ -23,6 +23,7 @@ public partial class ScreenHandlerManager : AbstractHandler
         hookScreenStack();
 
         this.addHandler(new NewSongSelectHandler());
+        this.addHandler(new GamePlayerHandler());
     }
 
     private void addHandler(AbstractScreenHandler handler)
