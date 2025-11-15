@@ -51,7 +51,6 @@ public partial class LinuxNotificationImpl : Drawable, INotificationImpl
             {
                 uint handle = await accessor.InhibitAsync("osu!", reason, []);
                 doNotDisturbHandle = handle;
-                Logging.Log($"DONE Invoking Inhibit async! {handle}");
             }
             catch (Exception e)
             {
