@@ -83,7 +83,7 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
 
             metadata["xesam:artist"] = VariantValue.Array(new[] { info.Metadata.GetArtist() });
             metadata["xesam:title"] = info.Metadata.GetTitle().Title;
-            metadata["xesam:album"] = info.DifficultyName;
+            //metadata["xesam:album"] = info.DifficultyName;
             metadata["xesam:audioBPM"] = info.BPM;
 
             metadata["mpris:artUrl"] = resolveBeatmapCoverUrl(value);
