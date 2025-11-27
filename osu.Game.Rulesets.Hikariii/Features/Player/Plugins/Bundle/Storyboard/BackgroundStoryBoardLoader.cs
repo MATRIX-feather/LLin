@@ -2,18 +2,13 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Platform;
 using osu.Framework.Timing;
 using osu.Game.Beatmaps;
 using osu.Game.Localisation;
 using osu.Game.Overlays;
-using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard.Storyboard;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
-using osu.Game.Rulesets.Hikariii.Localisation.LLin;
 using osu.Game.Screens.Play;
 using osuTK;
 
@@ -42,21 +37,16 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
         [Resolved]
         private MusicController music { get; set; } = null!;
 
-        public override int Version => 10;
-
-        public BackgroundStoryBoardLoader()
+        public BackgroundStoryBoardLoader(LLinPluginProvider provider)
+            : base(provider)
         {
             RelativeSizeAxes = Axes.Both;
 
             Name = "故事版加载器";
-            Description = "在播放器的背景显示谱面故事版";
-            Author = "mf-osu";
 
-            Flags.AddRange(new[]
-            {
-                LLinPlugin.PluginFlags.CanDisable,
-                LLinPlugin.PluginFlags.CanUnload
-            });
+            Flags.AddRange([
+                PluginFlags.CanDisable
+            ]);
         }
 
         private readonly PlayerLoaderDisclaimer epilepsyWarning = new(PlayerLoaderStrings.EpilepsyWarningTitle, PlayerLoaderStrings.EpilepsyWarningContent)
@@ -73,7 +63,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
         [BackgroundDependencyLoader]
         private void load()
         {
-            var config = (SbLoaderConfigManager)DependenciesContainer.Get<LLinPluginManager>().GetConfigManager(this);
+            var config = (SbLoaderConfigManager)DependenciesContainer.Get<LLinPluginManager>().GetConfigManager(Provider.Identifier());
             config.BindWith(SbLoaderSettings.EnableStoryboard, Enabled);
 
             DependenciesContainer.Cache(new OverlayColourProvider(OverlayColourScheme.Lime));
@@ -146,26 +136,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard
             };
 
             return currentStoryboard;
-        }
-
-        public override IPluginConfigManager CreateConfigManager(Storage storage) => new SbLoaderConfigManager(storage);
-
-        private SettingsEntry[]? entries;
-
-        public override SettingsEntry[] GetSettingEntries(IPluginConfigManager pluginConfigManager)
-        {
-            var config = (SbLoaderConfigManager)pluginConfigManager;
-
-            entries ??= new SettingsEntry[]
-            {
-                new BooleanSettingsEntry
-                {
-                    Name = LLinGenericStrings.EnablePlugin,
-                    Bindable = config.GetBindable<bool>(SbLoaderSettings.EnableStoryboard)
-                }
-            };
-
-            return entries;
         }
 
         protected override bool PostInit()

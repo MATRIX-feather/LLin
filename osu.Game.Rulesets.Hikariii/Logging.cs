@@ -12,7 +12,7 @@ public class Logging
         Logger.Log($"[{LOG_PREFIX}] {message}", level: level, target: loggingTarget);
     }
 
-    public static void LogError(Exception e, string? message = null)
+    public static void LogError(Exception e, string? message = null, LogLevel level = LogLevel.Important)
     {
         while (true)
         {

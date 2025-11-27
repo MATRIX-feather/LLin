@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Localisation;
@@ -19,14 +20,16 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
 
         private readonly CurrentValueText valueText = new CurrentValueText
         {
-            RelativeSizeAxes = Axes.X
+            RelativeSizeAxes = Axes.X,
+            Anchor = Anchor.CentreLeft,
+            Origin = Anchor.CentreLeft,
         };
 
         public List<T> Values { get; set; }
 
         protected override Drawable CreateSideDrawable() => valueText;
 
-        protected virtual string GetValueText(T newValue) => newValue?.ToString() ?? "无值";
+        protected virtual LocalisableString GetValueText(T newValue) => newValue?.GetLocalisableDescription() ?? "无值";
 
         [BackgroundDependencyLoader]
         private void load()
@@ -46,6 +49,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
 
         protected override void OnLeftClick()
         {
+            if (Values.Count == 0) return;
+
             currentIndex++;
             if (currentIndex >= Values.Count) currentIndex = 0;
 
@@ -54,6 +59,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
 
         protected override void OnRightClick()
         {
+            if (Values.Count == 0) return;
+
             currentIndex--;
             if (currentIndex < 0) currentIndex = Values.Count - 1;
 
@@ -83,7 +90,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
                         Alpha = 0,
                         Font = OsuFont.GetFont(size: 20),
                         Y = -5,
-                        RelativeSizeAxes = Axes.X
+                        RelativeSizeAxes = Axes.X,
+                        Anchor = Anchor.CentreLeft,
+                        Origin = Anchor.CentreLeft,
                     };
 
                     Schedule(() => AddInternal(currentText));

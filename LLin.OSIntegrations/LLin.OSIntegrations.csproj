@@ -22,10 +22,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="DBusXml/Handler/org.mpris.MediaPlayer2.xml" DBusGeneratorMode="Handler" />
-    <AdditionalFiles Include="DBusXml/Handler/org.mpris.MediaPlayer2.Player.xml" DBusGeneratorMode="Handler" />
-    <AdditionalFiles Include="DBusXml/Handler/xyz.nifeather.llin.greeter.xml" DBusGeneratorMode="Handler" />
-    <AdditionalFiles Include="DBusXml/Proxy/org.freedesktop.DBus.xml" DBusGeneratorMode="Proxy" />
-    <AdditionalFiles Include="DBusXml/Proxy/org.freedesktop.portal.Settings.xml" DBusGeneratorMode="Proxy" />
+    <AdditionalFiles Include="DBusXml/Handler/*.xml" DBusGeneratorMode="Handler" />
+    <AdditionalFiles Include="DBusXml/Proxy/*.xml" DBusGeneratorMode="Proxy" />
 </ItemGroup>
 </Project>

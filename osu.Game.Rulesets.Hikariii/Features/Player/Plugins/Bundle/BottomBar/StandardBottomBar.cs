@@ -12,7 +12,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 {
-    internal partial class LegacyBottomBar : LLinPlugin, IFunctionBarProvider
+    internal partial class StandardBottomBar : LLinPlugin, IFunctionBarProvider
     {
         protected override Drawable CreateContent() => new PlaceHolder();
 
@@ -28,21 +28,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
         private readonly SongProgressBar progressBar;
         private readonly Container contentContainer;
 
-        public override int Version => 10;
+        public override ContentLayer Target => ContentLayer.Overlay;
 
-        public override TargetLayer Target => TargetLayer.FunctionBar;
-
-        public LegacyBottomBar()
+        public StandardBottomBar(LLinPluginProvider provider)
+            : base(provider)
         {
             Name = "底栏";
-            Description = "mf-osu默认功能条";
-            Author = "MATRIX-夜翎";
             Depth = -1;
-
-            Flags.AddRange(new[]
-            {
-                PluginFlags.CanUnload
-            });
 
             Anchor = Anchor.BottomCentre;
             Origin = Anchor.BottomCentre;

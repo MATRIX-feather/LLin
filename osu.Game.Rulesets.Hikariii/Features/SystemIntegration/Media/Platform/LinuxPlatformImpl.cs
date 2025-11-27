@@ -99,16 +99,14 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
     private string resolveBeatmapCoverUrl(WorkingBeatmap beatmap)
     {
         string body;
-        string backgroundFilename = beatmap?.BeatmapInfo.Metadata.BackgroundFile;
+        string backgroundFilename = beatmap.BeatmapInfo.Metadata.BackgroundFile;
 
         if (!string.IsNullOrEmpty(backgroundFilename))
         {
             body = storage?.GetFullPath("files")
                    + Path.DirectorySeparatorChar
-                   + (beatmap.BeatmapSetInfo.GetPathForFile(beatmap.BeatmapInfo.Metadata?.BackgroundFile)
+                   + (beatmap.BeatmapSetInfo.GetPathForFile(beatmap.BeatmapInfo.Metadata.BackgroundFile)
                       ?? string.Empty);
-
-            Logging.Log("COVER PATH IS " + body);
         }
         else
         {
@@ -119,6 +117,13 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
                 body = storage.GetFullPath(target);
             else
                 return string.Empty;
+        }
+
+        //Logging.Log("COVER PATH IS " + body);
+        if (!File.Exists(body))
+        {
+            //Logging.Log("File doesn't exist! ignoring");
+            return string.Empty;
         }
 
         return $"file://{body}";

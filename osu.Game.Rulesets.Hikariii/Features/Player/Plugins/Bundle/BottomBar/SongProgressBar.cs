@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
             colourProvider.HueColour.BindValueChanged(_ =>
             {
-                FillColour = colourProvider.Highlight1;
+                FillColour = colourProvider.AccentColor;
                 BackgroundColour = colourProvider.Light4.Opacity(0.5f);
             }, true);
 

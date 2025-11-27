@@ -197,8 +197,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
             {
                 case ActiveState.Active:
                     BorderThickness = 3f;
-                    BorderColour = colourProvider.Highlight1;
-                    stateBox.FadeColour(colourProvider.Highlight1, 300, Easing.OutQuint);
+                    BorderColour = colourProvider.AccentColor;
+                    stateBox.FadeColour(colourProvider.AccentColor, 300, Easing.OutQuint);
                     break;
 
                 case ActiveState.Disabled:

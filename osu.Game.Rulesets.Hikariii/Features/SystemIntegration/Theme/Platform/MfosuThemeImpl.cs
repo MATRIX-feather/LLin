@@ -3,21 +3,28 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor.Platform;
+namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Theme.Platform;
 
-public partial class MfosuAccentColorImpl : Drawable, IPlatformAccentColorImpl
+public partial class MfosuThemeImpl : Drawable, IPlatformThemeImpl
 {
     private readonly BindableFloat colorRed = new();
     private readonly BindableFloat colorGreen = new();
     private readonly BindableFloat colorBlue = new();
 
     public event Action<Color4>? OnNewColorSet;
+    public event Action<ColorScheme>? OnColorSchemeSet;
 
     public Color4 GetAccentColor()
     {
         return new Color4(colorRed.Value, colorGreen.Value, colorBlue.Value, 255f);
+    }
+
+    public ColorScheme GetColorScheme()
+    {
+        return ColorScheme.PREFER_DARK;
     }
 
     [BackgroundDependencyLoader]
@@ -41,6 +48,9 @@ public partial class MfosuAccentColorImpl : Drawable, IPlatformAccentColorImpl
 
     private void updateColor()
     {
-        OnNewColorSet?.Invoke(GetAccentColor());
+        var hslColor = Color4.ToHsl(GetAccentColor());
+        var finalColor = Color4.FromHsl(new Vector4(hslColor.X, 1f, 0.7f, 1f));
+
+        OnNewColorSet?.Invoke(finalColor);
     }
 }

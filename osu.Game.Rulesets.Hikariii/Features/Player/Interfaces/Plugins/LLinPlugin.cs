@@ -5,33 +5,20 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
-using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
 {
-    public abstract partial class LLinPlugin : Container
+    public abstract partial class LLinPlugin(LLinPluginProvider provider) : Container
     {
+        public readonly LLinPluginProvider Provider = provider;
+
         /// <summary>
         /// 加载插件要提供的内容
         /// </summary>
         /// <returns>要加载的Drawable</returns>
         protected abstract Drawable CreateContent();
-
-        public virtual IPluginConfigManager CreateConfigManager(Storage storage)
-        {
-            if (storage == null) throw new ArgumentNullException(nameof(storage));
-
-            return new DefaultPluginConfigManager(storage);
-        }
-
-        public virtual SettingsEntry[] GetSettingEntries(IPluginConfigManager pluginConfigManager) => Array.Empty<SettingsEntry>();
-
-        [Obsolete("请使用带IPluginConfigManager作为参数的新方法")]
-        public virtual SettingsEntry[]? GetSettingEntries() => null;
 
         /// <summary>
         /// 内容加载完毕后要执行的步骤
@@ -65,25 +52,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
 
         /// <summary>
         /// 目标位置，决定插件要在哪里被添加
-        /// <seealso cref="TargetLayer"/>
+        /// <seealso cref="ContentLayer"/>
         /// </summary>
-        public virtual TargetLayer Target => TargetLayer.Background;
-
-        public override string ToString() => $"{Author} - {Name} ({Description}) [{Version}]";
-
-        public string Description = "插件描述";
-        public string Author = "插件作者";
-        public string Website = "???";
-
-        public bool HideFromPluginManagement { get; internal set; } = false;
-
-        public abstract int Version { get; }
+        public virtual ContentLayer Target => ContentLayer.Background;
 
         [Resolved(canBeNull: true)]
         private IImplementLLin? llin { get; set; }
-
-        [Obsolete("Mvis => LLin")]
-        protected IImplementLLin? Mvis => llin;
 
         protected IImplementLLin? LLin => llin;
 
@@ -121,7 +95,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
             if (PluginManager == null)
                 throw new NullDependencyException("Null LLinPluginManager!");
 
-            var config = PluginManager.GetConfigManager(this);
+            var config = PluginManager.GetConfigManager(Provider.Identifier());
 
             DependenciesContainer.Cache(config);
             DependenciesContainer.Cache(this);
@@ -240,9 +214,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         /// </summary>
         public enum PluginFlags
         {
-            CanDisable,
-            CanUnload,
-            CanReload
+            CanDisable
         }
 
         /// <summary>
@@ -250,11 +222,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         /// Background - 背景<br/>
         /// Foreground - 前景
         /// </summary>
-        public enum TargetLayer
+        public enum ContentLayer
         {
             Background,
             Foreground,
-            FunctionBar
+            Overlay
         }
 
         protected override void Dispose(bool isDisposing)

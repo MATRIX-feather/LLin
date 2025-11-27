@@ -5,7 +5,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Database;
@@ -14,10 +13,9 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Chooser;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sidebar;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Utils;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
 using Realms;
 
@@ -39,11 +37,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
         [Resolved]
         private MusicController controller { get; set; } = null!;
 
-        private readonly List<IBeatmapSetInfo> beatmapList = new List<IBeatmapSetInfo>();
-
-        public int CurrentPosition { get; set; } = -1;
-
-        private int maxCount;
         public Bindable<BeatmapCollection> CurrentCollection = new Bindable<BeatmapCollection>();
 
         protected override Drawable CreateContent() => new PlaceHolder();
@@ -52,37 +45,33 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 
         protected override bool PostInit() => true;
 
-        public override int Version => 10;
-
         public override PluginSidebarPage CreateSidebarPage()
             => new CollectionPluginPage(this);
 
-        public override IPluginConfigManager CreateConfigManager(Storage storage)
-            => new CollectionHelperConfigManager(storage);
-
-        public CollectionHelper()
+        public CollectionHelper(LLinPluginProvider provider)
+            : base(provider)
         {
             Name = "收藏夹";
-            Description = "将收藏夹作为歌单播放音乐!";
-            Author = "mf-osu";
 
-            Flags.AddRange(new[]
-            {
-                LLinPlugin.PluginFlags.CanDisable,
-                LLinPlugin.PluginFlags.CanUnload
-            });
+            Flags.AddRange([
+                PluginFlags.CanDisable
+            ]);
         }
 
         private bool trackChangedAfterDisable = true;
 
+        private readonly BindableBool enableRandom = new();
+
         [BackgroundDependencyLoader]
         private void load()
         {
-            var config = (CollectionHelperConfigManager)DependenciesContainer.Get<LLinPluginManager>().GetConfigManager(this);
+            var config = (CollectionHelperConfigManager)DependenciesContainer.Get<LLinPluginManager>().GetConfigManager(Provider.Identifier());
             config.BindWith(CollectionSettings.EnablePlugin, Enabled);
+            config.BindWith(CollectionSettings.EnableRandom, enableRandom);
+
             b.BindValueChanged(v =>
             {
-                updateCurrentPosition();
+                beatmapChooser?.OnExternalChoose(v.NewValue);
                 if (!IsCurrent) trackChangedAfterDisable = true;
             });
 
@@ -92,7 +81,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
                 LLin.Exiting += onMvisExiting;
             }
 
-            realmSubscription = realm.RegisterForNotifications(r => r.All<BeatmapCollection>().OrderBy(c => c.Name), onCollectionChange);
+            realmSubscription = realm.RegisterForNotifications(r => r.All<BeatmapCollection>().OrderBy(c => c.Name), onCollectionUpdate);
+
+            enableRandom.BindValueChanged(v =>
+            {
+                IBeatmapChooser chooser = v.NewValue ? new RandomChooser(beatmaps) : new SequenceChooser(beatmaps);
+                selectChooser(chooser);
+            }, true);
         }
 
         protected override void LoadComplete()
@@ -109,16 +104,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 
         public bool NextTrack()
         {
-            changeBeatmap(getBeatmap(beatmapList, b.Value, true));
-
-            return beatmapList.Count != 0;
+            return changeBeatmap(beatmapChooser?.PickNext());
         }
 
         public bool PrevTrack()
         {
-            changeBeatmap(getBeatmap(beatmapList, b.Value, true, -1));
-
-            return beatmapList.Count != 0;
+            return changeBeatmap(beatmapChooser?.PickLast());
         }
 
         public bool TogglePause()
@@ -173,9 +164,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
             }
         }
 
-        private void changeBeatmap(WorkingBeatmap working)
+        public bool AllowOsuControls { get; } = false;
+
+        private bool changeBeatmap(WorkingBeatmap? working)
         {
-            if (Disabled.Value) return;
+            if (Disabled.Value) return false;
+            if (working == null) return false;
 
             var track = b.Value.Track;
             track.Completed -= onTrackCompleted;
@@ -187,6 +181,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
             // 总是重新开始播放，因为两个谱面可能使用同一个track
             controller.Play(true);
             controller.CurrentTrack.Completed += onTrackCompleted;
+
+            return true;
         }
 
         private void onTrackCompleted()
@@ -194,54 +190,33 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
             if (IsCurrent) Schedule(() => NextTrack());
         }
 
-        /// <summary>
-        /// 用于从列表中获取指定的<see cref="WorkingBeatmap"/>。
-        /// </summary>
-        /// <returns>根据给定位移得到的<see cref="WorkingBeatmap"/></returns>
-        /// <param name="list">要给予的<see cref="BeatmapSetInfo"/>列表</param>
-        /// <param name="prevBeatmap">上一张图</param>
-        /// <param name="updateCurrentPosition">是否更新当前位置</param>
-        /// <param name="displace">位移数值，默认为1.</param>
-        private WorkingBeatmap getBeatmap(List<IBeatmapSetInfo> list, WorkingBeatmap prevBeatmap, bool updateCurrentPosition = false, int displace = 1)
+        private IBeatmapChooser? beatmapChooser;
+
+        private void selectChooser(IBeatmapChooser chooser)
         {
-            var prevSet = prevBeatmap.BeatmapSetInfo;
+            Logging.Log($"Now using {chooser} as collection beatmap chooser");
 
-            //更新当前位置和最大位置
-            if (updateCurrentPosition)
-                CurrentPosition = list.IndexOf(prevSet);
-
-            maxCount = list.Count;
-
-            //当前位置往指定位置移动
-            CurrentPosition += displace;
-
-            //如果当前位置超过了最大位置或者不在范围内，那么回到第一个
-            if (CurrentPosition >= maxCount || CurrentPosition < 0)
-            {
-                if (displace > 0) CurrentPosition = 0;
-                else CurrentPosition = maxCount - 1;
-            }
-
-            //从list获取当前位置所在的BeatmapSetInfo, 然后选择该BeatmapSetInfo下的第一个WorkingBeatmap
-            //最终赋值给NewBeatmap
-            var newBeatmap = list.Count > 0
-                ? beatmaps.GetWorkingBeatmap(list.ElementAt(CurrentPosition).Beatmaps.First().AsBeatmapInfo())
-                : b.Value;
-            return newBeatmap;
+            this.beatmapChooser?.Deactivate();
+            beatmapChooser = chooser;
+            chooser.Activate(cachedCollectionContent);
+            chooser.OnExternalChoose(b.Value);
         }
 
         [Resolved]
         private BeatmapHashResolver hashResolver { get; set; } = null!;
+
+        private readonly List<IBeatmapSetInfo> cachedCollectionContent = [];
 
         ///<summary>
         ///用来更新<see cref="beatmapList"/>
         ///</summary>
         private void updateBeatmaps(BeatmapCollection collection)
         {
-            //清理现有的谱面列表
-            beatmapList.Clear();
+            beatmapChooser?.ClearValidBeatmaps();
 
             if (collection?.BeatmapMD5Hashes == null) return;
+
+            List<IBeatmapSetInfo> beatmaps = [];
 
             foreach (string hash in collection.BeatmapMD5Hashes)
             {
@@ -257,16 +232,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
                 }
 
                 //进行比对，如果beatmapList中不存在，则添加。
-                if (!beatmapList.Contains(currentSet))
-                    beatmapList.Add(currentSet);
+                if (!beatmaps.Contains(currentSet))
+                    beatmaps.Add(currentSet);
             }
 
-            updateCurrentPosition(true);
-        }
+            cachedCollectionContent.Clear();
+            cachedCollectionContent.AddRange(beatmaps);
 
-        private void updateCurrentPosition(bool triggerDBusSubmenu = false)
-        {
-            CurrentPosition = beatmapList.IndexOf(b.Value.BeatmapSetInfo);
+            beatmapChooser?.Activate(beatmaps);
         }
 
         public void UpdateBeatmaps() => updateBeatmaps(CurrentCollection.Value);
@@ -275,7 +248,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 
         public static readonly BeatmapCollection DEFAULT_COLLECTION = new BeatmapCollection("未选择任何收藏夹");
 
-        private void onCollectionChange(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes)
+        private void onCollectionUpdate(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes)
         {
             AvaliableCollections = collections.AsEnumerable().Select(c => c).ToList();
 

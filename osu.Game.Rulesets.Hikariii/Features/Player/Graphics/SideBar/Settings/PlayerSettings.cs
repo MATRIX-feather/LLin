@@ -5,6 +5,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Sections;
@@ -27,7 +28,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings
             Direction = FillDirection.Vertical
         };
 
-        public string Title => "播放器设置";
+        public LocalisableString Title => "播放器设置";
         public IconUsage Icon { get; } = FontAwesome.Solid.Cog;
 
         [BackgroundDependencyLoader]
@@ -37,9 +38,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings
             RelativeSizeAxes = Axes.Both;
             Add(fillFlow);
 
-            foreach (var pl in pluginManager.GetAllPlugins(false))
+            foreach (var pl in pluginManager.GetAllPluginProviders().Values)
             {
-                if (pluginManager.GetSettingsFor(pl)?.Length > 0)
+                if (pluginManager.GetSettingsFor(pl).Length > 0)
                     AddSection(new NewPluginSettingsSection(pl));
             }
         }

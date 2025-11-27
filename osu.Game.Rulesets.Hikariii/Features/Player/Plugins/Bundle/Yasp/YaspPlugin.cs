@@ -2,17 +2,11 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Platform;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Panels;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
-using osu.Game.Rulesets.Hikariii.Localisation.LLin;
-using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
 {
@@ -21,57 +15,18 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
         private Drawable? currentContent;
 
         /// <summary>
-        /// 请参阅 <see cref="LLinPlugin.TargetLayer"/>
+        /// 请参阅 <see cref="LLinPlugin.ContentLayer"/>
         /// </summary>
-        public override LLinPlugin.TargetLayer Target => LLinPlugin.TargetLayer.Foreground;
+        public override ContentLayer Target => ContentLayer.Foreground;
 
-        public override IPluginConfigManager CreateConfigManager(Storage storage)
-            => new YaspConfigManager(storage);
-
-        public override SettingsEntry[] GetSettingEntries(IPluginConfigManager pluginConfigManager)
-        {
-            var config = (YaspConfigManager)pluginConfigManager;
-
-            return new SettingsEntry[]
-            {
-                new NumberSettingsEntry<float>
-                {
-                    Icon = FontAwesome.Solid.ExpandArrowsAlt,
-                    Name = YaspStrings.Scale,
-                    Bindable = config.GetBindable<float>(YaspSettings.Scale),
-                    DisplayAsPercentage = true,
-                },
-                new BooleanSettingsEntry
-                {
-                    Name = LLinGenericStrings.EnablePlugin,
-                    Bindable = config.GetBindable<bool>(YaspSettings.EnablePlugin)
-                },
-                new BooleanSettingsEntry
-                {
-                    Name = YaspStrings.UseAvatarForCoverIICover,
-                    Bindable = config.GetBindable<bool>(YaspSettings.CoverIIUseUserAvatar),
-                },
-                new EnumSettingsEntry<PanelType>
-                {
-                    Name = YaspStrings.PanelType,
-                    Bindable = config.GetBindable<PanelType>(YaspSettings.PanelType)
-                }
-            };
-        }
-
-        public override int Version => 10;
-
-        public YaspPlugin()
+        public YaspPlugin(LLinPluginProvider provider)
+            : base(provider)
         {
             Name = "YASP";
-            Description = "另一个简单的播放器面板";
-            Author = "MATRIX-夜翎";
 
-            Flags.AddRange(new[]
-            {
-                LLinPlugin.PluginFlags.CanDisable,
-                LLinPlugin.PluginFlags.CanUnload
-            });
+            Flags.AddRange([
+                PluginFlags.CanDisable
+            ]);
 
             RelativeSizeAxes = Axes.Both;
         }
@@ -136,7 +91,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
         [BackgroundDependencyLoader]
         private void load()
         {
-            var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(this);
+            var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(Provider.Identifier());
             config.BindWith(YaspSettings.EnablePlugin, Enabled);
             config.BindWith(YaspSettings.PanelType, panelType);
 

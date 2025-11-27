@@ -80,7 +80,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
             {
                 bgBox = new Box
                 {
-                    Colour = colourProvider.Highlight1,
+                    Colour = colourProvider.AccentColor,
                     RelativeSizeAxes = Axes.Both,
                 },
                 new FillFlowContainer
@@ -164,7 +164,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
 
             colourProvider.HueColour.BindValueChanged(_ =>
             {
-                bgBox.Colour = colourProvider.Highlight1.Opacity(isCurrent ? 1 : 0);
+                bgBox.Colour = colourProvider.AccentColor.Opacity(isCurrent ? 1 : 0);
+                textFillFlow.Colour = isCurrent ? colourProvider.ForegroundTextColor : Color4.White;
+                timeText.Colour = isCurrent ? colourProvider.ForegroundTextColor : Color4.White;
             }, true);
             offset.BindValueChanged(_ => Schedule(() => UpdateValue(Value)), true);
         }
@@ -176,9 +178,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
             get => isCurrentReal;
             set
             {
-                bgBox.FadeColour(colourProvider.Highlight1.Opacity(value ? 1 : 0), 300, Easing.OutQuint);
-                textFillFlow.FadeColour(value ? Color4.Black : Color4.White, 300, Easing.OutQuint);
-                timeText.FadeColour(value ? Color4.Black : Color4.White, 300, Easing.OutQuint);
+                if (isCurrentReal == value) return;
+
+                bgBox.FadeColour(colourProvider.AccentColor.Opacity(value ? 1 : 0), 300, Easing.OutQuint);
+                textFillFlow.FadeColour(value ? colourProvider.ForegroundTextColor : Color4.White, 300, Easing.OutQuint);
+                timeText.FadeColour(value ? colourProvider.ForegroundTextColor : Color4.White, 300, Easing.OutQuint);
 
                 isCurrentReal = value;
             }

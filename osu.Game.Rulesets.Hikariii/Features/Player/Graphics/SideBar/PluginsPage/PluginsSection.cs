@@ -7,7 +7,7 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Sections;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 
@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
     internal partial class PluginsSection : Section
     {
         [Resolved]
-        private LLinPluginManager manager { get; set; } = null!;
+        private SessionPluginManager manager { get; set; } = null!;
 
         private FillFlowContainer? placeholder;
 
@@ -60,17 +60,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                 }
             });
 
-            manager.OnPluginAdd += addPiece;
-            manager.OnPluginUnLoad += removePiece;
+            manager.OnPluginAdded += addPiece;
+            manager.OnPluginRemoved += removePiece;
         }
 
         protected override void LoadComplete()
         {
-            foreach (var pl in manager.GetAllPlugins(false))
-            {
-                if (!pl.HideFromPluginManagement)
-                    addPiece(pl);
-            }
+            foreach (var pl in manager.PluginsDictionary().Values)
+                addPiece(pl);
 
             FillFlow.LayoutEasing = Easing.OutQuint;
             FillFlow.LayoutDuration = 250;

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using osu.Framework.Extensions;
+using osu.Framework.Localisation;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items
 {
@@ -13,6 +14,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
             Values = array.ToList();
         }
 
-        protected override string GetValueText(T newValue) => newValue.GetDescription();
+        protected override LocalisableString GetValueText(T newValue) => newValue.GetLocalisableDescription();
     }
 }

@@ -4,15 +4,10 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Platform;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
-using osu.Game.Rulesets.Hikariii.Localisation.LLin;
-using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel
@@ -23,21 +18,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
     [Cached]
     public partial class SandboxPlugin : BindableControlledPlugin
     {
-        public override LLinPlugin.TargetLayer Target => LLinPlugin.TargetLayer.Foreground;
-        public override int Version => 10;
+        public override LLinPlugin.ContentLayer Target => LLinPlugin.ContentLayer.Foreground;
         public Bindable<WorkingBeatmap> CurrentBeatmap = new Bindable<WorkingBeatmap>();
 
-        public SandboxPlugin()
+        public SandboxPlugin(LLinPluginProvider provider)
+            : base(provider)
         {
             Name = "Sandbox";
-            Description = "可能是最好的osu!音乐可视化";
-            Author = "EVAST9919; mf-osu";
 
-            Flags.AddRange(new[]
-            {
-                LLinPlugin.PluginFlags.CanDisable,
-                LLinPlugin.PluginFlags.CanUnload
-            });
+            Flags.AddRange([
+                PluginFlags.CanDisable
+            ]);
 
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
@@ -52,7 +43,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
         {
             idleAlpha.BindValueChanged(onIdleAlphaChanged);
 
-            var config = (SandboxRulesetConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(this);
+            var config = (SandboxRulesetConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(Provider.Identifier());
 
             config.BindWith(SandboxRulesetSetting.EnableRulesetPanel, Enabled);
             config.BindWith(SandboxRulesetSetting.IdleAlpha, idleAlpha);
@@ -78,161 +69,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
                 this.FadeTo(v.NewValue, 750, Easing.OutQuint);
                 if (v.NewValue == 0) CurrentBeatmap.Disabled = true;
             }
-        }
-
-        public override IPluginConfigManager CreateConfigManager(Storage storage)
-            => new SandboxRulesetConfigManager(storage);
-
-        private SettingsEntry[] entries;
-
-        public override SettingsEntry[] GetSettingEntries(IPluginConfigManager pluginConfigManager)
-        {
-            var config = (SandboxRulesetConfigManager)pluginConfigManager;
-
-            entries ??= new SettingsEntry[]
-            {
-                new BooleanSettingsEntry
-                {
-                    Name = LLinGenericStrings.EnablePlugin,
-                    Bindable = config.GetBindable<bool>(SandboxRulesetSetting.EnableRulesetPanel)
-                },
-                new NumberSettingsEntry<float>
-                {
-                    Name = StpStrings.AlphaOnIdle,
-                    Bindable = config.GetBindable<float>(SandboxRulesetSetting.IdleAlpha),
-                    DisplayAsPercentage = true
-                },
-                new BooleanSettingsEntry
-                {
-                    Name = StpStrings.ShowParticles,
-                    Bindable = config.GetBindable<bool>(SandboxRulesetSetting.ShowParticles)
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.ParticleCount,
-                    //////////TransferValueOnCommit = true,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.ParticleCount),
-                    KeyboardStep = 1,
-                },
-                new EnumSettingsEntry<VisualizerLayout>
-                {
-                    Name = StpStrings.VisualizerLayoutType,
-                    Bindable = config.GetBindable<VisualizerLayout>(SandboxRulesetSetting.VisualizerLayout)
-                },
-                new BooleanSettingsEntry
-                {
-                    Name = StpStrings.SpinningCoverAndVisualizer,
-                    Bindable = config.GetBindable<bool>(SandboxRulesetSetting.SpinningCoverAndVisualizer)
-                },
-                new SeparatorSettingsEntry
-                {
-                    Name = StpStrings.TypeASettings
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.Radius,
-                    KeyboardStep = 1,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.Radius)
-                },
-                new EnumSettingsEntry<CircularBarType>
-                {
-                    Name = StpStrings.BarType,
-                    Bindable = config.GetBindable<CircularBarType>(SandboxRulesetSetting.CircularBarType)
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.Rotation,
-                    KeyboardStep = 1,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.Rotation)
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.DecayTime,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.DecayA),
-                    KeyboardStep = 1
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.HeightMultiplier,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.MultiplierA),
-                    KeyboardStep = 1
-                },
-                new BooleanSettingsEntry
-                {
-                    Name = StpStrings.Symmetry,
-                    Bindable = config.GetBindable<bool>(SandboxRulesetSetting.Symmetry)
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.Smoothness,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.SmoothnessA),
-                    KeyboardStep = 1
-                },
-                new NumberSettingsEntry<double>
-                {
-                    Name = StpStrings.BarWidth,
-                    Bindable = config.GetBindable<double>(SandboxRulesetSetting.BarWidthA),
-                    KeyboardStep = 0.1f
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.VisualizerAmount,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.VisualizerAmount),
-                    KeyboardStep = 1,
-                    ////////TransferValueOnCommit = true
-                },
-                new BooleanSettingsEntry
-                {
-                    Name = "使用osu!自带的特效显示",
-                    Bindable = config.GetBindable<bool>(SandboxRulesetSetting.TypeAUseMenuVisualisation)
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.BarsPerVisual,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.BarsPerVisual),
-                    KeyboardStep = 1,
-                    ////////TransferValueOnCommit = true
-                },
-                new SeparatorSettingsEntry
-                {
-                    Name = StpStrings.TypeBSettings
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.DecayTime,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.DecayB),
-                    KeyboardStep = 1
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.HeightMultiplier,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.MultiplierB),
-                    KeyboardStep = 1
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.Smoothness,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.SmoothnessB),
-                    KeyboardStep = 1
-                },
-                new NumberSettingsEntry<double>
-                {
-                    Name = StpStrings.BarWidth,
-                    Bindable = config.GetBindable<double>(SandboxRulesetSetting.BarWidthB)
-                },
-                new NumberSettingsEntry<int>
-                {
-                    Name = StpStrings.BarCount,
-                    Bindable = config.GetBindable<int>(SandboxRulesetSetting.BarCountB)
-                },
-                new EnumSettingsEntry<LinearBarType>
-                {
-                    Name = StpStrings.BarType,
-                    Bindable = config.GetBindable<LinearBarType>(SandboxRulesetSetting.LinearBarType)
-                },
-            };
-
-            return entries;
         }
 
         protected override Drawable CreateContent() => new Container

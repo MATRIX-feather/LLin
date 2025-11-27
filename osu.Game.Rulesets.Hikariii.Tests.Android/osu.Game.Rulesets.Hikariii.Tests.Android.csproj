@@ -42,6 +42,7 @@
   <ItemGroup Label="Package References">
     <PackageReference Include="DeepEqual" Version="2.0.0" />
     <PackageReference Include="Moq" Version="4.17.2" />
+    <PackageReference Update="ppy.osu.Framework.Android" Version="2025.1028.0" />
   </ItemGroup>
   <!-- osu.Framework.Android depends on https://www.nuget.org/packages/Xamarin.AndroidX.Window,
        which - via a chain of transitive dependencies - also includes https://www.nuget.org/packages/Xamarin.Jetbrains.Annotations,

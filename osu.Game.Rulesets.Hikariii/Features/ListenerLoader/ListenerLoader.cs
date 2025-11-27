@@ -9,9 +9,10 @@ using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
-using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.DBus;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Notifications;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Theme;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader;
 
@@ -105,9 +106,13 @@ public partial class ListenerLoader : AbstractHandler
                 var customColors = new CustomColourProvider();
                 depMgr.Cache(customColors);
 
-                var accentColorIntegration = new AccentColorIntegration();
-                gameInstance.Add(accentColorIntegration);
-                depMgr.Cache(accentColorIntegration);
+                var systemThemeIntegration = new SystemThemeIntegration();
+                gameInstance.Add(systemThemeIntegration);
+                depMgr.Cache(systemThemeIntegration);
+
+                var notificationIntegration = new SystemNotificationIntegration();
+                gameInstance.Add(notificationIntegration);
+                depMgr.Cache(notificationIntegration);
             }, 1);
 
             scheduler.AddDelayed(() =>

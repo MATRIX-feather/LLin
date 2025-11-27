@@ -13,7 +13,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar
 {
-    public partial class FunctionBar : LLinPlugin, IFunctionBarProvider
+    public partial class FallbackFunctionBar : LLinPlugin, IFunctionBarProvider
     {
         public bool OkForHide() => IsHovered;
 
@@ -23,7 +23,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
         private readonly Box idleIndicator;
         private readonly Box hideIndicator;
 
-        public FunctionBar()
+        public override ContentLayer Target => ContentLayer.Overlay;
+
+        public FallbackFunctionBar(LLinPluginProvider provider)
+            : base(provider)
         {
             Height = 40;
             RelativeSizeAxes = Axes.X;
@@ -68,6 +71,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
             };
         }
 
+        public override void Show()
+        {
+            LLin?.AddBottomSafeArea(this, this.Height);
+            base.Show();
+        }
+
         protected override Drawable CreateContent()
         {
             throw new NotImplementedException();
@@ -77,16 +86,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
 
         protected override bool PostInit() => true;
 
-        public override int Version => 0;
-
         [BackgroundDependencyLoader]
         private void load()
         {
-            if (LLin != null)
-            {
-                LLin.OnIdle += onIdle;
-                LLin.OnActive += resumeFromIdle;
-            }
+            if (LLin == null) return;
+
+            LLin.OnIdle += onIdle;
+            LLin.OnActive += resumeFromIdle;
         }
 
         private void resumeFromIdle()

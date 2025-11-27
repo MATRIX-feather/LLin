@@ -9,14 +9,15 @@ using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.DBus;
 using osuTK.Graphics;
 using Tmds.DBus.Protocol;
 
-namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor.Platform;
+namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Theme.Platform;
 
-public partial class LinuxAccentColorImpl : Drawable, IPlatformAccentColorImpl
+public partial class LinuxThemeImpl : Drawable, IPlatformThemeImpl
 {
     [Resolved]
     private DBusIntegration dbusIntegration { get; set; } = null!;
 
     private Color4? cachedLastValidColor;
+    private ColorScheme? cachedLastValidColorScheme;
     private DBusSession? session;
 
     [BackgroundDependencyLoader]
@@ -42,13 +43,26 @@ public partial class LinuxAccentColorImpl : Drawable, IPlatformAccentColorImpl
         try
         {
             var accentColorSetting = await settingsAccessor.ReadSettingAsync("org.freedesktop.appearance", "accent-color");
-            readAccentColorFromVariant(accentColorSetting);
+            applyAccentColorFromVariant(accentColorSetting);
+
+            var colorScheme = await settingsAccessor.ReadSettingAsync("org.freedesktop.appearance", "color-scheme");
+            applyColorSchemeFromVariant(colorScheme);
         }
         catch (DBusException e)
         {
-            Logging.LogError(e, "Failed reading accent color from desktop portal");
+            Logging.LogError(e, "Failed reading system theme from desktop portal");
+        }
+        catch (ParseException e)
+        {
+            Logging.LogError(e, "Failed parsing system theme from desktop portal");
+        }
+        catch (Exception e)
+        {
+            Logging.LogError(e, "Unknown error occurred while processing system theme integration");
         }
     }
+
+    public class ParseException(string message) : Exception(message);
 
     private void onDesktopSettingsChanged(Exception? arg1,
                                           (string optionNamespace, string optionName, VariantValue value) pair)
@@ -56,14 +70,50 @@ public partial class LinuxAccentColorImpl : Drawable, IPlatformAccentColorImpl
         if (pair.optionNamespace != "org.freedesktop.appearance")
             return;
 
-        if (pair.optionName != "accent-color")
-            return;
+        switch (pair.optionName)
+        {
+            case "accent-color":
+                applyAccentColorFromVariant(pair.value);
+                break;
 
-        readAccentColorFromVariant(pair.value);
+            case "color-scheme":
+                applyColorSchemeFromVariant(pair.value);
+                break;
+        }
     }
 
     /// <exception cref="Exception">Parse error</exception>
-    private void readAccentColorFromVariant(VariantValue variant)
+    private void applyColorSchemeFromVariant(VariantValue variant)
+    {
+        var structUnpack = variant.Type == VariantValueType.Variant
+            ? variant.GetVariantValue()
+            : variant;
+
+        if (structUnpack.Type != VariantValueType.UInt32)
+            throw new ParseException($"Bad desktop implementation? Expected UInt32 but got {structUnpack.Type}");
+
+        uint scheme = structUnpack.GetUInt32();
+        if (scheme is < 0 or > 2) scheme = 0;
+
+        ColorScheme schemeEnum = scheme switch
+        {
+            0 => ColorScheme.NONE,
+            1 => ColorScheme.PREFER_DARK,
+            2 => ColorScheme.PREFER_LIGHT,
+            _ => throw new ParseException($"Invalid color scheme {scheme}")
+        };
+
+        //Logging.Log("AAAAAA COLOR SCHEME IS " + schemeEnum);
+
+        var lastValue = cachedLastValidColorScheme ?? null;
+        cachedLastValidColorScheme = schemeEnum;
+
+        if (lastValue != schemeEnum)
+            OnColorSchemeSet?.Invoke(schemeEnum);
+    }
+
+    /// <exception cref="Exception">Parse error</exception>
+    private void applyAccentColorFromVariant(VariantValue variant)
     {
         float red, green, blue;
 
@@ -83,7 +133,7 @@ public partial class LinuxAccentColorImpl : Drawable, IPlatformAccentColorImpl
             return;
         }
 
-        var newColor = new Color4(red, green, blue, 255);
+        var newColor = new Color4(red, green, blue, 1);
         cachedLastValidColor = newColor;
         OnNewColorSet?.Invoke(newColor);
         return;
@@ -91,7 +141,7 @@ public partial class LinuxAccentColorImpl : Drawable, IPlatformAccentColorImpl
         float readColorSingle(VariantValue item)
         {
             if (item.Type != VariantValueType.Double)
-                throw new Exception($"Variant {item} is not double");
+                throw new ParseException($"Variant {item} is not double");
 
             return (float)item.GetDouble();
         }
@@ -104,9 +154,15 @@ public partial class LinuxAccentColorImpl : Drawable, IPlatformAccentColorImpl
     }
 
     public event Action<Color4>? OnNewColorSet;
+    public event Action<ColorScheme>? OnColorSchemeSet;
 
     public Color4 GetAccentColor()
     {
         return cachedLastValidColor ?? Color4.White;
+    }
+
+    public ColorScheme GetColorScheme()
+    {
+        return cachedLastValidColorScheme ?? ColorScheme.NONE;
     }
 }

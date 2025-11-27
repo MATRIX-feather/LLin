@@ -83,6 +83,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
 
         #region 其他API
 
+        //public Container RequestContainer();
+
         /// <summary>
         /// 订阅谱面变更事件
         /// </summary>

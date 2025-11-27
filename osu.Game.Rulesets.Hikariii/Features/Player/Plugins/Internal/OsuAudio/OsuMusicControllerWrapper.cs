@@ -1,18 +1,22 @@
 using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
-using osu.Framework.Platform;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio
 {
-    internal partial class OsuMusicControllerWrapper : LLinPlugin, IProvideAudioControlPlugin
+    public partial class OsuMusicControllerWrapper : LLinPlugin, IProvideAudioControlPlugin
     {
         [Resolved]
-        private MusicController controller { get; set; }
+        private MusicController controller { get; set; } = null!;
+
+        public OsuMusicControllerWrapper(LLinPluginProvider provider)
+            : base(provider)
+        {
+            Name = "osu!";
+        }
 
         public bool NextTrack()
         {
@@ -52,28 +56,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         }
 
         public bool IsCurrent { get; set; }
+        public bool AllowOsuControls { get; } = true;
 
         protected override Drawable CreateContent() => new PlaceHolder();
 
         protected override bool OnContentLoaded(Drawable content) => true;
 
         protected override bool PostInit() => true;
-
-        public override int Version => 1;
-
-        public OsuMusicControllerWrapper()
-        {
-            Name = "osu!";
-            Description = "osu!音乐兼容插件";
-            Author = "mf-osu";
-        }
-
-        public override IPluginConfigManager CreateConfigManager(Storage storage)
-        {
-            //workaround: OsuMusicControllerWrapper完成初始化时LLinPluginManager中storage尚未赋值，需要手动获取
-            storage ??= (Storage)DependenciesContainer.Get(typeof(Storage));
-
-            return base.CreateConfigManager(storage);
-        }
     }
 }

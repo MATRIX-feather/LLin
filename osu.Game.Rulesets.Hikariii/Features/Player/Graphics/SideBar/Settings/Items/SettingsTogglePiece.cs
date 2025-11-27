@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
         protected override void OnColorChanged()
         {
             BgBox.Colour = Bindable.Value ? ColourProvider.ActiveColor : ColourProvider.InActiveColor;
-            FillFlow.Colour = Bindable.Value ? Color4.Black : Color4.White;
+            FillFlow.Colour = Bindable.Value ? ColourProvider.ForegroundTextColor : Color4.White;
         }
 
         private void onBindableChanged(ValueChangedEvent<bool> v)
@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.I
             {
                 case true:
                     BgBox.FadeColour(ColourProvider.ActiveColor, 300, Easing.OutQuint);
-                    FillFlow.FadeColour(Color4.Black, 300, Easing.OutQuint);
+                    FillFlow.FadeColour(ColourProvider.ForegroundTextColor, 300, Easing.OutQuint);
                     break;
 
                 case false:

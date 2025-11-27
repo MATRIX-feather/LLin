@@ -5,16 +5,16 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
-using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor.Platform;
+using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Theme.Platform;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.AccentColor;
+namespace osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Theme;
 
-public partial class AccentColorIntegration : CompositeDrawable
+public partial class SystemThemeIntegration : CompositeDrawable
 {
-    private IPlatformAccentColorImpl? platformAccentColorImpl;
+    private IPlatformThemeImpl? platformAccentColorImpl;
 
-    protected IPlatformAccentColorImpl? PlatformAccentColorImpl
+    protected IPlatformThemeImpl? PlatformAccentColorImpl
     {
         get => platformAccentColorImpl;
         set
@@ -49,7 +49,7 @@ public partial class AccentColorIntegration : CompositeDrawable
         });
     }
 
-    private readonly MfosuAccentColorImpl defaultAccentColorImpl = new();
+    private readonly MfosuThemeImpl defaultAccentColorImpl = new();
 
     [Resolved]
     private CustomColourProvider customColors { get; set; } = null!;
@@ -94,11 +94,11 @@ public partial class AccentColorIntegration : CompositeDrawable
         }, true);
     }
 
-    private IPlatformAccentColorImpl? selectImplementation()
+    private IPlatformThemeImpl? selectImplementation()
     {
         if (OperatingSystem.IsLinux())
         {
-            var impl = new LinuxAccentColorImpl();
+            var impl = new LinuxThemeImpl();
             LoadComponent(impl);
             AddInternal(impl);
 
@@ -107,13 +107,13 @@ public partial class AccentColorIntegration : CompositeDrawable
 
         if (OperatingSystem.IsWindows())
         {
-            if (!WindowsAccentColorImpl.Available())
+            if (!WindowsThemeImpl.Available())
             {
                 Logging.Log("Detected Windows, but this version of LLin has not been built with Windows integration!");
                 return null;
             }
 
-            var impl = new WindowsAccentColorImpl();
+            var impl = new WindowsThemeImpl();
             LoadComponent(impl);
             AddInternal(impl);
 
