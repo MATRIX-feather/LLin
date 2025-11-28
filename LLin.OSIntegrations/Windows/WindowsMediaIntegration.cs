@@ -149,8 +149,7 @@ public class WindowsMediaIntegration
     private void smtcPlaybackPositionChangeRequested(SystemMediaTransportControls sender,
                                                      PlaybackPositionChangeRequestedEventArgs args)
     {
-        if (AllowExternalControl)
-            SetPosition?.Invoke(args.RequestedPlaybackPosition.Milliseconds);
+        SetPosition?.Invoke(args.RequestedPlaybackPosition.Milliseconds);
     }
 
     private void smtcPropertyChanged(SystemMediaTransportControls sender,
@@ -162,8 +161,6 @@ public class WindowsMediaIntegration
     private void smtcButtonPressed(SystemMediaTransportControls sender,
                                    SystemMediaTransportControlsButtonPressedEventArgs args)
     {
-        if (!AllowExternalControl)
-            return;
         switch (args.Button)
         {
             case SystemMediaTransportControlsButton.Play:
