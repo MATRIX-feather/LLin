@@ -108,7 +108,8 @@ public class WindowsMediaIntegration
 
     public bool AllowExternalControl
     {
-        set => smtc.IsEnabled = value;
+        // set => smtc.IsEnabled = value;
+        get; set;
     }
 
     //endregion Controls
