@@ -7,7 +7,6 @@ using osu.Framework.Screens;
 using osu.Game.Beatmaps;
 using osu.Game.Overlays;
 using osu.Game.Screens.Menu;
-using osu.Game.Screens.Select;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect
 {
@@ -28,31 +27,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect
             });
         }
 
-        protected override void LoadComplete()
-        {
-            this.FilterControl.CriteriaChanged += this.ApplyFilterToCarousel;
-            this.ApplyFilterToCarousel(new FilterCriteria());
-
-            base.LoadComplete();
-        }
-
-        protected void ApplyFilterToCarousel(FilterCriteria criteria)
-        {
-            criteria.RulesetCriteria = null;
-            criteria.Ruleset = null;
-
-            //this.Carousel.Filter(criteria);
-        }
-
         private readonly BindableBool startFromZero = new BindableBool();
-/*
-        protected override BeatmapDetailsArea CreateBeatmapDetailArea() => new MvisBeatmapDetailArea
-        {
-            SelectCurrentAction = callStart,
-            StartFromZero = { BindTarget = this.startFromZero }
-        };*/
-
-        //public override bool AllowEditing => false;
 
         private bool callingStart;
 
