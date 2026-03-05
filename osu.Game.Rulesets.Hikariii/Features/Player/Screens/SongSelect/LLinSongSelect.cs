@@ -5,7 +5,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Game.Beatmaps;
-using osu.Game.Database;
 using osu.Game.Overlays;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
@@ -19,15 +18,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect
         [Resolved]
         private MusicController musicController { get; set; }
 
-        // 修复Test中显示没有谱面可用
-        [Cached(typeof(BeatmapStore))]
-        private BeatmapStore detachedBeatmapStore = new RealmDetachedBeatmapStore();
-
         [BackgroundDependencyLoader]
         private void load()
         {
-            this.AddInternal(detachedBeatmapStore);
-
             musicController.CurrentTrack.Looping = true;
             Beatmap.BindValueChanged(v =>
             {
@@ -37,7 +30,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect
 
         protected override void LoadComplete()
         {
-            this.FilterControl.FilterChanged = this.ApplyFilterToCarousel;
+            this.FilterControl.CriteriaChanged += this.ApplyFilterToCarousel;
             this.ApplyFilterToCarousel(new FilterCriteria());
 
             base.LoadComplete();
@@ -48,25 +41,25 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect
             criteria.RulesetCriteria = null;
             criteria.Ruleset = null;
 
-            this.Carousel.Filter(criteria);
+            //this.Carousel.Filter(criteria);
         }
 
         private readonly BindableBool startFromZero = new BindableBool();
-
-        protected override BeatmapDetailArea CreateBeatmapDetailArea() => new MvisBeatmapDetailArea
+/*
+        protected override BeatmapDetailsArea CreateBeatmapDetailArea() => new MvisBeatmapDetailArea
         {
             SelectCurrentAction = callStart,
             StartFromZero = { BindTarget = this.startFromZero }
-        };
+        };*/
 
-        public override bool AllowEditing => false;
+        //public override bool AllowEditing => false;
 
         private bool callingStart;
 
         private void callStart(bool startAtZero)
         {
             callingStart = true;
-            SampleConfirm?.Play();
+            //SampleConfirm?.Play();
 
             if (startAtZero)
                 musicController.CurrentTrack.SeekAsync(-1000);
@@ -102,10 +95,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect
             logo.ScaleTo(0);
         }
 
-        protected override bool OnStart()
+        protected override void OnStart()
         {
             callStart(startFromZero.Value);
-            return true;
         }
     }
 }

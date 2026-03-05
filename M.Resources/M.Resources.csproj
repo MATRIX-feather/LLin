@@ -16,6 +16,6 @@
     <EmbeddedResource Include="Documents\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Framework" Version="2025.1028.0" />
+    <PackageReference Include="ppy.osu.Framework" Version="2026.303.0" />
   </ItemGroup>
 </Project>

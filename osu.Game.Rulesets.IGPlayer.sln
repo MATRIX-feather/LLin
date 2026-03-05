@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Hikariii.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildHikariii.Windows", "BuildHikariii.Windows\BuildHikariii.Windows.csproj", "{FD2129AB-CC30-4D8E-863F-4E24A119A763}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game", "..\osu\osu.Game\osu.Game.csproj", "{396E5160-730B-4CB8-8AF1-24245A649494}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,12 @@ Global
 		{FD2129AB-CC30-4D8E-863F-4E24A119A763}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD2129AB-CC30-4D8E-863F-4E24A119A763}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD2129AB-CC30-4D8E-863F-4E24A119A763}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{396E5160-730B-4CB8-8AF1-24245A649494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396E5160-730B-4CB8-8AF1-24245A649494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396E5160-730B-4CB8-8AF1-24245A649494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396E5160-730B-4CB8-8AF1-24245A649494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396E5160-730B-4CB8-8AF1-24245A649494}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{396E5160-730B-4CB8-8AF1-24245A649494}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

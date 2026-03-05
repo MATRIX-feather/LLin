@@ -16,15 +16,11 @@
     <EmbeddedResource Include="Textures\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ppy.osu.Game" Version="2025.1029.0" />
+    <!-- <PackageReference Include="ppy.osu.Game" Version="2026.303.0" /> -->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LLin.OSIntegrations\LLin.OSIntegrations.csproj" />
     <ProjectReference Include="..\M.Resources\M.Resources.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="osu.Framework">
-      <HintPath>..\..\osu-framework\osu.Framework\bin\Debug\net6.0\osu.Framework.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\osu\osu.Game\osu.Game.csproj" />
   </ItemGroup>
 </Project>
