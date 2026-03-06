@@ -83,7 +83,7 @@ function main()
 
     cd "${OUTPUT_DIR}" || die "Why?!"
 
-    tar -cf "${TARGET_DIR}/Hikariii.${RUNTIME}.zip" ./*
+    zip -r "${TARGET_DIR}/Hikariii.${RUNTIME}.zip" .
 }
 
 init;
