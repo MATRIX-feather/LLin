@@ -10,6 +10,7 @@ using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
+using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
@@ -96,17 +97,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 
         public override Drawable ToSettingsItem()
         {
-            return new Overlays.Settings.SettingsSlider<T>
+            return new SettingsItemV2(new FormSliderBar<T>()
             {
                 //todo: 感觉这么做有些dirty，但起码能用
                 //todo: 可以换成"Current = { BindTarget = ... }"这样？
                 Current = (Bindable<T>)Bindable.GetBoundCopy(),
-                LabelText = Name,
-                TooltipText = Description.ToString(),
+                Caption = Name,
+                HintText = Description,
                 DisplayAsPercentage = this.DisplayAsPercentage,
                 KeyboardStep = this.KeyboardStep,
                 TransferValueOnCommit = CommitOnMouseRelease
-            };
+            });
         }
 
         public override Drawable? ToLLinSettingsItem()
@@ -132,12 +133,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 
         public override Drawable ToSettingsItem()
         {
-            return new SettingsCheckbox
+            return new SettingsItemV2(new FormCheckBox
             {
                 Current = (Bindable<bool>)Bindable.GetBoundCopy(),
-                LabelText = Name,
-                TooltipText = Description
-            };
+                Caption = Name,
+                HintText = Description
+            });
         }
 
         public override Drawable? ToLLinSettingsItem()
@@ -163,19 +164,20 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 
         public override Drawable ToSettingsItem()
         {
-            return new MOsuSettingsDropdown<T>
+            return new SettingsItemV2(new LinguaFormDropdown<T>
             {
-                LabelText = Name,
+                Caption = Name,
                 Current = (Bindable<T>)Bindable.GetBoundCopy(),
                 Items = Values
-            };
+            });
         }
 
-        public partial class MOsuSettingsDropdown<X> : SettingsDropdown<X>
+        public partial class LinguaFormDropdown<X> : FormDropdown<X>
         {
-            public override IEnumerable<LocalisableString> FilterTerms => Control.Items.Select(x => x.GetLocalisableDescription());
-
-            protected override OsuDropdown<X> CreateDropdown() => new MOsuDropdown<X>();
+            protected override LocalisableString GenerateItemText(X item)
+            {
+                return item.GetLocalisableDescription();
+            }
         }
 
         public partial class MOsuDropdown<X> : OsuDropdown<X>
@@ -216,12 +218,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 
         public override Drawable ToSettingsItem()
         {
-            return new SettingsTextBox
+            return new SettingsItemV2(new FormTextBox()
             {
                 Current = (Bindable<string>)Bindable.GetBoundCopy(),
-                LabelText = Name,
-                TooltipText = Description.ToString()
-            };
+                Caption = Name,
+                HintText = Description.ToString()
+            });
         }
 
         public override Drawable? ToLLinSettingsItem()
@@ -246,12 +248,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 
         public override Drawable ToSettingsItem()
         {
-            return new SettingsEnumDropdown<T>
+            return new SettingsItemV2(new FormEnumDropdown<T>
             {
                 Current = (Bindable<T>)Bindable.GetBoundCopy(),
-                LabelText = Name,
-                TooltipText = Description.ToString()
-            };
+                Caption = Name,
+                HintText = Description.ToString()
+            });
         }
 
         public override Drawable? ToLLinSettingsItem()

@@ -19,7 +19,7 @@ using osuTK.Input;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items
 {
-    public partial class SettingsPieceBasePanel : CompositeDrawable
+    public abstract partial class SettingsPieceBasePanel : CompositeDrawable
     {
         protected readonly OsuSpriteText SpriteText = new OsuSpriteText
         {

@@ -37,6 +37,7 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
         stack.ScreenPushed += screenSwitch;
         stack.ScreenExited += screenSwitch;
 
+        Dependencies.Cache(new CustomColourProvider());
         Dependencies.Cache(new MConfigManager(storage));
         cacheAndAdd(new LLinPluginManager());
 
