@@ -2,9 +2,11 @@ using M.Resources;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using osu.Framework.Screens;
+using osu.Game.Database;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Input;
 using osu.Game.Overlays;
@@ -12,6 +14,7 @@ using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Screens;
+using osu.Game.Screens.Footer;
 using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Hikariii.Tests;
@@ -21,6 +24,7 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
     private OsuScreenStack stack = null!;
 
     private BackButton backButton = null!;
+    private ScreenStackFooter screenFooter = null!;
 
     [Resolved]
     private HikariiiTestBrowser testBrowser { get; set; } = null!;
@@ -68,6 +72,22 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
                 if (backButton.State.Value == Visibility.Visible && stack.CurrentScreen != null) stack.Exit();
             }
         });
+
+        screenFooter = new ScreenStackFooter(stack, new ScreenFooter.BackReceptor())
+        {
+            BackButtonPressed = stack.Exit
+        };
+
+        Add(new PopoverContainer
+        {
+            Child = screenFooter,
+            RelativeSizeAxes = Axes.Both,
+            Depth = -999,
+        });
+
+        var beatmapStore = new RealmDetachedBeatmapStore();
+        Dependencies.CacheAs(typeof(BeatmapStore), beatmapStore);
+        this.Add(beatmapStore);
 
         //AddGame(gameInstance = new OsuGame());
         AddStep("Push player", pushPlayer);
