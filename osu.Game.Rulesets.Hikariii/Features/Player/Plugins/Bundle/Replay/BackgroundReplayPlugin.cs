@@ -1,13 +1,15 @@
+using System;
 using System.Linq;
+using System.Threading;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Online.API;
 using osu.Game.Online.Leaderboards;
-using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Scoring;
 using osu.Game.Screens.Play.Leaderboards;
@@ -44,8 +46,20 @@ public partial class BackgroundReplayPlugin : LLinPlugin
 
     private LeaderboardManager leaderboardManager;
 
-    private Drawable? displayingContent;
+    private Drawable? displayingReplay;
+    private Container? contentContainer;
+
     private Score? viewingScore;
+
+    public Score? ViewingScore
+    {
+        get => viewingScore;
+        set
+        {
+            viewingScore = value;
+            loadReplay(value);
+        }
+    }
 
     [BackgroundDependencyLoader]
     private void load()
@@ -67,7 +81,7 @@ public partial class BackgroundReplayPlugin : LLinPlugin
 
     private void onBeatmapChanged(WorkingBeatmap beatmap)
     {
-        expireCurrentReplay();
+        removeCurrentReplayFromStage();
 
         var cr = new LeaderboardCriteria(beatmap.BeatmapInfo,
             beatmap.BeatmapInfo.Ruleset,
@@ -79,27 +93,38 @@ public partial class BackgroundReplayPlugin : LLinPlugin
 
     private void onScoresRefreshed(ValueChangedEvent<LeaderboardScores?> e)
     {
-        Cancel();
-
         var newValue = e.NewValue;
         if (newValue == null) return;
 
-        Score? targetScore = newValue.TopScores.Select(scoreInfo => scoreManager.GetScore(scoreInfo))
-                                     .OfType<Score>()
-                                     .FirstOrDefault();
-
-        if (targetScore == null) return;
-
-        this.viewingScore = targetScore;
-        expireCurrentReplay();
-
-        if (!Disabled.Value)
-            cancelAndLoad();
+        ViewingScore = pickScore(newValue);
     }
 
-    private void expireCurrentReplay()
+    /// <summary>
+    /// Pick a score from the given <see cref="LeaderboardScores"/>
+    /// </summary>
+    /// <returns>A <see cref="Score"/>, null if none found.</returns>
+    private Score? pickScore(LeaderboardScores scores)
     {
-        var currentReplay = this.displayingContent;
+        var currentBeatmap = LLin!.Beatmap.Value;
+
+        Score? targetScore = scores.AllScores.Select(scoreInfo => scoreManager.GetScore(scoreInfo))
+                                   .FirstOrDefault();
+
+        if (targetScore == null) return null;
+
+        // Prevent selecting scores that does not match the current beatmap
+        if (!targetScore.ScoreInfo.BeatmapInfo?.Equals(currentBeatmap?.BeatmapInfo ?? null) ?? false)
+            return null;
+
+        return targetScore;
+    }
+
+    /// <summary>
+    /// Remove the current playing replay from the stage.
+    /// </summary>
+    private void removeCurrentReplayFromStage()
+    {
+        var currentReplay = this.displayingReplay;
 
         if (currentReplay == null)
             return;
@@ -107,46 +132,88 @@ public partial class BackgroundReplayPlugin : LLinPlugin
         currentReplay.Hide();
         currentReplay.Expire();
 
-        this.Remove(currentReplay, true);
-
-        displayingContent = null;
-    }
-
-    public override bool Disable()
-    {
-        expireCurrentReplay();
-        return base.Disable();
+        displayingReplay = null;
     }
 
     public override bool Enable()
     {
-        cancelAndLoad();
+        contentContainer?.FadeIn(300);
+        loadReplay(ViewingScore);
 
         return base.Enable();
     }
 
-    private void cancelAndLoad()
+    public override bool Disable()
     {
-        Cancel();
-        Load();
+        contentContainer?.FadeOut(300);
+
+        return base.Disable();
+    }
+
+    private CancellationTokenSource? replayLoadingCancellationTokenSource;
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="viewingScore">The score to view, leave null for autoplay for the current beatmap</param>
+    private void loadReplay(Score? viewingScore)
+    {
+        removeCurrentReplayFromStage();
+
+        replayLoadingCancellationTokenSource?.Cancel();
+        replayLoadingCancellationTokenSource = new CancellationTokenSource();
+
+        var currentBeatmap = LLin!.Beatmap.Value;
+        viewingScore ??= tryAutoMod(currentBeatmap);
+
+        if (viewingScore == null) return;
+
+        LoadComponentAsync(new ReplayContainer(viewingScore, LLin!)
+        {
+            RelativeSizeAxes = Axes.Both
+        }, loaded =>
+        {
+            if (contentContainer == null) return;
+
+            this.displayingReplay = loaded;
+            contentContainer.Add(loaded);
+            loaded.Show();
+        }, replayLoadingCancellationTokenSource.Token);
+    }
+
+    private Score? tryAutoMod(WorkingBeatmap workingBeatmap)
+    {
+        var ruleset = workingBeatmap.BeatmapInfo.Ruleset.CreateInstance();
+        var autoPlay = ruleset.GetAutoplayMod();
+
+        var playableBeatmap = workingBeatmap.GetPlayableBeatmap(ruleset.RulesetInfo);
+
+        // Using `autoPlay?.CreateScoreFromReplayData(workingBeatmap.Beatmap, []);` would produce a replay with invalid BeatmapInfo, why?
+        var replay = autoPlay?.CreateReplayData(playableBeatmap, []);
+        if (replay == null) return null;
+
+        return new Score
+        {
+            Replay = replay.Replay,
+            ScoreInfo = new ScoreInfo(playableBeatmap.BeatmapInfo, ruleset.RulesetInfo)
+            {
+                Date = DateTimeOffset.Now
+            }
+        };
     }
 
     protected override Drawable CreateContent()
     {
-        var score = viewingScore;
-        if (score == null)
-            return new PlaceHolder();
-
-        return new ReplayContainer(score, LLin!)
+        return new Container
         {
-            RelativeSizeAxes = Axes.Both
+            RelativeSizeAxes = Axes.Both,
+            Name = "Replay player container"
         };
     }
 
     protected override bool OnContentLoaded(Drawable content)
     {
-        this.displayingContent = content;
-        content.FadeIn(300);
+        this.contentContainer = content as Container;
 
         return true;
     }

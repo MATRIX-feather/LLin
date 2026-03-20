@@ -62,12 +62,13 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
         scoreProcessor.ApplyBeatmap(playableBeatmap);
         scoreProcessor.HasCompleted.BindValueChanged(v =>
         {
-            playingContainer.FadeTo(v.NewValue ? 0.01f : 1, 300, Easing.OutQuint).ScaleTo(v.NewValue ? 1.4f : 1f, 300, Easing.OutQuint);
+            playingContainer.FadeTo(v.NewValue ? 0.01f : 1, 300, Easing.OutQuint)
+                            .ScaleTo(v.NewValue ? 1.4f : 1f, 300, Easing.OutQuint);
         }, true);
 
         Add(scoreProcessor);
 
-        dependencies.Cache(scoreProcessor);
+        dependencies.CacheAs(scoreProcessor);
 
         LoadComponent(playingContainer);
         Add(playingContainer);
