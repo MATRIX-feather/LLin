@@ -49,7 +49,7 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
         this.drawableRuleset = rulesetInstance.CreateDrawableRulesetWith(playableBeatmap, score.ScoreInfo.Mods);
         drawableRuleset.Clock = llin.AudioClock;
 
-        this.playingContainer = new RulesetSkinProvidingContainer(rulesetInstance, workingBeatmap.Beatmap, workingBeatmap.Skin)
+        playingContainer = new RulesetSkinProvidingContainer(rulesetInstance, playableBeatmap, workingBeatmap.Skin)
         {
             Anchor = Anchor.Centre,
             Origin = Anchor.Centre,
@@ -60,6 +60,7 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
         this.scoreProcessor = rulesetInstance.CreateScoreProcessor();
         scoreProcessor.Mods.Value = score.ScoreInfo.Mods;
         scoreProcessor.ApplyBeatmap(playableBeatmap);
+        scoreProcessor.Clock = llin.AudioClock;
         scoreProcessor.HasCompleted.BindValueChanged(v =>
         {
             playingContainer.FadeTo(v.NewValue ? 0.01f : 1, 300, Easing.OutQuint)
