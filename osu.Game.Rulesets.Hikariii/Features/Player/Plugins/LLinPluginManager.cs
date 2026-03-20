@@ -13,6 +13,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp;
@@ -179,6 +180,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 
                 new LyricPluginProvider(),
                 new YaspProvider(),
+
+                new ReplayPluginProvider()
 
                 //new NewBottomBarProvider()
             };
