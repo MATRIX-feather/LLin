@@ -10,13 +10,14 @@ using osu.Game.Beatmaps;
 using osu.Game.Database;
 using osu.Game.Online.API;
 using osu.Game.Online.Leaderboards;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
 using osu.Game.Scoring;
 using osu.Game.Screens.Play.Leaderboards;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay;
 
-public partial class BackgroundReplayPlugin : LLinPlugin
+public partial class BackgroundReplayPlugin : BindableControlledPlugin
 {
     public BackgroundReplayPlugin(LLinPluginProvider provider)
         : base(provider)
@@ -61,9 +62,16 @@ public partial class BackgroundReplayPlugin : LLinPlugin
         }
     }
 
+    private Bindable<AutoplayPreference> autoplayPreference = new Bindable<AutoplayPreference>();
+
     [BackgroundDependencyLoader]
     private void load()
     {
+        var config = (ReplayConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(Provider.Identifier());
+
+        config.BindWith(ReplaySettings.EnablePlugin, Enabled);
+        config.BindWith(ReplaySettings.UseAutoplay, autoplayPreference);
+
         this.leaderboardManager = new LeaderboardManager();
         Add(leaderboardManager);
 
@@ -164,7 +172,10 @@ public partial class BackgroundReplayPlugin : LLinPlugin
         replayLoadingCancellationTokenSource = new CancellationTokenSource();
 
         var currentBeatmap = LLin!.Beatmap.Value;
-        viewingScore ??= tryAutoMod(currentBeatmap);
+
+        if ((autoplayPreference.Value is AutoplayPreference.AsAlternative && viewingScore == null)
+            || autoplayPreference.Value is AutoplayPreference.Always)
+            viewingScore = tryAutoMod(currentBeatmap);
 
         if (viewingScore == null) return;
 
