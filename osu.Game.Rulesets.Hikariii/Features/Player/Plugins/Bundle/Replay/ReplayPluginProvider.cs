@@ -2,6 +2,7 @@ using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay;
 
@@ -14,7 +15,7 @@ public class ReplayPluginProvider : LLinPluginProvider
 
     public override PluginDescription GetDescription()
     {
-        return new PluginDescription("Replay support", "Add replay to background", []);
+        return new PluginDescription(LLinPluginNameString.BackgroundReplay, LLinPluginNameString.BackgroundReplayDescription, []);
     }
 
     public override string Identifier()

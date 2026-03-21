@@ -12,5 +12,8 @@ public class LLinPluginNameString
     public static LocalisableString OsuMusicController => new TranslatableString(getKey(@"osu_music_controller"), "osu! music controller");
     public static LocalisableString CollectionMusicController => new TranslatableString(getKey(@"collection_music_controller"), "Collection music controller");
 
+    public static LocalisableString BackgroundReplay => new TranslatableString(getKey(@"background_replay"), "Background replay");
+    public static LocalisableString BackgroundReplayDescription => new TranslatableString(getKey(@"background_replay_description"), "Add replay to background");
+
     private static string getKey(string key) => $@"{prefix}:{key}";
 }
