@@ -1,8 +1,5 @@
-using System.ComponentModel;
-using osu.Framework.Graphics;
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 
@@ -10,7 +7,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay.Confi
 
 public class ReplayConfigManager : PluginConfigManager<ReplaySettings>
 {
-    public ReplayConfigManager(Storage storage) : base(storage)
+    public ReplayConfigManager(Storage storage)
+        : base(storage)
     {
     }
 
@@ -21,6 +19,7 @@ public class ReplayConfigManager : PluginConfigManager<ReplaySettings>
     {
         SetDefault(ReplaySettings.EnablePlugin, true);
         SetDefault(ReplaySettings.UseAutoplay, AutoplayPreference.AsAlternative);
+        SetDefault(ReplaySettings.OnlyUsePassedScores, true);
         base.InitialiseDefaults();
     }
 
@@ -31,6 +30,7 @@ public enum ReplaySettings
 {
     EnablePlugin,
     UseAutoplay,
+    OnlyUsePassedScores,
 }
 
 public enum AutoplayPreference

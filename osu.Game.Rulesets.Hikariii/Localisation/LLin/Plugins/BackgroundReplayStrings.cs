@@ -9,6 +9,8 @@ namespace osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins
         // 设置
         public static LocalisableString AutoplayPreference => new TranslatableString(getKey(@"autoplay_preference"), @"Use Autoplay replays");
 
+        public static LocalisableString OnlyUsePassedScores => new TranslatableString(getKey(@"only_passed_scores"), "Only use passed scores");
+
         // Autoplay 回放偏好
         public static LocalisableString AlwaysUseAutoplay => new TranslatableString(getKey(@"autoplay_always"), @"Always");
 

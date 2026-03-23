@@ -129,4 +129,7 @@
   <data name="autoplay_always" xml:space="preserve">
     <value>总是</value>
   </data>
+  <data name="only_passed_scores" xml:space="preserve">
+    <value>仅使用已通过分数</value>
+  </data>
 </root>

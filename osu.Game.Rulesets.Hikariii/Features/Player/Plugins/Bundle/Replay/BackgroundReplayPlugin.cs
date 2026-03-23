@@ -62,7 +62,8 @@ public partial class BackgroundReplayPlugin : BindableControlledPlugin
         }
     }
 
-    private Bindable<AutoplayPreference> autoplayPreference = new Bindable<AutoplayPreference>();
+    private readonly Bindable<AutoplayPreference> autoplayPreference = new Bindable<AutoplayPreference>();
+    private readonly BindableBool onlyPassedScores = new BindableBool();
 
     [BackgroundDependencyLoader]
     private void load()
@@ -71,6 +72,7 @@ public partial class BackgroundReplayPlugin : BindableControlledPlugin
 
         config.BindWith(ReplaySettings.EnablePlugin, Enabled);
         config.BindWith(ReplaySettings.UseAutoplay, autoplayPreference);
+        config.BindWith(ReplaySettings.OnlyUsePassedScores, onlyPassedScores);
 
         this.leaderboardManager = new LeaderboardManager();
         Add(leaderboardManager);
@@ -82,7 +84,7 @@ public partial class BackgroundReplayPlugin : BindableControlledPlugin
     protected override void LoadComplete()
     {
         leaderboardManager.Scores.BindValueChanged(onScoresRefreshed);
-        LLin!.OnBeatmapChanged(this.onBeatmapChanged, this, true);
+        LLin!.OnBeatmapChanged(onBeatmapChanged, this, true);
 
         base.LoadComplete();
     }
@@ -115,8 +117,9 @@ public partial class BackgroundReplayPlugin : BindableControlledPlugin
     {
         var currentBeatmap = LLin!.Beatmap.Value;
 
+        // Cannot use ScoreInfo.Passed here since false positives exist
         Score? targetScore = scores.AllScores.Select(scoreInfo => scoreManager.GetScore(scoreInfo))
-                                   .FirstOrDefault();
+                                   .FirstOrDefault(score => !onlyPassedScores.Value || score?.ScoreInfo.Rank != ScoreRank.F);
 
         if (targetScore == null) return null;
 
@@ -173,7 +176,7 @@ public partial class BackgroundReplayPlugin : BindableControlledPlugin
 
         var currentBeatmap = LLin!.Beatmap.Value;
 
-        if ((autoplayPreference.Value is AutoplayPreference.AsAlternative && viewingScore == null)
+        if (autoplayPreference.Value is AutoplayPreference.AsAlternative && viewingScore == null
             || autoplayPreference.Value is AutoplayPreference.Always)
             viewingScore = tryAutoMod(currentBeatmap);
 

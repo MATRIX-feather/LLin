@@ -1,3 +1,4 @@
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
@@ -38,13 +39,19 @@ public class ReplayPluginProvider : LLinPluginProvider
             new BooleanSettingsEntry
             {
                 Name = LLinGenericStrings.EnablePlugin,
-                Bindable = config.GetBindable<bool>(ReplaySettings.EnablePlugin)
+                Bindable = config.GetBindable<bool>(ReplaySettings.EnablePlugin),
             },
             new EnumSettingsEntry<AutoplayPreference>
             {
                 Name = BackgroundReplayStrings.AutoplayPreference,
-                Bindable = config.GetBindable<AutoplayPreference>(ReplaySettings.UseAutoplay)
-            }
+                Icon = FontAwesome.Solid.Cog,
+                Bindable = config.GetBindable<AutoplayPreference>(ReplaySettings.UseAutoplay),
+            },
+            new BooleanSettingsEntry
+            {
+                Name = BackgroundReplayStrings.OnlyUsePassedScores,
+                Bindable = config.GetBindable<bool>(ReplaySettings.OnlyUsePassedScores),
+            },
         ];
     }
 }
