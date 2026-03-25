@@ -1,7 +1,11 @@
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Platform;
+using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Localisation.LLin;
+using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay;
 
@@ -14,7 +18,7 @@ public class ReplayPluginProvider : LLinPluginProvider
 
     public override PluginDescription GetDescription()
     {
-        return new PluginDescription("Replay support", "Add replay to background", []);
+        return new PluginDescription(LLinPluginNameString.BackgroundReplay, LLinPluginNameString.BackgroundReplayDescription, []);
     }
 
     public override string Identifier()
@@ -24,6 +28,30 @@ public class ReplayPluginProvider : LLinPluginProvider
 
     public override IPluginConfigManager CreateConfigManager(Storage storage)
     {
-        return new ReplayConfigManager();
+        return new ReplayConfigManager(storage);
+    }
+
+    public override SettingsEntry[] GetSettingEntries(IPluginConfigManager ipcm)
+    {
+        var config = (ReplayConfigManager)ipcm;
+        return
+        [
+            new BooleanSettingsEntry
+            {
+                Name = LLinGenericStrings.EnablePlugin,
+                Bindable = config.GetBindable<bool>(ReplaySettings.EnablePlugin),
+            },
+            new EnumSettingsEntry<AutoplayPreference>
+            {
+                Name = BackgroundReplayStrings.AutoplayPreference,
+                Icon = FontAwesome.Solid.Cog,
+                Bindable = config.GetBindable<AutoplayPreference>(ReplaySettings.UseAutoplay),
+            },
+            new BooleanSettingsEntry
+            {
+                Name = BackgroundReplayStrings.OnlyUsePassedScores,
+                Bindable = config.GetBindable<bool>(ReplaySettings.OnlyUsePassedScores),
+            },
+        ];
     }
 }
