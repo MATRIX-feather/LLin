@@ -52,16 +52,6 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
         this.drawableRuleset = rulesetInstance.CreateDrawableRulesetWith(playableBeatmap, score.ScoreInfo.Mods);
         drawableRuleset.Clock = llin.AudioClock;
 
-        drawableRuleset.OnLoadComplete += _ =>
-        {
-            // Without calling `ApplyToPlayer`, OsuModRelax would crash the game due to their `pressHandler` is null where it should not.
-            // Since ModRelax doesn't implement IApplicableToPlayer, and Hikariii itself doesn't have dependency to osu ruleset (Also not worth adding one just because this imo)
-            // The best way is to perform like how Player does.
-            var fakePlayer = new ReplayPlayer(score);
-            foreach (var mod in drawableRuleset.Mods.OfType<IApplicableToPlayer>())
-                mod.ApplyToPlayer(fakePlayer);
-        };
-
         playingContainer = new RulesetSkinProvidingContainer(rulesetInstance, playableBeatmap, workingBeatmap.Skin)
         {
             Anchor = Anchor.Centre,
@@ -87,19 +77,29 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
         LoadComponent(playingContainer);
         Add(playingContainer);
 
-        drawableRuleset.NewResult += r =>
+        drawableRuleset.OnLoadComplete += _ =>
         {
-            //Logging.Log("NewResult " + r);
-            scoreProcessor.ApplyResult(r);
-        };
+            drawableRuleset.NewResult += r =>
+            {
+                //Logging.Log("NewResult " + r);
+                scoreProcessor.ApplyResult(r);
+            };
 
-        drawableRuleset.RevertResult += r =>
-        {
-            scoreProcessor.RevertResult(r);
-        };
+            drawableRuleset.RevertResult += r =>
+            {
+                scoreProcessor.RevertResult(r);
+            };
 
-        drawableRuleset.FrameStableClock.IsCatchingUp.BindValueChanged(v => this.updateSampleDisablingState());
-        drawableRuleset.SetReplayScore(score);
+            drawableRuleset.FrameStableClock.IsCatchingUp.BindValueChanged(v => this.updateSampleDisablingState());
+            drawableRuleset.SetReplayScore(score);
+
+            // Without calling `ApplyToPlayer`, OsuModRelax would crash the game due to their `pressHandler` is null where it should not.
+            // Since ModRelax doesn't implement IApplicableToPlayer, and Hikariii itself doesn't have dependency to osu ruleset (Also not worth adding one just because this imo)
+            // The best way is to perform like how Player does.
+            var fakePlayer = new ReplayPlayer(score);
+            foreach (var mod in drawableRuleset.Mods.OfType<IApplicableToPlayer>())
+                mod.ApplyToPlayer(fakePlayer);
+        };
     }
 
     private bool isPlaying;
