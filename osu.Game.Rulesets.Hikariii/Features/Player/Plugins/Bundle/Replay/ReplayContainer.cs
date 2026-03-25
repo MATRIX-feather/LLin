@@ -1,3 +1,4 @@
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
@@ -6,9 +7,11 @@ using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
 using osu.Game.Scoring;
+using osu.Game.Screens.Play;
 using osu.Game.Skinning;
 using osuTK.Graphics;
 
@@ -48,6 +51,16 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
         var rulesetInstance = score.ScoreInfo.Ruleset.CreateInstance();
         this.drawableRuleset = rulesetInstance.CreateDrawableRulesetWith(playableBeatmap, score.ScoreInfo.Mods);
         drawableRuleset.Clock = llin.AudioClock;
+
+        drawableRuleset.OnLoadComplete += _ =>
+        {
+            // Without calling `ApplyToPlayer`, OsuModRelax would crash the game due to their `pressHandler` is null where it should not.
+            // Since ModRelax doesn't implement IApplicableToPlayer, and Hikariii itself doesn't have dependency to osu ruleset (Also not worth adding one just because this imo)
+            // The best way is to perform like how Player does.
+            var fakePlayer = new ReplayPlayer(score);
+            foreach (var mod in drawableRuleset.Mods.OfType<IApplicableToPlayer>())
+                mod.ApplyToPlayer(fakePlayer);
+        };
 
         playingContainer = new RulesetSkinProvidingContainer(rulesetInstance, playableBeatmap, workingBeatmap.Skin)
         {
