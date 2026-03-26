@@ -3,22 +3,15 @@ using System.Reflection;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Development;
-using osu.Framework.Graphics;
-using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Beatmaps;
 using osu.Game.Database;
-using osu.Game.Graphics;
-using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Rulesets.Hikariii.Features.DownloadAccel;
 using osu.Game.Rulesets.Hikariii.Features.DownloadAccel.Graphics;
-using osu.Game.Tests.Visual;
-using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 
@@ -124,9 +117,17 @@ public partial class PreviewTrackHandler : AbstractHandler
     private readonly Bindable<PreviewTrackManager.TrackManagerPreviewTrack> previewTrack = new();
     private FieldInfo? previewTrackFieldInfo;
 
+    // Don't poll until we reached this time, in milliseconds.
+    // Credit: https://github.com/2710165659/osu-beatmap-accel/blob/master/osu.Game.Rulesets.BeatmapAccel/Features/Download/PreviewTrackHandler.cs#L59
+    private double nextPollTime;
+
     protected override void Update()
     {
         base.Update();
+        double currentTime = Clock.CurrentTime;
+        if (currentTime < nextPollTime) return;
+
+        nextPollTime = currentTime + 100;
 
         try
         {
