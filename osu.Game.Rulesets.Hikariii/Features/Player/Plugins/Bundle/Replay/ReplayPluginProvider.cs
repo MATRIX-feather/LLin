@@ -18,7 +18,7 @@ public class ReplayPluginProvider : LLinPluginProvider
 
     public override PluginDescription GetDescription()
     {
-        return new PluginDescription(LLinPluginNameString.BackgroundReplay, LLinPluginNameString.BackgroundReplayDescription, []);
+        return new PluginDescription(LLinPluginNameString.BackgroundReplay, LLinPluginNameString.BackgroundReplayDescription, ["CloneWith", "MATRIX-feather"]);
     }
 
     public override string Identifier()
