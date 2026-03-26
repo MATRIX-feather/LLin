@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -30,7 +31,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         public readonly BindableBool Active = new BindableBool();
         public bool IsCurrent;
 
+        public readonly List<BeatmapInfo> ChildrenBeatmapInfos;
         public readonly WorkingBeatmap Beatmap;
+
         private Flash flash;
         private Box maskBox;
         private Box hover;
@@ -38,12 +41,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         private Box bgBox;
         private ShakeContainer content;
 
-        public BeatmapPiece(WorkingBeatmap b)
+        /// <param name="b">The WorkingBeatmap, used to display beatmap cover and information.</param>
+        /// <param name="children">Available beatmaps for the beatmap set.</param>
+        public BeatmapPiece(WorkingBeatmap b, List<BeatmapInfo> children)
         {
             RelativeSizeAxes = Axes.X;
             Height = 80;
 
             Beatmap = b;
+            ChildrenBeatmapInfos = children;
         }
 
         [BackgroundDependencyLoader]
@@ -199,7 +205,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         protected override bool OnClick(ClickEvent e)
         {
             if (IsCurrent && b.Value != Beatmap)
-                collectionHelper.Play(Beatmap);
+                collectionHelper.Play(ChildrenBeatmapInfos[0]);
             else
                 content.Shake();
 

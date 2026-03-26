@@ -2,16 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Utils;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Chooser;
 
 public class RandomChooser(BeatmapManager beatmapManager) : IBeatmapChooser
 {
-    private readonly Queue<IBeatmapSetInfo> visitedSets = [];
-    private readonly List<IBeatmapSetInfo> validSets = [];
+    private readonly Queue<BeatmapInfo> visitedSets = [];
+    private readonly List<BeatmapInfo> validSets = [];
 
-    public void Activate(List<IBeatmapSetInfo> input)
+    public void Activate(ICollection<BeatmapInfo> input)
     {
         ClearValidBeatmaps();
         this.validSets.AddRange(input);
@@ -48,7 +47,7 @@ public class RandomChooser(BeatmapManager beatmapManager) : IBeatmapChooser
         var target = list[RNG.Next(0, list.Count)];
         visitedSets.Enqueue(target);
 
-        return beatmapManager.GetWorkingBeatmap(target.Beatmaps.First().AsBeatmapInfo());
+        return beatmapManager.GetWorkingBeatmap(target);
     }
 
     public WorkingBeatmap? PickLast()
@@ -59,12 +58,12 @@ public class RandomChooser(BeatmapManager beatmapManager) : IBeatmapChooser
         if (!visitedSets.TryDequeue(out var target))
             target = validSets[0];
 
-        return beatmapManager.GetWorkingBeatmap(target.Beatmaps.First().AsBeatmapInfo());
+        return beatmapManager.GetWorkingBeatmap(target);
     }
 
     public void OnExternalChoose(WorkingBeatmap beatmap)
     {
-        var setInfo = beatmap.BeatmapSetInfo;
+        var setInfo = beatmap.BeatmapInfo;
 
         if (validSets.Contains(setInfo))
             visitedSets.Enqueue(setInfo);

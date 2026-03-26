@@ -5,7 +5,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection;
 
 public interface IBeatmapChooser
 {
-    public void Activate(List<IBeatmapSetInfo> input);
+    public void Activate(ICollection<BeatmapInfo> input);
     public void Deactivate();
     public void ClearValidBeatmaps();
 

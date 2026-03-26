@@ -15,17 +15,17 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sidebar
 {
-    public partial class CollectionInfo : CompositeDrawable
+    public partial class DrawableCollectionInfo : CompositeDrawable
     {
         private OsuSpriteText collectionName = null!;
         private OsuSpriteText collectionBeatmapCount = null!;
-        private readonly Bindable<BeatmapCollection> collection = new Bindable<BeatmapCollection>();
-        private readonly List<IBeatmapSetInfo> beatmapSets = new List<IBeatmapSetInfo>();
+        private readonly Bindable<BeatmapCollection> collection = new();
+        private readonly Dictionary<IBeatmapSetInfo, List<BeatmapInfo>> beatmapSets = new();
 
         private BeatmapList? beatmapList;
         private readonly BindableBool isCurrentCollection = new BindableBool();
 
-        public CollectionInfo()
+        public DrawableCollectionInfo()
         {
             RelativeSizeAxes = Axes.Both;
             Masking = true;
@@ -120,11 +120,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         [Resolved]
         private BeatmapHashResolver hashResolver { get; set; } = null!;
 
+        [Resolved]
+        private CollectionHelper collectionHelper { get; set; } = null!;
+
         private void OnCollectionChanged(ValueChangedEvent<BeatmapCollection> v)
         {
             var c = v.NewValue;
 
-            if (c == CollectionHelper.DEFAULT_COLLECTION)
+            if (c.Equals(CollectionHelper.DEFAULT_COLLECTION))
             {
                 clearInfo();
                 return;
@@ -132,20 +135,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
 
             beatmapSets.Clear();
 
-            //From CollectionHelper.cs
-            foreach (string hash in c.BeatmapMD5Hashes)
-            {
-                var item = hashResolver.ResolveHash(hash);
-
-                //获取当前BeatmapSet
-                var currentSet = item?.BeatmapSet;
-
-                if (currentSet == null) continue;
-
-                //进行比对，如果beatmapList中不存在，则添加。
-                if (!beatmapSets.Contains(currentSet))
-                    beatmapSets.Add(currentSet);
-            }
+            foreach (var keyValuePair in collectionHelper.SortBeatmaps(c))
+                beatmapSets[keyValuePair.Key] = keyValuePair.Value;
 
             collectionName.Text = c.Name;
             collectionBeatmapCount.Text = CollectionStrings.SongCount(beatmapSets.Count);

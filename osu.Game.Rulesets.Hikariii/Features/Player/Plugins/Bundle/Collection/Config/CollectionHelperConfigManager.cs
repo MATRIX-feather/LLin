@@ -1,4 +1,5 @@
 using osu.Framework.Platform;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sorter;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Config
@@ -14,6 +15,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.C
         {
             SetDefault(CollectionSettings.EnablePlugin, false);
             SetDefault(CollectionSettings.EnableRandom, false);
+            SetDefault(CollectionSettings.BeatmapSortMethod, SortMethod.MostDifficultFirst);
             base.InitialiseDefaults();
         }
 
@@ -23,6 +25,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.C
     public enum CollectionSettings
     {
         EnablePlugin,
-        EnableRandom
+        EnableRandom,
+        BeatmapSortMethod
     }
 }

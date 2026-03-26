@@ -16,6 +16,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Chooser;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sidebar;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sorter;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
 using Realms;
 
@@ -61,6 +62,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
         private bool trackChangedAfterDisable = true;
 
         private readonly BindableBool enableRandom = new();
+        private readonly IBeatmapSorter beatmapSorter = new MostDifficultFirstSorter();
 
         [BackgroundDependencyLoader]
         private void load()
@@ -90,17 +92,31 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
             }, true);
         }
 
+        private void onCollectionUpdate(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes)
+        {
+            AvaliableCollections = collections.AsEnumerable().Select(c => c).ToList();
+
+            if (CurrentCollection.Value == null) return;
+
+            var collectionMatch = AvaliableCollections.Find(c => c.ID == CurrentCollection.Value.ID);
+            CurrentCollection.Value = collectionMatch ?? DEFAULT_COLLECTION;
+        }
+
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            CurrentCollection.BindValueChanged(OnCollectionChanged);
+            CurrentCollection.BindValueChanged(v => updateBeatmaps(v.NewValue));
         }
 
         private void onMvisExiting()
         {
         }
 
-        public void Play(WorkingBeatmap b) => changeBeatmap(b);
+        public void Play(BeatmapInfo b)
+        {
+            var asWorking = beatmaps.GetWorkingBeatmap(b);
+            changeBeatmap(asWorking);
+        }
 
         public bool NextTrack()
         {
@@ -198,48 +214,82 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 
             this.beatmapChooser?.Deactivate();
             beatmapChooser = chooser;
-            chooser.Activate(cachedCollectionContent);
+
+            chooser.Activate(cachedCollectionContent.Values);
             chooser.OnExternalChoose(b.Value);
         }
 
         [Resolved]
         private BeatmapHashResolver hashResolver { get; set; } = null!;
 
-        private readonly List<IBeatmapSetInfo> cachedCollectionContent = [];
+        private readonly Dictionary<BeatmapSetInfo, BeatmapInfo> cachedCollectionContent = [];
 
-        ///<summary>
-        ///用来更新<see cref="beatmapList"/>
-        ///</summary>
-        private void updateBeatmaps(BeatmapCollection collection)
+        private readonly List<string> cachedMD5List = [];
+
+        /// <summary>
+        /// Sort beatmaps for the given beatmap collection.
+        /// </summary>
+        /// <param name="collection">The beatmap collection to sort</param>
+        /// <returns>
+        /// A dictionary of BeatmapSet <![CDATA[<->]]> Available Beatmaps. The most close to the user option at first, and The most far from the user option at last.
+        /// <br/>
+        /// For example: When the user decides to play the most difficult beatmap, the most difficult beatmap is at last.
+        /// One exception is when the user decides to play a random beatmap, the list will get shuffled each time this is being called.
+        /// </returns>
+        /// <remarks>Currently we only sort beatmaps by difficulty, the most difficult at first, and the easiest at last.</remarks>
+        public Dictionary<BeatmapSetInfo, List<BeatmapInfo>> SortBeatmaps(BeatmapCollection collection)
         {
-            beatmapChooser?.ClearValidBeatmaps();
-
-            if (collection?.BeatmapMD5Hashes == null) return;
-
-            List<IBeatmapSetInfo> beatmaps = [];
+            Dictionary<BeatmapSetInfo, List<BeatmapInfo>> beatmapDictionary = new();
 
             foreach (string hash in collection.BeatmapMD5Hashes)
             {
                 var item = hashResolver.ResolveHash(hash);
 
-                //获取当前BeatmapSet
-                var currentSet = item?.BeatmapSet;
+                if (item?.BeatmapSet == null) continue;
 
-                if (currentSet == null)
+                var existing = beatmapDictionary.GetValueOrDefault(item.BeatmapSet, null);
+
+                if (existing == null)
                 {
-                    Logging.Log($"{hash}解析到的谱面是null，将不会继续处理此Hash");
-                    continue;
+                    existing = [];
+                    beatmapDictionary[item.BeatmapSet] = existing;
                 }
 
-                //进行比对，如果beatmapList中不存在，则添加。
-                if (!beatmaps.Contains(currentSet))
-                    beatmaps.Add(currentSet);
+                existing.Add(item);
             }
 
-            cachedCollectionContent.Clear();
-            cachedCollectionContent.AddRange(beatmaps);
+            foreach (var keyValuePair in beatmapDictionary.Where(kvp => kvp.Value.Count > 1))
+                beatmapSorter.Sort(keyValuePair.Value);
 
-            beatmapChooser?.Activate(beatmaps);
+            return beatmapDictionary;
+        }
+
+        ///<summary>
+        /// Update available beatmaps for the beatmap chooser using the given collection. Won't do anything is the collection is null.
+        ///</summary>
+        private void updateBeatmaps(BeatmapCollection? collection)
+        {
+            if (collection?.BeatmapMD5Hashes == null) return;
+
+            if (collection.BeatmapMD5Hashes.SequenceEqual(cachedMD5List))
+            {
+                //Logging.Log("HashSum is the same, skipping update...");
+                return;
+            }
+
+            beatmapChooser?.ClearValidBeatmaps();
+
+            cachedMD5List.Clear();
+            cachedMD5List.AddRange(collection.BeatmapMD5Hashes);
+
+            var sortedBeatmaps = SortBeatmaps(collection);
+
+            cachedCollectionContent.Clear();
+            foreach (var keyValuePair in sortedBeatmaps)
+                cachedCollectionContent[keyValuePair.Key] = keyValuePair.Value[0];
+
+            beatmapChooser?.Activate(cachedCollectionContent.Values);
+            beatmapChooser?.OnExternalChoose(b.Value);
         }
 
         public void UpdateBeatmaps() => updateBeatmaps(CurrentCollection.Value);
@@ -247,23 +297,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
         public List<BeatmapCollection> AvaliableCollections { get; private set; } = new List<BeatmapCollection>();
 
         public static readonly BeatmapCollection DEFAULT_COLLECTION = new BeatmapCollection("未选择任何收藏夹");
-
-        private void onCollectionUpdate(IRealmCollection<BeatmapCollection> collections, ChangeSet? changes)
-        {
-            AvaliableCollections = collections.AsEnumerable().Select(c => c).ToList();
-
-            if (CurrentCollection.Value != null)
-            {
-                var collectionMatch = AvaliableCollections.Find(c => c.ID == CurrentCollection.Value.ID);
-
-                CurrentCollection.Value = collectionMatch ?? DEFAULT_COLLECTION;
-            }
-        }
-
-        private void OnCollectionChanged(ValueChangedEvent<BeatmapCollection> v)
-        {
-            updateBeatmaps(CurrentCollection.Value);
-        }
 
         protected override void Dispose(bool isDisposing)
         {

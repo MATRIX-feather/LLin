@@ -5,11 +5,8 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Utils;
@@ -26,7 +23,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         [Resolved]
         private Bindable<WorkingBeatmap> working { get; set; }
 
-        private readonly List<IBeatmapSetInfo> beatmapSets;
+        private readonly Dictionary<IBeatmapSetInfo, List<BeatmapInfo>> beatmapSets;
         private readonly Cached scrollCache = new Cached();
         private BeatmapPiece currentPiece;
         private OsuScrollContainer beatmapScroll;
@@ -36,7 +33,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
 
         public BindableBool IsCurrent = new BindableBool();
 
-        public BeatmapList(List<IBeatmapSetInfo> set)
+        public BeatmapList(Dictionary<IBeatmapSetInfo, List<BeatmapInfo>> set)
         {
             RelativeSizeAxes = Axes.Both;
             Alpha = 0;
@@ -77,22 +74,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
             });
         }
 
-        private Box createDefaultMaskBox()
+        private void addBeatmapSets()
         {
-            var b = new Box
+            var panels = beatmapSets.Select(pair =>
             {
-                RelativeSizeAxes = Axes.Both,
-                Colour = getMaskBoxColour()
-            };
+                var workingBeatmap = beatmaps.GetWorkingBeatmap(pair.Value[0].AsBeatmapInfo());
+                return new BeatmapPiece(workingBeatmap, pair.Value);
+            });
 
-            return b;
-        }
+            fillFlow.AddRange(panels);
 
-        private ColourInfo getMaskBoxColour()
-        {
-            return ColourInfo.GradientVertical(
-                colourProvider.Dark6,
-                colourProvider.Dark6.Opacity(0));
+            scrollCache.Invalidate();
         }
 
         protected override void UpdateAfterChildren()
@@ -116,13 +108,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
                 piece.MakeActive();
                 break;
             }
-
-            scrollCache.Invalidate();
-        }
-
-        private void addBeatmapSets()
-        {
-            fillFlow.AddRange(beatmapSets.Select(s => new BeatmapPiece(beatmaps.GetWorkingBeatmap(s.Beatmaps.First().AsBeatmapInfo()))));
 
             scrollCache.Invalidate();
         }

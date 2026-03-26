@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         private CollectionPanel? prevPanel;
         private OsuScrollContainer collectionScroll = null!;
         private Container scrollContainer = null!;
-        private CollectionInfo info = null!;
+        private DrawableCollectionInfo info = null!;
 
         public CollectionPluginPage(LLinPlugin plugin)
             : base(plugin)
@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
                         }
                     }
                 },
-                info = new CollectionInfo
+                info = new DrawableCollectionInfo
                 {
                     Name = "收藏夹信息界面",
                     RelativeSizeAxes = Axes.Both,

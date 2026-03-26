@@ -1,16 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Beatmaps;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Utils;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Chooser;
 
 public class SequenceChooser(BeatmapManager beatmapManager) : IBeatmapChooser
 {
-    private readonly List<IBeatmapSetInfo> currentList = [];
+    private readonly List<BeatmapInfo> currentList = [];
     private int currentIndex = 0;
 
-    public void Activate(List<IBeatmapSetInfo> input)
+    public void Activate(ICollection<BeatmapInfo> input)
     {
         ClearValidBeatmaps();
         currentList.AddRange(input);
@@ -37,7 +36,7 @@ public class SequenceChooser(BeatmapManager beatmapManager) : IBeatmapChooser
         if (currentIndex >= currentList.Count)
             currentIndex = 0;
 
-        return beatmapManager.GetWorkingBeatmap(currentList[currentIndex].Beatmaps.First().AsBeatmapInfo());
+        return beatmapManager.GetWorkingBeatmap(currentList[currentIndex]);
     }
 
     public WorkingBeatmap? PickLast()
@@ -50,13 +49,18 @@ public class SequenceChooser(BeatmapManager beatmapManager) : IBeatmapChooser
         if (currentIndex < 0)
             currentIndex = currentList.Count - 1;
 
-        return beatmapManager.GetWorkingBeatmap(currentList[currentIndex].Beatmaps.First().AsBeatmapInfo());
+        return beatmapManager.GetWorkingBeatmap(currentList[currentIndex]);
     }
 
     public void OnExternalChoose(WorkingBeatmap beatmap)
     {
-        currentIndex = currentList.Contains(beatmap.BeatmapSetInfo)
-            ? currentList.IndexOf(beatmap.BeatmapSetInfo)
-            : -1;
+        var beatmapSetInfo = beatmap.BeatmapSetInfo;
+        var match = currentList.FirstOrDefault(i => i.BeatmapSet?.Equals(beatmapSetInfo) ?? false);
+
+        int index = match == null
+            ? -1
+            : currentList.IndexOf(match);
+
+        currentIndex = index;
     }
 }
