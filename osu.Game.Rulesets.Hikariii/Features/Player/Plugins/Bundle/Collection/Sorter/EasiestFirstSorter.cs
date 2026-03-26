@@ -9,4 +9,9 @@ public class EasiestFirstSorter : IBeatmapSorter
     {
         beatmapInfos.Sort((a, b) => a.StarRating.CompareTo(b.StarRating));
     }
+
+    public BeatmapInfo Pick(List<BeatmapInfo> beatmapInfos)
+    {
+        return beatmapInfos[0];
+    }
 }

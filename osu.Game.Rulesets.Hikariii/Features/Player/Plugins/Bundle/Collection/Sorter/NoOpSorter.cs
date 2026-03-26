@@ -8,4 +8,9 @@ public class NoOpSorter : IBeatmapSorter
     public void Sort(List<BeatmapInfo> beatmapInfos)
     {
     }
+
+    public BeatmapInfo Pick(List<BeatmapInfo> beatmapInfos)
+    {
+        return beatmapInfos[0];
+    }
 }

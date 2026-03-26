@@ -3,6 +3,7 @@ using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sorter;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin;
 
@@ -27,8 +28,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
             [
                 new BooleanSettingsEntry
                 {
-                    Name = "启用随机播放",
+                    Name = "歌曲随机播放",
+                    Description = "是否随机播放收藏夹中的歌曲",
                     Bindable = config.GetBindable<bool>(CollectionSettings.EnableRandom)
+                },
+                new EnumSettingsEntry<SortMethod>
+                {
+                    Name = "谱面挑选方式",
+                    Description = "决定收藏夹要如何从收藏有多个难度的歌曲中挑选谱面",
+                    Bindable = config.GetBindable<SortMethod>(CollectionSettings.BeatmapSortMethod)
                 }
             ];
         }

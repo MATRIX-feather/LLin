@@ -6,13 +6,19 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
 
 public class RandomSorter : IBeatmapSorter
 {
+    private readonly Random random = new();
+
     public void Sort(List<BeatmapInfo> beatmapInfos)
     {
         var asArray = beatmapInfos.ToArray();
-        var random = new Random();
         random.Shuffle(asArray);
 
         beatmapInfos.Clear();
         beatmapInfos.AddRange(asArray);
+    }
+
+    public BeatmapInfo Pick(List<BeatmapInfo> beatmapInfos)
+    {
+        return beatmapInfos[random.Next(beatmapInfos.Count)];
     }
 }

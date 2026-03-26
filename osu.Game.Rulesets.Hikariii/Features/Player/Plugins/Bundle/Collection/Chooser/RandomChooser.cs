@@ -2,70 +2,110 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Utils;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sorter;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Chooser;
 
 public class RandomChooser(BeatmapManager beatmapManager) : IBeatmapChooser
 {
-    private readonly Queue<BeatmapInfo> visitedSets = [];
-    private readonly List<BeatmapInfo> validSets = [];
+    private readonly Dictionary<BeatmapSetInfo, List<BeatmapInfo>> beatmapCandidates = [];
+    private readonly List<BeatmapSetInfo> visitedBeatmapSets = [];
 
-    public void Activate(ICollection<BeatmapInfo> input)
+    private void sortBeatmaps(SortMethod sortMethod)
     {
-        ClearValidBeatmaps();
-        this.validSets.AddRange(input);
+        foreach (var keyValuePair in beatmapCandidates)
+            sorter.Sort(keyValuePair.Value);
     }
 
-    public void Deactivate()
+    public void SetBeatmapCandidates(Dictionary<BeatmapSetInfo, List<BeatmapInfo>> beatmapDictionary)
     {
-        ClearValidBeatmaps();
+        ClearBeatmapCandidates();
+
+        foreach (var keyValuePair in beatmapDictionary)
+            beatmapCandidates[keyValuePair.Key] = keyValuePair.Value;
+
+        sortBeatmaps(sortMethod);
     }
 
-    public void ClearValidBeatmaps()
+    public void ClearBeatmapCandidates()
     {
-        this.validSets.Clear();
-        this.visitedSets.Clear();
+        beatmapCandidates.Clear();
+        visitedBeatmapSets.Clear();
+    }
+
+    private SortMethod sortMethod = SortMethod.MostDifficultFirst;
+    private IBeatmapSorter sorter;
+
+    public void SetCandidateSortMethod(SortMethod? newMethod)
+    {
+        this.sortMethod = newMethod ?? SortMethod.MostDifficultFirst;
+
+        this.sorter = sortMethod switch
+        {
+            SortMethod.MostDifficultFirst => new MostDifficultFirstSorter(),
+            SortMethod.EasiestFirst => new EasiestFirstSorter(),
+            SortMethod.Random => new RandomSorter(),
+            _ => new NoOpSorter()
+        };
+
+        sortBeatmaps(this.sortMethod);
     }
 
     public WorkingBeatmap? PickNext()
     {
-        if (validSets.Count == 0)
+        if (beatmapCandidates.Count == 0)
             return null;
 
-        var list = validSets.Except(visitedSets).ToList();
+        var visitableBeatmapSets = beatmapCandidates.Keys.Except(visitedBeatmapSets).ToList();
 
-        if (list.Count == 0)
+        if (visitableBeatmapSets.Count == 0)
         {
-            visitedSets.Clear();
-            list.AddRange(validSets);
+            visitedBeatmapSets.Clear();
+            visitableBeatmapSets.AddRange(beatmapCandidates.Keys);
         }
 
         // Let's not make the queue too large
-        if (visitedSets.Count > 100)
-            visitedSets.Clear();
+        if (visitedBeatmapSets.Count > 100)
+            visitedBeatmapSets.Clear();
 
-        var target = list[RNG.Next(0, list.Count)];
-        visitedSets.Enqueue(target);
+        var targetBeatmapSet = visitableBeatmapSets[RNG.Next(0, visitableBeatmapSets.Count)];
+        visitedBeatmapSets.Add(targetBeatmapSet);
 
-        return beatmapManager.GetWorkingBeatmap(target);
+        return beatmapManager.GetWorkingBeatmap(sorter.Pick(beatmapCandidates[targetBeatmapSet]));
     }
 
     public WorkingBeatmap? PickLast()
     {
-        if (validSets.Count == 0)
+        if (beatmapCandidates.Count == 0)
             return null;
 
-        if (!visitedSets.TryDequeue(out var target))
-            target = validSets[0];
+        BeatmapSetInfo targetBeatmapSet;
 
-        return beatmapManager.GetWorkingBeatmap(target);
+        if (visitedBeatmapSets.Count == 0)
+        {
+            targetBeatmapSet = beatmapCandidates.Keys.First();
+        }
+        else
+        {
+            targetBeatmapSet = visitedBeatmapSets[^1];
+            visitedBeatmapSets.Remove(targetBeatmapSet);
+        }
+
+        return beatmapManager.GetWorkingBeatmap(sorter.Pick(beatmapCandidates[targetBeatmapSet]));
+    }
+
+    public WorkingBeatmap? PickFrom(BeatmapSetInfo beatmapSet)
+    {
+        return !beatmapCandidates.TryGetValue(beatmapSet, out var list)
+            ? null
+            : beatmapManager.GetWorkingBeatmap(sorter.Pick(list));
     }
 
     public void OnExternalChoose(WorkingBeatmap beatmap)
     {
-        var setInfo = beatmap.BeatmapInfo;
+        var setInfo = beatmap.BeatmapSetInfo;
 
-        if (validSets.Contains(setInfo))
-            visitedSets.Enqueue(setInfo);
+        if (beatmapCandidates.ContainsKey(setInfo))
+            visitedBeatmapSets.Add(setInfo);
     }
 }

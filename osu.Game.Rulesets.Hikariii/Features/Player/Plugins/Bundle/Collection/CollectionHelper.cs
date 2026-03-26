@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
         private bool trackChangedAfterDisable = true;
 
         private readonly BindableBool enableRandom = new();
-        private readonly IBeatmapSorter beatmapSorter = new MostDifficultFirstSorter();
+        private readonly Bindable<SortMethod> sortMethod = new Bindable<SortMethod>(SortMethod.MostDifficultFirst);
 
         [BackgroundDependencyLoader]
         private void load()
@@ -70,6 +70,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
             var config = (CollectionHelperConfigManager)DependenciesContainer.Get<LLinPluginManager>().GetConfigManager(Provider.Identifier());
             config.BindWith(CollectionSettings.EnablePlugin, Enabled);
             config.BindWith(CollectionSettings.EnableRandom, enableRandom);
+            config.BindWith(CollectionSettings.BeatmapSortMethod, sortMethod);
+
+            sortMethod.BindValueChanged(v =>
+            {
+                beatmapChooser?.SetCandidateSortMethod(v.NewValue);
+            });
 
             b.BindValueChanged(v =>
             {
@@ -110,6 +116,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
 
         private void onMvisExiting()
         {
+        }
+
+        public bool Play(BeatmapSetInfo beatmapSetInfo)
+        {
+            var beatmap = beatmapChooser?.PickFrom(beatmapSetInfo);
+            if (beatmap == null || beatmap == LLin?.Beatmap.Value) return false;
+
+            return changeBeatmap(beatmap);
         }
 
         public void Play(BeatmapInfo b)
@@ -212,32 +226,29 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
         {
             Logging.Log($"Now using {chooser} as collection beatmap chooser");
 
-            this.beatmapChooser?.Deactivate();
+            this.beatmapChooser?.ClearBeatmapCandidates();
             beatmapChooser = chooser;
 
-            chooser.Activate(cachedCollectionContent.Values);
+            chooser.SetBeatmapCandidates(cachedCollectionContent);
+            chooser.SetCandidateSortMethod(sortMethod.Value);
             chooser.OnExternalChoose(b.Value);
         }
 
         [Resolved]
         private BeatmapHashResolver hashResolver { get; set; } = null!;
 
-        private readonly Dictionary<BeatmapSetInfo, BeatmapInfo> cachedCollectionContent = [];
+        private readonly Dictionary<BeatmapSetInfo, List<BeatmapInfo>> cachedCollectionContent = [];
 
         private readonly List<string> cachedMD5List = [];
 
         /// <summary>
-        /// Sort beatmaps for the given beatmap collection.
+        /// Extract playable beatmaps from the given beatmap collection.
         /// </summary>
         /// <param name="collection">The beatmap collection to sort</param>
         /// <returns>
-        /// A dictionary of BeatmapSet <![CDATA[<->]]> Available Beatmaps. The most close to the user option at first, and The most far from the user option at last.
-        /// <br/>
-        /// For example: When the user decides to play the most difficult beatmap, the most difficult beatmap is at last.
-        /// One exception is when the user decides to play a random beatmap, the list will get shuffled each time this is being called.
+        /// A dictionary of BeatmapSet <![CDATA[<->]]> Available Beatmaps
         /// </returns>
-        /// <remarks>Currently we only sort beatmaps by difficulty, the most difficult at first, and the easiest at last.</remarks>
-        public Dictionary<BeatmapSetInfo, List<BeatmapInfo>> SortBeatmaps(BeatmapCollection collection)
+        public Dictionary<BeatmapSetInfo, List<BeatmapInfo>> ExtractBeatmaps(BeatmapCollection collection)
         {
             Dictionary<BeatmapSetInfo, List<BeatmapInfo>> beatmapDictionary = new();
 
@@ -258,9 +269,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
                 existing.Add(item);
             }
 
-            foreach (var keyValuePair in beatmapDictionary.Where(kvp => kvp.Value.Count > 1))
-                beatmapSorter.Sort(keyValuePair.Value);
-
             return beatmapDictionary;
         }
 
@@ -277,18 +285,18 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
                 return;
             }
 
-            beatmapChooser?.ClearValidBeatmaps();
+            beatmapChooser?.ClearBeatmapCandidates();
 
             cachedMD5List.Clear();
             cachedMD5List.AddRange(collection.BeatmapMD5Hashes);
 
-            var sortedBeatmaps = SortBeatmaps(collection);
+            var sortedBeatmaps = ExtractBeatmaps(collection);
 
             cachedCollectionContent.Clear();
             foreach (var keyValuePair in sortedBeatmaps)
-                cachedCollectionContent[keyValuePair.Key] = keyValuePair.Value[0];
+                cachedCollectionContent[keyValuePair.Key] = keyValuePair.Value;
 
-            beatmapChooser?.Activate(cachedCollectionContent.Values);
+            beatmapChooser?.SetBeatmapCandidates(sortedBeatmaps);
             beatmapChooser?.OnExternalChoose(b.Value);
         }
 

@@ -135,7 +135,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
 
             beatmapSets.Clear();
 
-            foreach (var keyValuePair in collectionHelper.SortBeatmaps(c))
+            foreach (var keyValuePair in collectionHelper.ExtractBeatmaps(c))
                 beatmapSets[keyValuePair.Key] = keyValuePair.Value;
 
             collectionName.Text = c.Name;

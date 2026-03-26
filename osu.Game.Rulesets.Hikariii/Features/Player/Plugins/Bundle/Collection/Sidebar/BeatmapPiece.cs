@@ -204,10 +204,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
 
         protected override bool OnClick(ClickEvent e)
         {
-            if (IsCurrent && b.Value != Beatmap)
-                collectionHelper.Play(ChildrenBeatmapInfos[0]);
+            if (IsCurrent)
+            {
+                if (!collectionHelper.Play(Beatmap.BeatmapSetInfo))
+                    content.Shake();
+            }
             else
+            {
                 content.Shake();
+            }
 
             return base.OnClick(e);
         }
