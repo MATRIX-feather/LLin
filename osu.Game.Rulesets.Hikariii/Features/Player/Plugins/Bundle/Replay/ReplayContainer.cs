@@ -44,12 +44,13 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
     {
         Alpha = 0.01f;
 
+        var mods = score.ScoreInfo.Mods;
         var beatmapInfo = score.ScoreInfo.BeatmapInfo;
         var workingBeatmap = beatmapManager.GetWorkingBeatmap(beatmapInfo);
-        var playableBeatmap = workingBeatmap.GetPlayableBeatmap(score.ScoreInfo.Ruleset);
+        var playableBeatmap = workingBeatmap.GetPlayableBeatmap(score.ScoreInfo.Ruleset, mods);
 
         var rulesetInstance = score.ScoreInfo.Ruleset.CreateInstance();
-        this.drawableRuleset = rulesetInstance.CreateDrawableRulesetWith(playableBeatmap, score.ScoreInfo.Mods);
+        this.drawableRuleset = rulesetInstance.CreateDrawableRulesetWith(playableBeatmap, mods);
         drawableRuleset.Clock = llin.AudioClock;
 
         playingContainer = new RulesetSkinProvidingContainer(rulesetInstance, playableBeatmap, workingBeatmap.Skin)
@@ -61,7 +62,7 @@ public partial class ReplayContainer : Container, ISamplePlaybackDisabler
         };
 
         this.scoreProcessor = rulesetInstance.CreateScoreProcessor();
-        scoreProcessor.Mods.Value = score.ScoreInfo.Mods;
+        scoreProcessor.Mods.Value = mods;
         scoreProcessor.ApplyBeatmap(playableBeatmap);
         scoreProcessor.Clock = llin.AudioClock;
         scoreProcessor.HasCompleted.BindValueChanged(v =>
