@@ -82,14 +82,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                         SpawnRatio = 1,
                         ExtraScaleRange = (0.2f, 2f)
                     },
-                    triangles ??= new TrianglesV1Wrapper(seed: 727 + llin?.SessionMagicCode ?? 0)
+                    triangles ??= new Triangles(seed: 727 + llin?.SessionMagicCode ?? 0)
                     {
                         Anchor = Anchor.BottomCentre,
                         Origin = Anchor.BottomCentre,
                         RelativeSizeAxes = Axes.Both,
                         TriangleScale = TriangleScale,
                         Colour = triangleColor,
-                        Alpha = 0
+                        Alpha = 0,
+                        SpawnRatio = 0.55f
                     }
                 ];
 
@@ -128,11 +129,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
                 if (trianglesV2 != null)
                     trianglesV2.Velocity = 1 + totalSum;
-            }
-
-            private partial class TrianglesV1Wrapper(int? seed = null) : Triangles(seed)
-            {
-                protected override float SpawnRatio { get; } = 0.55f;
             }
         }
 

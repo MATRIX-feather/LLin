@@ -1,6 +1,11 @@
 # Hikariii
 向osu!添加播放器以及Sayobot加速下载功能
 
+> [!CAUTION]
+>
+> 注意！
+> 根据 [Cai1Hsu/osu-plugins](https://github.com/Cai1Hsu/osu-plugins/issues/93) 以及 [ppy/osu](https://github.com/ppy/osu/issues/37540)，连接到 osu! 官方服务器时使用诸如 LLin 这类 ruleset 插件可能会导致你的账号被**封禁**。
+
 ## 安装方法
 先将你在[Release](https://github.com/MATRIX-feather/LLin/releases)或[Actions](https://github.com/MATRIX-feather/LLin/actions/new)下载到的文件解压，然后：
 1. 在游戏里点击`设置 ~> 打开 osu! 文件夹`
