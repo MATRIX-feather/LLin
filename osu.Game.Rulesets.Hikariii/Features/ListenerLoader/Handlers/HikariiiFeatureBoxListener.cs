@@ -244,12 +244,14 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
     private void overlayFadeOut()
     {
         dropdownContainer?.Hide();
+        clickToCloseTrigger.FadeOut(300);
         contentContainer.FadeOut(300);
     }
 
     private void overlayFadeIn()
     {
         dropdownContainer?.Show();
+        clickToCloseTrigger.FadeIn(300);
         contentContainer.FadeIn(300);
     }
 
