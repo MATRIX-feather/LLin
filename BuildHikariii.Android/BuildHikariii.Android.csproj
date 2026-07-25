@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Update="ppy.osu.Framework.Android" Version="2025.1028.0" />
+      <PackageReference Update="ppy.osu.Framework.Android" Version="2026.629.0" />
     </ItemGroup>
 
 </Project>
