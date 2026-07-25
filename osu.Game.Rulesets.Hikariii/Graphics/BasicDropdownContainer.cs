@@ -3,17 +3,13 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
-using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics;
 
-public partial class BasicDropdownContainer : OsuFocusedOverlayContainer
+public partial class BasicDropdownContainer : VisibilityContainer
 {
-    public override bool AcceptsFocus => true;
-    public override bool RequestsFocus => true;
-
     protected override void OnFocusLost(FocusLostEvent e)
     {
         if (e.NextFocused != null && e.NextFocused != this)
