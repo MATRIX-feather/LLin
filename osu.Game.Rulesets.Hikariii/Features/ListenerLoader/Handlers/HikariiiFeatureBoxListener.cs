@@ -13,12 +13,14 @@ using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osu.Game.Rulesets.Hikariii.Graphics;
 using osu.Game.Screens.Menu;
 using osu.Game.Screens.Select;
 using osuTK;
 using osuTK.Graphics;
+using IconButton = osu.Game.Rulesets.Hikariii.Graphics.IconButton;
 
 namespace osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
 
@@ -91,7 +93,8 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
                 contentContainer = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding(24)
+                    Padding = new MarginPadding(24),
+                    Depth = -1
                 }
             ]
         };
@@ -180,7 +183,26 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
                         ]
                     }
                 ]
-            }
+            },
+            new OsuAnimatedButton
+            {
+                Size = new Vector2(18),
+                Anchor = Anchor.TopRight,
+                Origin = Anchor.TopRight,
+                //Margin = new MarginPadding(24), //24 - 24 -> We don't need it anymore.
+                Action = aboutHikariiiOverlay.Hide,
+                Children =
+                [
+                    new SpriteIcon
+                    {
+                        Icon = FontAwesome.Solid.Times,
+                        RelativeSizeAxes = Axes.Both,
+                        Scale = new Vector2(0.8f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre
+                    }
+                ]
+            },
         ]);
 
         links.AddText("连接到 osu! 官方服务器时使用诸如 Hikariii 这类 ruleset 插件可能会导致你的账号被 [[ 封禁 ]]");

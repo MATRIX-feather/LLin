@@ -6,7 +6,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
@@ -121,25 +120,6 @@ public partial class AboutHikariiiDropdownContainer : BasicDropdownContainer
 
         ContentContainer.AddRange(
         [
-            new OsuAnimatedButton
-            {
-                Size = new Vector2(18),
-                Anchor = Anchor.TopRight,
-                Origin = Anchor.TopRight,
-                Margin = new MarginPadding(24),
-                Action = this.Hide,
-                Children =
-                [
-                    new SpriteIcon
-                    {
-                        Icon = FontAwesome.Solid.Times,
-                        RelativeSizeAxes = Axes.Both,
-                        Scale = new Vector2(0.8f),
-                        Anchor = Anchor.Centre,
-                        Origin = Anchor.Centre
-                    }
-                ]
-            },
             new FillFlowContainer
             {
                 RelativeSizeAxes = Axes.Both,
