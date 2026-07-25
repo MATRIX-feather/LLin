@@ -5,9 +5,13 @@ RUNTIME="${2:-net8.0}"
 
 if [ "${RUNTIME}" == "windows" ];then
     RUNTIME="net8.0-windows10.0.22621.0";
+elif [ "${RUNTIME}" == "android" ];then
+    RUNTIME="net8.0-android";
 fi
 
 readonly RUNTIME
+
+echo "Runtime: ${RUNTIME}"
 
 function die()
 {

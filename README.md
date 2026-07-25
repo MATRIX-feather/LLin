@@ -13,6 +13,48 @@
 4. 重启osu!
 5. 完成！
 
+## 有关构建
+
+### 通用版本（无 Windows 集成）
+若要构建通用版本：
+```
+dotnet publish BuildHikariii -c Release
+```
+
+需要从 publish 中提取的文件在 [package.sh](./package.sh) 的 `function main()` 中有提到。
+
+### Windows
+若要构建带有 Windows 支持的 Hikariii：
+```
+dotnet publish BuildHikariii.Windows -c Release
+```
+
+需要从 publish 中提取的文件在 [package.sh](./package.sh) 的 `function main()` 中有提到。
+
+### Android
+如果你遇到了类似以下内容的 Android 版本的构建问题，请试着使用 .NET 8.0.423 SDK：
+```
+1.
+---
+/LLin/BuildHikariii.Android/BuildHikariii.Android.csproj : error NU1101: 找不到包 Microsoft.NETCore.App.Runtime.linux-bionic-x86。源 /usr/lib64/dotnet/library-packs, nuget.org 中不存在具有此 ID 的包
+/LLin/BuildHikariii.Android/BuildHikariii.Android.csproj : error NU1101: 找不到包 Microsoft.NETCore.App.Runtime.linux-bionic-arm。源 /usr/lib64/dotnet/library-packs, nuget.org 中不存在具有此 ID 的包
+---
+
+2.
+---
+/LLin/LLin.OSIntegrations/Linux/DBus/Services/FreedesktopSettingsAccessor.cs(10,14): error CS0246: 未能找到类型或命名空间名“OrgFreedesktopPortalSettingsProxy”(是否缺少 using 指令或程序集引用?) [/home/neko/repo/LLin/LLin.OSIntegrations/LLin.OSIntegrations.csproj::TargetFramework=net8.0]
+---
+
+3.
+---
+/LLin/LLin.OSIntegrations/Linux/DBus/Services/Mpris/MprisService.cs(81,13): error CS0246: 未能找到类型或命名空间名“PathHandler”(是否缺少 using 指令或程序集引用?) [/home/neko/repo/LLin/LLin.OSIntegrations/LLin.OSIntegrations.csproj::TargetFramework=net8.0]
+---
+```
+
+你可以将 global-android.json 重命名为 global.json 来强制使用 8.0.423。
+
+需要从 publish 中提取的文件在 [package.sh](./package.sh) 的 `function main()` 中有提到。
+
 ## 食用指南
 ### 下载加速
 点击任意未下载谱面的预览按钮（"`▶`"），待预览加载完毕后将会在左上角自动显示橙色的下载加速的选项。
