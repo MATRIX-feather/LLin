@@ -1,6 +1,5 @@
 using System;
 using osu.Framework.Graphics;
-using osu.Framework.Input.Events;
 using osu.Game.Graphics.Containers;
 
 namespace osu.Game.Rulesets.Hikariii.Features;

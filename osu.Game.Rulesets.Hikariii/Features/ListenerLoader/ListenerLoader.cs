@@ -40,8 +40,7 @@ public partial class ListenerLoader : AbstractHandler
         return
         [
             new HikariiiFeatureBoxListener(),
-            new ScreenHandlerManager(),
-            new PreviewTrackHandler()
+            new ScreenHandlerManager()
         ];
     }
 

@@ -3,7 +3,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Configuration;
-using osu.Game.Rulesets.Hikariii.Features.DownloadAccel.AccelUtils;
 using Tmds.DBus.Protocol;
 
 namespace osu.Game.Rulesets.Hikariii.Features;
@@ -17,8 +16,6 @@ public partial class FeatureManager : CompositeDrawable
     [BackgroundDependencyLoader]
     private void load(OsuConfigManager osuConfig)
     {
-        AccelExtensionsUtil.SetOsuConfigManager(osuConfig);
-
         try
         {
             tryDbus();
