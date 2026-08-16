@@ -33,10 +33,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             //Other Settings
             SetDefault(MSetting.UseAccelForDefault, true);
             SetDefault(MSetting.DoNotShowDisclaimer, false);
-            SetDefault(MSetting.AccelSource, "https://txy1.sayobot.cn/beatmaps/download/[NOVIDEO_SAYO]/[BID]");
-            SetDefault(MSetting.CoverAccelSource, "https://a.sayobot.cn/beatmaps/[BID]/covers/cover.jpg"); //不加.jpg日志会刷Texture could not be loaded via STB
-            SetDefault(MSetting.TrackPreviewAccelSource, "https://a.sayobot.cn/preview/[BID].mp3");
-            SetDefault(MSetting.UseAccelSetToOldOption, false);
 
             //UI Settings
             SetDefault(MSetting.OptUI, true);
@@ -165,10 +161,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
         EnableTray,
         EnableSystemNotifications,
         TrayIconName,
-        AccelSource,
-        UseAccelSetToOldOption,
-        CoverAccelSource,
-        TrackPreviewAccelSource,
         InGameLeaderboardState,
         MvisAutoVSync,
         MvisPlayerSettingsMaxWidth,
