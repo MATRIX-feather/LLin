@@ -12,14 +12,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio
     internal class OsuAudioPluginProvider : LLinPluginProvider
     {
         private readonly MConfigManager config;
-        private readonly LLinPluginManager plmgr;
 
         public override PluginDescription GetDescription() => new(LLinPluginNameString.OsuMusicController, "集成 osu 音频控制", ["mfosu"]);
 
-        internal OsuAudioPluginProvider(MConfigManager config, LLinPluginManager plmgr)
+        internal OsuAudioPluginProvider(MConfigManager config)
         {
             this.config = config;
-            this.plmgr = plmgr;
         }
 
         public override LLinPlugin CreatePlugin() => new OsuMusicControllerWrapper(this);

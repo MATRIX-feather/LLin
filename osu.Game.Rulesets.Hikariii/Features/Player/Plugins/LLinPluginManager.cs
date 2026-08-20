@@ -170,7 +170,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             var bundledPlugins = new LLinPluginProvider[]
             {
                 new DummyBasePluginProvider(config, this),
-                new OsuAudioPluginProvider(config, this),
+                new OsuAudioPluginProvider(config),
                 new FallbackFunctionBarProvider(),
 
                 new SandboxPanelProvider(),
