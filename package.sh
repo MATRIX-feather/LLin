@@ -102,6 +102,8 @@ function main()
         archive_name="${ARCHIVE:-Hikariii.${RUNTIME}}.zip"
         zip -r "${TARGET_DIR}/${archive_name}" .;
         log "Archive: ${TARGET_DIR}/${archive_name}"
+
+        log "Archive sha256sum: $(sha256sum "${TARGET_DIR}/${archive_name}" | cut -d ' ' -f 1)"
     fi
 }
 
