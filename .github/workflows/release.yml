@@ -1,0 +1,118 @@
+name: Release
+on:
+  push:
+    branches: ['ruleset', 'ci']
+  pull_request:
+    branches: ['ruleset']
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build Windows
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.x']
+
+    env:
+      ARTIFACT_PATH: |
+        assemble-temp/*
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet (${{ matrix.dotnet-version }})
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Build Hikariii
+        run: dotnet publish BuildHikariii.Windows -c Release
+
+      - name: Copy artifacts
+        run: |
+          env ARCHIVE=Hikariii.WindowsDesktop ./package.sh BuildHikariii.Windows windows
+
+      - name: Upload Release Assets
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: 'target/Hikariii.WindowsDesktop.zip'
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.424']
+
+    env:
+      ARTIFACT_PATH: |
+        assemble-temp/*
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet (${{ matrix.dotnet-version }})
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Prepare .NET workload
+        run: |
+          cp global-android.json global.json || exit 1
+          echo ".NET Version:"
+          dotnet --version
+          sudo dotnet workload restore || exit 2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build Hikariii (Android)
+        run: dotnet publish BuildHikariii.Android -c Release
+
+      - name: Copy artifacts
+        run: |
+          env ARCHIVE=Hikariii.Android ./package.sh BuildHikariii.Android android
+
+      - name: Upload Release Assets
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: 'target/Hikariii.Android.zip'
+
+  build-common:
+    name: Build Common
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.x']
+
+    env:
+      ARTIFACT_PATH: |
+        assemble-temp/*
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet (${{ matrix.dotnet-version }})
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Build Hikariii (Common)
+        run: dotnet publish BuildHikariii -c Release
+
+      - name: Copy artifacts
+        run: |
+          env ARCHIVE=Hikariii.Desktop ./package.sh BuildHikariii
+
+      - name: Upload Release Assets
+        uses: AButler/upload-release-assets@v4.0
+        with:
+          files: 'target/Hikariii.Desktop.zip'
+
