@@ -62,9 +62,9 @@ jobs:
 
       - name: Prepare .NET workload
         run: |
+          cp global-android.json global.json || exit 1
           echo ".NET Version:"
           dotnet --version
-          cp global-android.json global.json || exit 1
           sudo dotnet workload restore || exit 2
 
       - name: Set up JDK 17
