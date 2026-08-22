@@ -3,6 +3,8 @@
 readonly DIR="${1:-???}"
 RUNTIME="${2:-net8.0}"
 
+readonly COPYONLY="${COPYONLY:-false}"
+
 if [ "${RUNTIME}" == "windows" ];then
     RUNTIME="net8.0-windows10.0.22621.0";
 elif [ "${RUNTIME}" == "android" ];then
@@ -87,7 +89,11 @@ function main()
 
     cd "${OUTPUT_DIR}" || die "Why?!"
 
-    zip -r "${TARGET_DIR}/Hikariii.${RUNTIME}.zip" .
+    if "$COPYONLY"; then
+        echo "Do copy only, skipping zip";
+    else
+        zip -r "${TARGET_DIR}/Hikariii.${RUNTIME}.zip" .;
+    fi
 }
 
 init;

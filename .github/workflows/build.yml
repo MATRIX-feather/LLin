@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build
+  build-windows:
+    name: Build Windows
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,14 +17,90 @@ jobs:
 
     env:
       ARTIFACT_PATH: |
-        tmp/M.*.dll
-        tmp/*/M.*.dll
-        tmp/LLin.*.dll
-        tmp/osu.Game.Rulesets.*.dll
-        tmp/Tmds.DBus.*.dll
-        tmp/Microsoft.Windows.SDK.NET.dll
-        tmp/WinRT.Runtime.dll
-        tmp/README.md
+        assemble-temp/*
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet (${{ matrix.dotnet-version }})
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Build Hikariii (Windows)
+        run: dotnet publish BuildHikariii.Windows -c Release
+
+      - name: Copy artifacts (Windows)
+        run: |
+          env COPYONLY=true ./package.sh BuildHikariii.Windows windows
+
+      - name: Upload artifacts (Windows)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Hikariii.WindowsDesktop
+          path: ${{ env.ARTIFACT_PATH }}
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.424']
+
+    env:
+      ARTIFACT_PATH: |
+        assemble-temp/*
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet (${{ matrix.dotnet-version }})
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Prepare .NET workload
+        run: |
+          echo ".NET Version:"
+          dotnet --version
+          cp global-android.json global.json || exit 1
+          sudo dotnet workload restore || exit 2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # This defaults to ~/.android/sdk
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Build Hikariii (Android)
+        run: dotnet publish BuildHikariii.Android -c Release -p:AndroidSdkDirectory="$HOME/.android/sdk"
+
+      - name: Copy artifacts (Android)
+        run: |
+          env COPYONLY=true ./package.sh BuildHikariii.Android android
+
+      - name: Upload artifacts (Android)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Hikariii.Android
+          path: ${{ env.ARTIFACT_PATH }}
+
+  build-common:
+    name: Build Common
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.x']
+
+    env:
+      ARTIFACT_PATH: |
+        assemble-temp/*
 
     steps:
       - uses: actions/checkout@v4
@@ -39,26 +115,10 @@ jobs:
 
       - name: Copy artifacts (Common)
         run: |
-          cp -r BuildHikariii/bin/Release/net8.0/publish tmp
-          cp README.md tmp
+          env COPYONLY=true ./package.sh BuildHikariii
 
       - name: Upload artifacts (Common)
         uses: actions/upload-artifact@v4
         with:
-          name: common
-          path: ${{ env.ARTIFACT_PATH }}
-
-      - name: Build Hikariii (Windows)
-        run: dotnet publish BuildHikariii.Windows -c Release
-
-      - name: Copy artifacts (Windows)
-        run: |
-          rm -rf tmp
-          cp -r BuildHikariii.Windows/bin/Release/net8.0*/publish tmp
-          cp README.md tmp
-
-      - name: Upload artifacts (Windows)
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows
+          name: Hikariii.Desktop
           path: ${{ env.ARTIFACT_PATH }}
