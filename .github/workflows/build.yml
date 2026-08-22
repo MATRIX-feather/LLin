@@ -78,7 +78,7 @@ jobs:
         with:
           key: ${{ runner.os }}-${{ env.cache-name }}-android-sdk-${{ hashFiles('BuildHikariii.Android/BuildHikariii.Android.csproj') }}
           path: |
-            ~/.android
+            ${{ env.HOME }}/.android
 
       # This defaults to ~/.android/sdk
       - name: Setup Android SDK
