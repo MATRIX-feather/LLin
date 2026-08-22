@@ -36,6 +36,7 @@ jobs:
         uses: AButler/upload-release-assets@v4.0
         with:
           files: 'target/Hikariii.WindowsDesktop.zip'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-android:
     name: Build Android
@@ -81,6 +82,7 @@ jobs:
         uses: AButler/upload-release-assets@v4.0
         with:
           files: 'target/Hikariii.Android.zip'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
   build-common:
     name: Build Common
@@ -113,4 +115,5 @@ jobs:
         uses: AButler/upload-release-assets@v4.0
         with:
           files: 'target/Hikariii.Desktop.zip'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
