@@ -12,8 +12,8 @@
   <ItemGroup Label="Package References">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
-    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2026.702.1" />
-    <PackageReference Include="ppy.osu.Game.Rulesets.Taiko" Version="2026.702.1" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2026.730.0" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Taiko" Version="2026.730.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuildHikariii\BuildHikariii.csproj" />

@@ -3,6 +3,7 @@ using System.Reflection;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays;
@@ -111,5 +112,7 @@ namespace osu.Game.Rulesets.Hikariii.Graphics.Settings
             targetMethod.Invoke(settingsOverlay, [this.subPanel]);
             this.Schedule(() => contentContainer.Add(subPanel));
         }
+
+        protected override LocalisableString Header => "Hikariii";
     }
 }
