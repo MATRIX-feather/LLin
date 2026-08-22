@@ -18,8 +18,6 @@ public partial class HikariiiSettingsSubPanel : SettingsSubPanel
     [BackgroundDependencyLoader]
     private void load(LLinPluginManager manager)
     {
-        AddSection(new GeneralHikariiiSettingsSection());
-
         foreach (var pl in manager.GetAllPluginProviders().Values.Where(pl => manager.GetSettingsFor(pl)?.Length > 0))
             AddSection(new PluginSettingsSubsection(pl));
     }
