@@ -72,22 +72,20 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Cache Android SDK
-        uses: actions/cache@v4
-        with:
-          key: ${{ runner.os }}-${{ env.cache-name }}-android-sdk-${{ hashFiles('BuildHikariii.Android/BuildHikariii.Android.csproj') }}
-          path: |
-            ${{ env.HOME }}/.android/sdk
-            ~/.android/sdk
-            $HOME/.android/sdk
+      
+      #- name: Cache Android SDK
+      #  uses: actions/cache@v4
+      #  with:
+      #    key: ${{ runner.os }}-${{ env.cache-name }}-android-sdk-${{ hashFiles('BuildHikariii.Android/BuildHikariii.Android.csproj') }}
+      #    path: |
+      #      ~/.android
 
       # This defaults to ~/.android/sdk
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
+      #- name: Setup Android SDK
+      #  uses: android-actions/setup-android@v4
 
       - name: Build Hikariii (Android)
-        run: dotnet publish BuildHikariii.Android -c Release -p:AndroidSdkDirectory="$HOME/.android/sdk"
+        run: dotnet publish BuildHikariii.Android -c Release # -p:AndroidSdkDirectory="$HOME/.android/sdk"
 
       - name: Copy artifacts (Android)
         run: |
