@@ -1,7 +1,7 @@
 name: Build
 on:
   push:
-    branches: ['ruleset']
+    branches: ['ruleset', 'ci']
   pull_request:
     branches: ['ruleset']
   workflow_dispatch:
