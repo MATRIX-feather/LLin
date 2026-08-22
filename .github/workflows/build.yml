@@ -73,6 +73,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Cache Android SDK
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-${{ env.cache-name }}-android-sdk-${{ hashFiles('BuildHikariii.Android/BuildHikariii.Android.csproj') }}
+          path: |
+            ~/.android
+
       # This defaults to ~/.android/sdk
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
