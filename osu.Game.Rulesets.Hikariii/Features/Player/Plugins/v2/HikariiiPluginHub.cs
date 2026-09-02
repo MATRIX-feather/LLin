@@ -29,6 +29,8 @@ public partial class HikariiiPluginHub : CompositeDrawable, IHikariiiPluginManag
         return providers.GetValueOrDefault(id);
     }
 
+    public Action<(string, IHikariiiPluginProvider)>? InternalDebug_OnNewProviderRegister;
+
     public bool TryRegisterPlugin(IHikariiiPluginProvider provider, string id)
     {
         if (GetPluginProvider(id) != null)
@@ -48,6 +50,7 @@ public partial class HikariiiPluginHub : CompositeDrawable, IHikariiiPluginManag
 
         providers[id] = provider;
 
+        InternalDebug_OnNewProviderRegister?.Invoke((id, provider));
         Logging.Log($"Registered plugin '{id}' for {provider}#{provider.GetHashCode()}");
         return true;
     }

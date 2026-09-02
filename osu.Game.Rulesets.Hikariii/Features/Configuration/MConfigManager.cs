@@ -13,6 +13,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Configuration
 {
+    [Obsolete("This is gonna be removed in future versions")]
     public class MConfigManager : IniConfigManager<MSetting>
     {
         protected override string Filename => "mf.ini";

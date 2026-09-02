@@ -2,27 +2,59 @@ using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Loader;
 using osu.Game.Tests.Visual;
 
-namespace osu.Game.Rulesets.Hikariii.Tests;
+namespace osu.Game.Rulesets.Hikariii.Tests.HikariiiPlayerV2;
 
 public partial class TestPluginHubV2 : OsuTestScene
 {
     private HikariiiPluginHub pluginHub;
+    private IHikariiiPluginManager hubAsInterface;
+    private FillFlowContainer pluginList;
 
     [BackgroundDependencyLoader]
     private void load(Storage storage)
     {
         Dependencies.Cache(storage);
 
-        Add(pluginHub = new HikariiiPluginHub());
+        Add(pluginList = new FillFlowContainer
+        {
+            Direction = FillDirection.Vertical,
+            RelativeSizeAxes = Axes.X,
+            AutoSizeAxes = Axes.Y,
+        });
+
+        Add(pluginHub = new HikariiiPluginHub
+        {
+            InternalDebug_OnNewProviderRegister = pair =>
+            {
+                pluginList.Add(new OsuSpriteText
+                {
+                    Text = $"ID {pair.Item1} Class {pair.Item2}"
+                });
+            }
+        });
+
+        hubAsInterface = pluginHub;
         Logging.Log("OK Added plugin Hub");
 
         AddStep("Load builtin plugin providers", loadBuiltinProviders);
+
+        AddStep("Foreach create drawable plugin", () =>
+        {
+            hubAsInterface.GetAllPluginProviders()
+                          .ForEach(pair => pluginList.Add(new OsuSpriteText
+                          {
+                              Text = $"id {pair.Key} Drawable {pair.Value.CreateDrawablePlugin()}"
+                          }));
+        });
     }
 
     [Test]
