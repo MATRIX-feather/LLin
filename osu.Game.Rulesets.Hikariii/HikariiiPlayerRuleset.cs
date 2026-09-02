@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Hikariii
 {
     public partial class HikariiiPlayerRuleset : Ruleset
     {
-        public override string Description => "Hikariii (下载加速&音乐播放器&Gosu支持)";
+        public override string Description => "Hikariii";
 
         public static readonly string SHORT_NAME = "igplayerruleset";
 

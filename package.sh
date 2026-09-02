@@ -3,6 +3,9 @@
 readonly DIR="${1:-???}"
 RUNTIME="${2:-net8.0}"
 
+readonly COPYONLY="${COPYONLY:-false}" # TRUE if we should not create zip archive
+readonly ARCHIVE # Name of the zip archive
+
 if [ "${RUNTIME}" == "windows" ];then
     RUNTIME="net8.0-windows10.0.22621.0";
 elif [ "${RUNTIME}" == "android" ];then
@@ -11,7 +14,10 @@ fi
 
 readonly RUNTIME
 
-echo "Runtime: ${RUNTIME}"
+function log()
+{
+    echo "--> $*"
+}
 
 function die()
 {
@@ -51,7 +57,7 @@ function init()
     export BUILD_RESULT_DIR="${PWD}/${DIR}/bin/Release/${RUNTIME}"
     readonly BUILD_RESULT_DIR
 
-    echo "Final directory is '${BUILD_RESULT_DIR}'"
+    log "Final directory is '${BUILD_RESULT_DIR}'"
 }
 
 function copy()
@@ -72,22 +78,33 @@ function copy()
 
 function main()
 {
+    log "Runtime: ${RUNTIME}"
+
     copy "LLin.OSIntegrations.dll"
     copy "Tmds.DBus.Protocol.dll"
     copy "M.Resources.dll"
     copy "osu.Game.Rulesets.Hikariii.dll"
     copy "zh/M.Resources.resources.dll"
 
-    copy "Microsoft.Windows.SDK.NET.dll" || echo "Ignoring WindowsSDK..."
-    copy "WinRT.Runtime.dll" || echo "Ignoring WinRT..."
+    copy "Microsoft.Windows.SDK.NET.dll" || log "Ignoring WindowsSDK..."
+    copy "WinRT.Runtime.dll" || log "Ignoring WinRT..."
 
-    cp "${PWD}/README.md" "${OUTPUT_DIR}" || echo "Unable to copy README.md, ignoring..."
+    cp "${PWD}/README.md" "${OUTPUT_DIR}" || log "Unable to copy README.md, ignoring..."
 
     local lastPWD="${PWD}"
 
     cd "${OUTPUT_DIR}" || die "Why?!"
 
-    zip -r "${TARGET_DIR}/Hikariii.${RUNTIME}.zip" .
+    if "$COPYONLY"; then
+        log "Do copy only, skipping zip";
+    else
+        log "Make archive"
+        archive_name="${ARCHIVE:-Hikariii.${RUNTIME}}.zip"
+        zip -r "${TARGET_DIR}/${archive_name}" .;
+        log "Archive: ${TARGET_DIR}/${archive_name}"
+
+        log "Archive sha256sum: $(sha256sum "${TARGET_DIR}/${archive_name}" | cut -d ' ' -f 1)"
+    fi
 }
 
 init;

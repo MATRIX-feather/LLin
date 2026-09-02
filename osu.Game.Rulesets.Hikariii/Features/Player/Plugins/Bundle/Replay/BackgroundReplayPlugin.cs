@@ -197,6 +197,9 @@ public partial class BackgroundReplayPlugin : BindableControlledPlugin
 
     private Score? tryAutoMod(WorkingBeatmap workingBeatmap)
     {
+        if (!workingBeatmap.BeatmapInfo.Ruleset.Available)
+            return null;
+
         var ruleset = workingBeatmap.BeatmapInfo.Ruleset.CreateInstance();
         var autoPlay = ruleset.GetAutoplayMod();
 
