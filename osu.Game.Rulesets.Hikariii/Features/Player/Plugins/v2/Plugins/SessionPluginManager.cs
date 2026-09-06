@@ -56,11 +56,20 @@ public partial class SessionPluginManager : CompositeDrawable
         ];
     }
 
+    public DrawableHikariiiPlugin? GetPlugin(string id)
+    {
+        return trackingPlugins!.GetValueOrDefault(id, null);
+    }
+
+    public DrawableHikariiiPlugin GetPluginOrThrow(string id)
+    {
+        return GetPlugin(id) ?? throw new Exception($"Could not find plugin with id {id}");
+    }
+
     public X? GetPluginWithType<X>(string id)
         where X : class
     {
-        var plugin = trackingPlugins!.GetValueOrDefault(id, null);
-        return plugin as X;
+        return GetPlugin(id) as X;
     }
 
     public X GetPluginWithTypeOrThrow<X>(string id)

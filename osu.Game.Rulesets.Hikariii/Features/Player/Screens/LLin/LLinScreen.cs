@@ -3,12 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
-using osu.Framework.Development;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Graphics.Containers;
@@ -169,34 +169,34 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 changeAudioControlProvider(OsuAudio.ID);
         }
 
-        private void changeAudioControlProvider(string? name)
+        private void changeAudioControlProvider(string? next)
         {
-            var provider = pluginManager.GetPluginProvider(name ?? "") ?? pluginManager.GetPluginProviderOrThrow(OsuAudio.ID);
-            name = provider.GetID();
+            var provider = pluginManager.GetPluginProvider(next ?? "") ?? pluginManager.GetPluginProviderOrThrow(OsuAudio.ID);
+            next = provider.GetID();
             if (provider.CreateDrawablePlugin() is not IProvideAudioControlPlugin)
-                throw new InvalidOperationException($"The given plugin {name} does not offer audio control feature.");
+                throw new InvalidOperationException($"The given plugin {next} does not offer audio control feature.");
 
-            var plugin = sessionPluginManager.EnablePlugin(name);
-            var pacp = plugin as IProvideAudioControlPlugin ?? throw new Exception("Why could this happen?");
-
-            //如果没找到(为null)，则解锁Beatmap.Disabled
-            Beatmap.Disabled = !pacp.AllowOsuControls;
-
-            sessionPluginManager.DisablePlugin(audioControlName.Value);
+            string last = audioControlName.Value;
 
             //todo: maybe remove this because we now remove the drawable plugin entirely from the player
             //设置当前控制插件IsCurrent为false
-            if (audioControlPlugin != null)
-                audioControlPlugin.IsCurrent = false;
+            var lastAudioController = audioControlPlugin;
+            if (lastAudioController != null)
+                lastAudioController.IsCurrent = false;
+
+            sessionPluginManager.DisablePlugin(last);
+
+            var plugin = sessionPluginManager.EnablePlugin(next);
+            var nextAsController = plugin as IProvideAudioControlPlugin ?? throw new Exception("Why could this happen?");
+
+            //如果没找到(为null)，则解锁Beatmap.Disabled
+            Beatmap.Disabled = !nextAsController.AllowOsuControls;
 
             //切换并设置当前控制插件IsCurrent为true
-            audioControlPlugin = pacp;
-            pacp!.IsCurrent = true;
+            audioControlPlugin = nextAsController;
+            nextAsController!.IsCurrent = true;
 
-            audioControlName.Value = name;
-
-            if (audioControlPlugin is Drawable nextAsDrawable && nextAsDrawable.Parent == null)
-                AddInternal(nextAsDrawable);
+            audioControlName.Value = next;
             //Logging.Log($"更改控制插件到{audioControlProvider}");
         }
 
@@ -232,12 +232,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         private IFunctionBarProvider? currentFunctionBar { get; set; }
 
-        private void changeFunctionBarProvider(string? name)
+        private void changeFunctionBarProvider(string? next)
         {
-            var provider = pluginManager.GetPluginProvider(name ?? "") ?? pluginManager.GetPluginProviderOrThrow(BuiltinControlBar.ID);
-            name = provider.GetID();
+            var provider = pluginManager.GetPluginProvider(next ?? "") ?? pluginManager.GetPluginProviderOrThrow(BuiltinControlBar.ID);
+            next = provider.GetID();
             if (provider.CreateDrawablePlugin() is not IFunctionBarProvider)
-                throw new InvalidOperationException($"The given plugin {name} does not offer function provider feature.");
+                throw new InvalidOperationException($"The given plugin {next} does not offer function provider feature.");
 
             //todo: FIXME investigate this.
             //不要在此功能条禁用时再调用onFunctionBarPluginDisable
@@ -249,22 +249,24 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     RemoveBottomSafeArea(oldAsPlugin);
             }
 
-            sessionPluginManager.DisablePlugin(name);
-            var plugin = sessionPluginManager.EnablePlugin(name);
+            sessionPluginManager.DisablePlugin(next);
+            var plugin = sessionPluginManager.EnablePlugin(next);
             var newProvider = plugin as IFunctionBarProvider ?? throw new Exception("Why could this happen?");
 
             //todo: FIXME investigate this.
             //更新控制按钮
-            newProvider.SetFunctionControls(functionControls);
+            Schedule(() => newProvider.SetFunctionControls(functionControls));
             newProvider.OnDisable += onFunctionBarDisable;
 
             //更新currentFunctionBarProvider
             currentFunctionBar = newProvider;
 
-            functionBarName.Value = name;
+            functionBarName.Value = next;
 
             if (controlDisplayTemp.Value > 0f)
                 newProvider.ShowFunctionControl();
+
+            sessionPluginManager.EnablePlugin(next);
             //Logging.Log($"更改底栏到{newProvider}");
         }
 
@@ -472,27 +474,31 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         #region 插件加载、卸载
 
-        private readonly List<LLinPlugin> loadingList = new List<LLinPlugin>();
+        private readonly List<object> loadingList = new List<object>();
 
-        public bool UnmarkFromLoading(LLinPlugin pl)
+        private bool unmarkFromLoading(object pl)
         {
             if (!loadingList.Contains(pl)) return false;
 
             loadingList.Remove(pl);
 
             // workaround: Dispose时会对loadingIndicator作变换，如果我们不在更新线程上，则不要执行
-            if (loadingList.Count == 0 && ThreadSafety.IsUpdateThread)
-                loadingIndicator.Hide();
+            if (loadingList.Count == 0)
+                Schedule(loadingIndicator.Hide);
+
+            Logging.Log($"Load list remaining {loadingList.Count}.");
 
             return true;
         }
 
-        public bool MarkAsLoading(LLinPlugin pl)
+        private bool markAsLoading(object pl)
         {
             if (loadingList.Contains(pl)) return false;
 
             loadingList.Add(pl);
-            loadingIndicator.Show();
+            Schedule(loadingIndicator.Show);
+
+            Logging.Log($"Load list remaining {loadingList.Count}.");
             return true;
         }
 
@@ -877,6 +883,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 sessionPluginManager
             ]);
 
+            loadingIndicator.Hide();
+
             backgroundLayer.Add(backgroundTriangles);
 
             //配置绑定/设置
@@ -900,8 +908,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 Logging.LogError(e, "无法绑定Framework设置");
             }
 
-            Logging.Log(level: LogLevel.Important, message: "FIXME: we are not loading plugins as it is not finished");
-
             //加载插件
             foreach (var provider in sessionPluginManager.AllowedPluginProviders())
             {
@@ -909,62 +915,18 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
                 try
                 {
-                    //决定要把插件放在何处
-                    switch (pl.ContentLayer)
-                    {
-                        case ContentLayerType.Background:
-                            backgroundLayer.Add(pl);
-                            break;
-
-                        case ContentLayerType.Foreground:
-                            foregroundLayer.Add(pl);
-                            break;
-
-                        case ContentLayerType.Overlay:
-                            Logging.Log("FIXME: stub Add plugin to Overlay layer");
-                            break;
-                    }
-
-                    var pluginSidebarPage = pl.CreateDrawablePluginPage();
-
-                    //如果插件有侧边栏页面
-                    if (pluginSidebarPage == null) continue;
-
-                    Logging.Log(level: LogLevel.Important, message: "FIXME: fix sidebar page");
-                    /*sidebar.Add(pluginSidebarPage);
-                    var btn = pluginSidebarPage.GetFunctionEntry();
-
-                    //如果插件的侧边栏页面有入口按钮
-                    if (btn != null)
-                    {
-                        btn.Action = () =>
-                        {
-                            sidebar.ShowComponent(pluginSidebarPage, true);
-                            return true;
-                        };
-                        btn.Description += $" ({pluginSidebarPage.ShortcutKey})";
-
-                        functionControls.Add(btn);
-                    }
-
-                    //如果插件的侧边栏页面有调用快捷键
-                    if (pluginSidebarPage.ShortcutKey != Key.Unknown)
-                    {
-                        RegisterPluginKeybind(pl, new PluginKeybind(pluginSidebarPage.ShortcutKey, () =>
-                        {
-                            if (!pl.Disabled.Value) btn?.Active();
-                        }));
-                    }*/
+                    sessionPluginManager.EnablePlugin(provider.GetID());
+                    loadPluginAsync((provider.GetID(), pl)).Wait();
+                    //LoadComponent(pl);
+                    //addPlugin(provider.GetID(), pl);
                 }
                 catch (Exception e)
                 {
-                    Logging.Log($"在添加 {provider.GetID()} 时出现问题, 请联系你的插件提供方: {e.Message}", level: LogLevel.Important);
-                    Logging.Log(e.Message);
-                    Logging.Log(e.StackTrace);
+                    Logging.LogError(e, $"Failed to load drawable plugin upon startup {provider.GetID()}.");
                 }
             }
 
-            sessionPluginManager.OnPluginEnable += loadPluginAsync;
+            sessionPluginManager.OnPluginEnable += pair => loadPluginAsync(pair);
             sessionPluginManager.OnPluginDisable += discardPlugin;
 
             bgBlur.BindValueChanged(v => updateBackground(Beatmap.Value));
@@ -1017,15 +979,109 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             blackBackground.BindValueChanged(_ => applyBackgroundBrightness());
         }
 
+        //region plugin load/discard
+
+        private readonly IDictionary<string, CancellationTokenSource> cancellationTokenSources = new ConcurrentDictionary<string, CancellationTokenSource>();
+
+        // Remove a disabled plugin from the player
         private void discardPlugin((string id, DrawableHikariiiPlugin plugin) pair)
         {
+            string id = pair.id;
+            var plugin = pair.plugin;
+
+            if (plugin.Parent is Container container)
+                container.Remove(plugin, true);
+            else if (plugin.Parent != null)
+                throw new InvalidOperationException($"PANIC! Parent of the drawable plugin {plugin} is not a container, this should not happen! is the plugin already disabled?");
+
             Logging.Log(level: LogLevel.Important, message: "FIXME: implement late plugin discard");
         }
 
-        private void loadPluginAsync((string id, DrawableHikariiiPlugin plugin) pair)
+        // Load an enabled plugin then add it to the player
+        private Task loadPluginAsync((string id, DrawableHikariiiPlugin plugin) pair)
         {
-            Logging.Log(level: LogLevel.Important, message: "FIXME: implement late plugin loading");
+            string id = pair.id;
+            var plugin = pair.plugin;
+
+            bool hasExistingToken = cancellationTokenSources.TryGetValue(id, out var cancellationTokenSource);
+
+            if (hasExistingToken)
+            {
+                cancellationTokenSources.Remove(id);
+                cancellationTokenSource!.Cancel();
+            }
+
+            markAsLoading(id);
+
+            Logging.Log($"Loading {id}");
+            return this.LoadComponentAsync(plugin, loadedDrawable =>
+            {
+                //onPluginLoadFinishAnyState(id);
+                addPlugin(id, loadedDrawable);
+            }).ContinueWith(t =>
+            {
+                onPluginLoadFinishAnyState(id);
+            });
         }
+
+        private void onPluginLoadFinishAnyState(string id)
+        {
+            Logging.Log($"Finished loading {id}");
+            unmarkFromLoading(id);
+            cancellationTokenSources.Remove(id);
+        }
+
+        private void addPlugin(string id, DrawableHikariiiPlugin pl)
+        {
+            //决定要把插件放在何处
+            switch (pl.ContentLayer)
+            {
+                case ContentLayerType.Background:
+                    backgroundLayer.Add(pl);
+                    break;
+
+                case ContentLayerType.Foreground:
+                    foregroundLayer.Add(pl);
+                    break;
+
+                case ContentLayerType.Overlay:
+                    overlayLayer.Add(pl);
+                    break;
+            }
+
+            var pluginSidebarPage = pl.CreateDrawablePluginPage();
+
+            //如果插件有侧边栏页面
+            if (pluginSidebarPage == null) return;
+
+            Logging.Log(level: LogLevel.Important, message: "FIXME: fix sidebar page");
+            /*sidebar.Add(pluginSidebarPage);
+            var btn = pluginSidebarPage.GetFunctionEntry();
+
+            //如果插件的侧边栏页面有入口按钮
+            if (btn != null)
+            {
+                btn.Action = () =>
+                {
+                    sidebar.ShowComponent(pluginSidebarPage, true);
+                    return true;
+                };
+                btn.Description += $" ({pluginSidebarPage.ShortcutKey})";
+
+                functionControls.Add(btn);
+            }
+
+            //如果插件的侧边栏页面有调用快捷键
+            if (pluginSidebarPage.ShortcutKey != Key.Unknown)
+            {
+                RegisterPluginKeybind(pl, new PluginKeybind(pluginSidebarPage.ShortcutKey, () =>
+                {
+                    if (!pl.Disabled.Value) btn?.Active();
+                }));
+            }*/
+        }
+
+        //endregion
 
         protected override void LoadComplete()
         {

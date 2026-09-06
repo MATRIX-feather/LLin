@@ -121,7 +121,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
                     //调用OnContentLoaded进行善后
                     OnContentLoaded(content);
 
-                    llin?.UnmarkFromLoading(this);
                 }, cancellationTokenSource.Token);
             }
             catch (Exception e)
@@ -137,8 +136,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         {
             cancellationTokenSource.Cancel();
             cancellationTokenSource = new CancellationTokenSource();
-
-            llin?.UnmarkFromLoading(this);
         }
 
         /// <summary>
@@ -148,22 +145,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         {
             try
             {
-                //向加载列表添加这个plugin
-                llin?.MarkAsLoading(this);
-
-                //调用PostInit在加载内容前初始化
-                if (!PostInit())
-                {
-                    llin?.UnmarkFromLoading(this);
-                    return;
-                }
-
                 createLoadTask();
             }
             catch (Exception e)
             {
                 Logging.LogError(e, $"{Name}在加载时出现了问题");
-                llin?.UnmarkFromLoading(this);
             }
         }
 

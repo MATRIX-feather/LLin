@@ -144,28 +144,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
 
         #endregion
 
-        #region 插件加载标记
-
-        /// <summary>
-        /// 标记一个<see cref="LLinPlugin"/>的状态为加载中
-        /// </summary>
-        /// <param name="pl">目标插件</param>
-        /// <returns>
-        /// true: 成功标记<br/>
-        /// false: 该插件已经标记为加载中了或插件不在MvisPluginManager给出的列表中</returns>
-        public bool MarkAsLoading(LLinPlugin pl);
-
-        /// <summary>
-        /// 取消一个<see cref="LLinPlugin"/>的加载标记
-        /// </summary>
-        /// <param name="pl">目标插件</param>
-        /// <returns>
-        /// true: 成功取消<br/>
-        /// false: 该插件没有加载标记或插件不在MvisPluginManager给出的列表中</returns>
-        public bool UnmarkFromLoading(LLinPlugin pl);
-
-        #endregion
-
         /// <summary>
         /// 底栏高度，可用于避免插件内容与当前底栏插件冲突
         /// </summary>
