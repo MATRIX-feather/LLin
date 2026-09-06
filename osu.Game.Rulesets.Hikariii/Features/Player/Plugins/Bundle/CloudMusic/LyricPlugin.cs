@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic
         public bool IsContentLoaded => ContentLoaded;
 
         public override PluginSidebarPage CreateSidebarPage()
-            => new LyricSidebarSectionContainer(this);
+            => new LyricSidebarSectionContainer(null); //todo: FIXME null id for lyric sidebar section container
 
         internal WorkingBeatmap CurrentWorkingBeatmap = null!;
         private readonly LyricLineHandler lrcLine = new LyricLineHandler();

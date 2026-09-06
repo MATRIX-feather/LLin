@@ -1,12 +1,15 @@
 #nullable disable
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types
 {
+    [Obsolete]
     public abstract partial class BindableControlledPlugin(LLinPluginProvider provider) : LLinPlugin(provider)
     {
         [Resolved]
@@ -30,10 +33,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types
 
         protected virtual void OnValueChanged(ValueChangedEvent<bool> v)
         {
-            if (Enabled.Value && !playerExiting)
-                manager.EnablePlugin(this);
-            else
-                manager.DisablePlugin(this);
+            throw new NotImplementedException();
         }
 
         public override bool Disable()

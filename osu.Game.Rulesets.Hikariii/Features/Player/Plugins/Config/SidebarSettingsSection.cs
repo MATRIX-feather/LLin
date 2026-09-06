@@ -2,41 +2,42 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osu.Framework.Localisation;
+using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Sections;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config
 {
     [Cached]
     public partial class NewPluginSettingsSection : Section
     {
-        private readonly LLinPluginProvider provider;
-
         private readonly BindableFloat fillFlowMaxWidth = new BindableFloat();
 
-        public NewPluginSettingsSection(LLinPluginProvider plugin)
+        public int MaxRows { get; private set; } = 1;
+        public Action<int>? OnNewMaxRows;
+        private readonly SettingsEntry[] entries;
+
+        public NewPluginSettingsSection(LocalisableString title, SettingsEntry[] entries)
         {
-            this.provider = plugin;
-            Title = plugin.GetDescription().Name;
+            Title = title;
+            this.entries = entries;
 
             Alpha = 0.02f;
         }
 
         [BackgroundDependencyLoader]
-        private void load(LLinPluginManager pluginManager, MConfigManager config)
+        private void load(HikariiiCoreConfigManager config)
         {
-            config.BindWith(MSetting.MvisPlayerSettingsMaxWidth, fillFlowMaxWidth);
+            config.BindWith(HikariiiCoreSetting.SettingsMaxWidth, fillFlowMaxWidth);
 
-            foreach (var se in pluginManager.GetSettingsFor(provider))
+            foreach (var se in entries)
             {
                 var item = se.ToLLinSettingsItem();
                 if (item != null) Add(item);
             }
         }
-
-        public int MaxRows { get; private set; } = 1;
-        public Action<int>? OnNewMaxRows;
 
         protected override void LoadComplete()
         {

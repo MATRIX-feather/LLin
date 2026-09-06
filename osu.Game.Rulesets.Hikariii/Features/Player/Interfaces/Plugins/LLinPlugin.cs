@@ -10,6 +10,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
 {
+    [Obsolete]
     public abstract partial class LLinPlugin(LLinPluginProvider provider) : Container
     {
         public readonly LLinPluginProvider Provider = provider;

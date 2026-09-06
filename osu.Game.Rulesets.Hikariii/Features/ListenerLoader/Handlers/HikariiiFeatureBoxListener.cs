@@ -283,7 +283,7 @@ public partial class HikariiiFeatureBoxListener : AbstractHandler
                 Text = "打开 Hikariii 播放器",
                 Action = () =>
                 {
-                    Game.PerformFromScreen(s => s.Push(new LLinLoader(() => new LLinScreen())), new[]
+                    Game.PerformFromScreen(s => s.Push(new HikariiiLoader(() => new LLinScreen())), new[]
                     {
                         typeof(MainMenu),
                         typeof(SoloSongSelect)

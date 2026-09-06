@@ -28,11 +28,11 @@ public partial class MfosuThemeImpl : Drawable, IPlatformThemeImpl
     }
 
     [BackgroundDependencyLoader]
-    private void load(MConfigManager config)
+    private void load(LLinGlobalConfigManager config)
     {
-        config.BindWith(MSetting.MvisInterfaceRed, colorRed);
-        config.BindWith(MSetting.MvisInterfaceGreen, colorGreen);
-        config.BindWith(MSetting.MvisInterfaceBlue, colorBlue);
+        config.BindWith(LLinGlobal.AccentRed, colorRed);
+        config.BindWith(LLinGlobal.AccentGreen, colorGreen);
+        config.BindWith(LLinGlobal.AccentBlue, colorBlue);
 
         colorRed.BindValueChanged(_ => updateColor());
         colorGreen.BindValueChanged(_ => updateColor());

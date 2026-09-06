@@ -3,23 +3,24 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.BuiltIn.Core;
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
 
 public class HikariiiCore : IHikariiiPluginProvider
 {
-    public string GetID() => "hikariii-core";
+    public const string ID = "hikariii-core";
+
+    public string GetID() => ID;
 
     public IPluginConfigManager CreatePluginConfig(Storage storageAccess)
     {
-        return new HikariiiCoreConfig(storageAccess);
+        return new HikariiiCoreConfigManager(storageAccess);
     }
 
     public Type GetPluginConfigType()
     {
-        return typeof(HikariiiCoreConfig);
+        return typeof(HikariiiCoreConfigManager);
     }
 
     public PluginDescription GetPluginDescription() => new("Hikariii", "播放器基础设置", ["mfosu"]);
@@ -31,10 +32,10 @@ public class HikariiiCore : IHikariiiPluginProvider
 
     private volatile SettingsEntry[]? settingsEntries;
 
-    public readonly IBindable<IProvideAudioControlPlugin> AudioController = new Bindable<IProvideAudioControlPlugin>();
-    public readonly IBindable<IFunctionBarProvider> FunctionBarProvider = new Bindable<IFunctionBarProvider>();
+    public readonly IBindable<IHikariiiPluginProvider> AudioController = new Bindable<IHikariiiPluginProvider>();
+    public readonly IBindable<IHikariiiPluginProvider> FunctionBarProvider = new Bindable<IHikariiiPluginProvider>();
 
-    private SettingsEntry[] createSettingsEntriesIfNotSet(HikariiiCoreConfig config)
+    private SettingsEntry[] createSettingsEntriesIfNotSet(HikariiiCoreConfigManager config)
     {
         if (settingsEntries != null)
             return settingsEntries;
@@ -47,21 +48,21 @@ public class HikariiiCore : IHikariiiPluginProvider
             new NumberSettingsEntry<float>
             {
                 Name = "背景模糊",
-                Bindable = config.GetBindable<float>(HikariiiCoreConfig.HikariiiSetting.BackgroundBlur),
+                Bindable = config.GetBindable<float>(HikariiiCoreSetting.BackgroundBlur),
                 DisplayAsPercentage = true,
                 KeyboardStep = 0.01f,
             },
             new NumberSettingsEntry<float>
             {
                 Name = "空闲时的背景亮度",
-                Bindable = config.GetBindable<float>(HikariiiCoreConfig.HikariiiSetting.IdleBackgroundDim),
+                Bindable = config.GetBindable<float>(HikariiiCoreSetting.IdleBackgroundDim),
                 DisplayAsPercentage = true,
                 KeyboardStep = 0.01f,
             },
             new BooleanSettingsEntry
             {
                 Name = "启用背景动画",
-                Bindable = config.GetBindable<bool>(HikariiiCoreConfig.HikariiiSetting.BackgroundBlur),
+                Bindable = config.GetBindable<bool>(HikariiiCoreSetting.TrianglesInBackground),
                 Description = "如果条件允许,播放器将会在背景显示动画"
             },
             funcBarEntry = new ListSettingsEntry<IHikariiiPluginProvider>
@@ -72,26 +73,25 @@ public class HikariiiCore : IHikariiiPluginProvider
             new BooleanSettingsEntry
             {
                 Name = "节能模式",
-                Bindable = config.GetBindable<bool>(HikariiiCoreConfig.HikariiiSetting.EcoMode),
+                Bindable = config.GetBindable<bool>(HikariiiCoreSetting.EcoMode),
                 Description = "启用后，将在进入播放器时自动启用垂直同步和单线程，并在退出时恢复进入前的状态",
                 Icon = FontAwesome.Solid.Leaf
             },
             new BooleanSettingsEntry
             {
-                Name = "使用新版三角粒子",
-                Bindable = config.GetBindable<bool>(HikariiiCoreConfig.HikariiiSetting.EnableTriangleV2),
-                Description = "可能不适合所有背景，仍需调教"
+                Name = "使用空心三角",
+                Bindable = config.GetBindable<bool>(HikariiiCoreSetting.HollowTriangles)
             },
             new BooleanSettingsEntry
             {
                 Name = "启用进、退场动画",
                 Description = "嗯...至少有人说挺炫酷的？",
-                Bindable = config.GetBindable<bool>(HikariiiCoreConfig.HikariiiSetting.EnableFancyIntroOutro)
+                Bindable = config.GetBindable<bool>(HikariiiCoreSetting.EnableFancyIntroOutro)
             },
             new NumberSettingsEntry<float>
             {
                 Name = "播放器设置最大宽度",
-                Bindable = config.GetBindable<float>(HikariiiCoreConfig.HikariiiSetting.SettingsMaxWidth),
+                Bindable = config.GetBindable<float>(HikariiiCoreSetting.SettingsMaxWidth),
                 DisplayAsPercentage = true,
                 KeyboardStep = 0.01f,
                 CommitOnMouseRelease = true
@@ -104,7 +104,7 @@ public class HikariiiCore : IHikariiiPluginProvider
             new NumberSettingsEntry<double>
             {
                 Name = "播放速度",
-                Bindable = config.GetBindable<double>(HikariiiCoreConfig.HikariiiSetting.PlaybackSpeed),
+                Bindable = config.GetBindable<double>(HikariiiCoreSetting.PlaybackSpeed),
                 KeyboardStep = 0.01f,
                 DisplayAsPercentage = true,
                 //TransferValueOnCommit = true
@@ -112,13 +112,13 @@ public class HikariiiCore : IHikariiiPluginProvider
             new BooleanSettingsEntry
             {
                 Name = "调整音调",
-                Bindable = config.GetBindable<bool>(HikariiiCoreConfig.HikariiiSetting.AdjustTrackPitch),
+                Bindable = config.GetBindable<bool>(HikariiiCoreSetting.AdjustTrackPitch),
                 Description = "暂不支持调整故事版的音调"
             },
             new BooleanSettingsEntry
             {
                 Name = "夜核节拍器",
-                Bindable = config.GetBindable<bool>(HikariiiCoreConfig.HikariiiSetting.NightcoreBeat),
+                Bindable = config.GetBindable<bool>(HikariiiCoreSetting.NightcoreBeat),
                 Description = "动次打次动次打次"
             }
         ];
@@ -129,6 +129,6 @@ public class HikariiiCore : IHikariiiPluginProvider
 
     public SettingsEntry[] GetSettingsEntries(IPluginConfigManager config)
     {
-        return createSettingsEntriesIfNotSet((HikariiiCoreConfig)config);
+        return createSettingsEntriesIfNotSet((HikariiiCoreConfigManager)config);
     }
 }

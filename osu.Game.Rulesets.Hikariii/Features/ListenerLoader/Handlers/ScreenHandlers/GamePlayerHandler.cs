@@ -14,14 +14,14 @@ public partial class GamePlayerHandler : AbstractScreenHandler
     private SystemNotificationIntegration? notifications { get; set; }
 
     [Resolved]
-    private MConfigManager config { get; set; } = null!;
+    private LLinGlobalConfigManager config { get; set; } = null!;
 
     private readonly BindableBool enabled = new();
 
     [BackgroundDependencyLoader]
     private void load()
     {
-        config.BindWith(MSetting.EnableOSDoNotDisturbWhenPlaying, enabled);
+        config.BindWith(LLinGlobal.EnableOSDoNotDisturbWhenPlaying, enabled);
         enabled.BindValueChanged(onToggle);
     }
 

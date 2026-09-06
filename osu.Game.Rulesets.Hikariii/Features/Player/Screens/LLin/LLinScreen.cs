@@ -31,7 +31,6 @@ using osu.Game.Localisation;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Overlays.Volume;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings;
@@ -41,8 +40,12 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Types;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.BuiltinControlBar;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.OsuAudio;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.SongSelect;
 using osu.Game.Rulesets.Hikariii.Features.SystemIntegration.Media;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin;
@@ -53,7 +56,6 @@ using osu.Game.Screens;
 using osu.Game.Screens.Play;
 using osuTK;
 using osuTK.Graphics;
-using osuTK.Input;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 {
@@ -70,7 +72,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         #region 全局依赖
 
         [Resolved]
-        private LLinPluginManager pluginManager { get; set; } = null!;
+        private IHikariiiPluginManager pluginManager { get; set; } = null!;
 
         [Resolved]
         private IDialogOverlay dialog { get; set; } = null!;
@@ -142,47 +144,56 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         public DrawableTrack CurrentTrack => musicController.CurrentTrack;
 
-        public void RequestAudioControl(IProvideAudioControlPlugin pacp, LocalisableString message, Action? onDeny, Action? onAllow)
+        public void RequestAudioControl(string name, LocalisableString message, Action? onDeny, Action? onAllow)
         {
-            if (!(pacp is LLinPlugin mpl)) return;
+            var provider = pluginManager.GetPluginProvider(name) ?? pluginManager.GetPluginProviderOrThrow(OsuAudio.ID);
 
-            dialog.Push(new AudioControlRequestDialog(mpl.ToString(), message,
+            if (provider.CreateDrawablePlugin() is not IProvideAudioControlPlugin)
+            {
+                onDeny?.Invoke();
+                return;
+            }
+
+            dialog.Push(new AudioControlRequestDialog(name, message,
                 () =>
                 {
-                    changeAudioControlProvider(pacp);
+                    changeAudioControlProvider(name);
                     onAllow?.Invoke();
                 },
                 onDeny));
         }
 
-        public void ReleaseAudioControlFrom(IProvideAudioControlPlugin pacp)
+        public void ReleaseAudioControlFrom(string name)
         {
-            if (audioControlPlugin == pacp)
-                changeAudioControlProvider(null);
+            if (audioControlName.Value.Equals(name))
+                changeAudioControlProvider(OsuAudio.ID);
         }
 
-        private void changeAudioControlProvider(IProvideAudioControlPlugin? pacp)
+        private void changeAudioControlProvider(string? name)
         {
-            //如果没找到(为null)，则解锁Beatmap.Disabled
-            Beatmap.Disabled = (pacp != null) && !pacp.AllowOsuControls;
+            var provider = pluginManager.GetPluginProvider(name ?? "") ?? pluginManager.GetPluginProviderOrThrow(OsuAudio.ID);
+            name = provider.GetID();
+            if (provider.CreateDrawablePlugin() is not IProvideAudioControlPlugin)
+                throw new InvalidOperationException($"The given plugin {name} does not offer audio control feature.");
 
+            var plugin = sessionPluginManager.EnablePlugin(name);
+            var pacp = plugin as IProvideAudioControlPlugin ?? throw new Exception("Why could this happen?");
+
+            //如果没找到(为null)，则解锁Beatmap.Disabled
+            Beatmap.Disabled = !pacp.AllowOsuControls;
+
+            sessionPluginManager.DisablePlugin(audioControlName.Value);
+
+            //todo: maybe remove this because we now remove the drawable plugin entirely from the player
             //设置当前控制插件IsCurrent为false
             if (audioControlPlugin != null)
-            {
                 audioControlPlugin.IsCurrent = false;
 
-                if (audioControlPlugin is Drawable lastAsDrawable && lastAsDrawable.Parent == this)
-                    RemoveInternal(lastAsDrawable, false);
-            }
-
-            var newControlPlugin = pacp ?? pluginManager.AcquireOsuAudioController();
-
             //切换并设置当前控制插件IsCurrent为true
-            audioControlPlugin = newControlPlugin;
-            newControlPlugin.IsCurrent = true;
+            audioControlPlugin = pacp;
+            pacp!.IsCurrent = true;
 
-            if (pacp is LLinPlugin plugin)
-                currentAudioControlProviderSetting.Value = plugin.Provider.Identifier();
+            audioControlName.Value = name;
 
             if (audioControlPlugin is Drawable nextAsDrawable && nextAsDrawable.Parent == null)
                 AddInternal(nextAsDrawable);
@@ -221,27 +232,28 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         private IFunctionBarProvider? currentFunctionBar { get; set; }
 
-        private void changeFunctionBarProvider(IFunctionBarProvider? newProvider)
+        private void changeFunctionBarProvider(string? name)
         {
-            //找到旧的Functionbar
-            var targetDrawable = overlayLayer.FirstOrDefault(d => d == currentFunctionBar);
+            var provider = pluginManager.GetPluginProvider(name ?? "") ?? pluginManager.GetPluginProviderOrThrow(BuiltinControlBar.ID);
+            name = provider.GetID();
+            if (provider.CreateDrawablePlugin() is not IFunctionBarProvider)
+                throw new InvalidOperationException($"The given plugin {name} does not offer function provider feature.");
 
-            //移除
-            if (targetDrawable != null)
-                overlayLayer.Remove(targetDrawable, false);
-
+            //todo: FIXME investigate this.
             //不要在此功能条禁用时再调用onFunctionBarPluginDisable
             if (currentFunctionBar != null)
             {
                 currentFunctionBar.OnDisable -= onFunctionBarDisable;
 
-                if (currentFunctionBar is LLinPlugin oldAsPlugin)
+                if (currentFunctionBar is DrawableHikariiiPlugin oldAsPlugin)
                     RemoveBottomSafeArea(oldAsPlugin);
             }
 
-            //如果新的目标是null，则使用后备功能条
-            newProvider ??= sessionPluginManager.GetPluginWithTypeOrThrow<IFunctionBarProvider>(FallbackFunctionBarProvider.ID);
+            sessionPluginManager.DisablePlugin(name);
+            var plugin = sessionPluginManager.EnablePlugin(name);
+            var newProvider = plugin as IFunctionBarProvider ?? throw new Exception("Why could this happen?");
 
+            //todo: FIXME investigate this.
             //更新控制按钮
             newProvider.SetFunctionControls(functionControls);
             newProvider.OnDisable += onFunctionBarDisable;
@@ -249,21 +261,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             //更新currentFunctionBarProvider
             currentFunctionBar = newProvider;
 
-            if (newProvider is LLinPlugin plugin)
-                currentFunctionbarSetting.Value = plugin.Provider.Identifier();
-
-            //添加新的功能条
-            if (newProvider is Drawable nextAsDrawable && nextAsDrawable.Parent == null)
-                overlayLayer.Add(nextAsDrawable);
-
-            newProvider.Show();
+            functionBarName.Value = name;
 
             if (controlDisplayTemp.Value > 0f)
                 newProvider.ShowFunctionControl();
             //Logging.Log($"更改底栏到{newProvider}");
         }
 
-        private void onFunctionBarDisable() => changeFunctionBarProvider(null);
+        private void onFunctionBarDisable() => changeFunctionBarProvider(BuiltinControlBar.ID);
 
         #endregion
 
@@ -614,15 +619,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         private readonly BindableFloat bottomPadding = new();
         public IBindable<float> BottomSafeAreaPadding => bottomPadding;
 
-        private readonly Dictionary<LLinPlugin, float> safeAreaPaddings = new();
+        private readonly Dictionary<DrawableHikariiiPlugin, float> safeAreaPaddings = new();
 
-        public void AddBottomSafeArea(LLinPlugin plugin, float amount)
+        public void AddBottomSafeArea(DrawableHikariiiPlugin plugin, float amount)
         {
             safeAreaPaddings[plugin] = amount;
             updateBottomPadding();
         }
 
-        public void RemoveBottomSafeArea(LLinPlugin plugin)
+        public void RemoveBottomSafeArea(DrawableHikariiiPlugin plugin)
         {
             safeAreaPaddings.Remove(plugin);
             updateBottomPadding();
@@ -653,8 +658,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         private readonly BindableBool adjustFreq = new();
         private readonly BindableBool nightcoreBeat = new();
         private readonly BindableBool autoVsync = new();
-        private Bindable<string> currentAudioControlProviderSetting = null!;
-        private Bindable<string> currentFunctionbarSetting = null!;
+        private Bindable<string> audioControlName = null!;
+        private Bindable<string> functionBarName = null!;
 
         private FrameSync previousFrameSync;
         private ExecutionMode previousExecutionMode;
@@ -704,9 +709,21 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         [Cached(type: typeof(ISamplePlaybackDisabler))]
         public readonly HikariiiSamplePlaybackAntiDisabler samplePlaybackAntiDisabler = new HikariiiSamplePlaybackAntiDisabler();
 
+        private DependencyContainer dependencies;
+
+        protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+            => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+
         [BackgroundDependencyLoader]
-        private void load(MConfigManager config, IdleTracker idleTracker, FrameworkConfigManager fcm)
+        private void load(IdleTracker idleTracker, FrameworkConfigManager fcm)
         {
+            // register core config early.
+            var config = pluginManager.TryGetPluginConfigOrThrow<HikariiiCoreConfigManager>(
+                pluginManager.GetPluginProviderOrThrow(HikariiiCore.ID)
+            );
+
+            dependencies.Cache(config);
+
             inputManager = GetContainingInputManager();
 
             sidebar.Header = tabControl;
@@ -864,14 +881,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
             //配置绑定/设置
             inputIdle.BindTo(idleTracker.IsIdle);
-            config.BindWith(MSetting.MvisBgBlur, bgBlur);
-            config.BindWith(MSetting.MvisIdleBgDim, idleBgDim);
-            config.BindWith(MSetting.MvisMusicSpeed, musicSpeed);
-            config.BindWith(MSetting.MvisAdjustMusicWithFreq, adjustFreq);
-            config.BindWith(MSetting.MvisEnableNightcoreBeat, nightcoreBeat);
-            config.BindWith(MSetting.MvisAutoVSync, autoVsync);
-            currentAudioControlProviderSetting = config.GetBindable<string>(MSetting.MvisCurrentAudioProvider);
-            currentFunctionbarSetting = config.GetBindable<string>(MSetting.MvisCurrentFunctionBar);
+            config.BindWith(HikariiiCoreSetting.BackgroundBlur, bgBlur);
+            config.BindWith(HikariiiCoreSetting.IdleBackgroundDim, idleBgDim);
+            config.BindWith(HikariiiCoreSetting.PlaybackSpeed, musicSpeed);
+            config.BindWith(HikariiiCoreSetting.AdjustTrackPitch, adjustFreq);
+            config.BindWith(HikariiiCoreSetting.NightcoreBeat, nightcoreBeat);
+            config.BindWith(HikariiiCoreSetting.EcoMode, autoVsync);
+            audioControlName = config.GetBindable<string>(HikariiiCoreSetting.AudioPluginName);
+            functionBarName = config.GetBindable<string>(HikariiiCoreSetting.FunctionBarName);
 
             try
             {
@@ -883,31 +900,38 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 Logging.LogError(e, "无法绑定Framework设置");
             }
 
-            sessionPluginManager.LoadPlugins(pluginManager);
+            Logging.Log(level: LogLevel.Important, message: "FIXME: we are not loading plugins as it is not finished");
 
             //加载插件
-            foreach ((string key, var pl) in sessionPluginManager.PluginsDictionary())
+            foreach (var provider in sessionPluginManager.AllowedPluginProviders())
             {
+                var pl = provider.CreateDrawablePlugin();
+
                 try
                 {
                     //决定要把插件放在何处
-                    switch (pl.Target)
+                    switch (pl.ContentLayer)
                     {
-                        case LLinPlugin.ContentLayer.Background:
+                        case ContentLayerType.Background:
                             backgroundLayer.Add(pl);
                             break;
 
-                        case LLinPlugin.ContentLayer.Foreground:
+                        case ContentLayerType.Foreground:
                             foregroundLayer.Add(pl);
+                            break;
+
+                        case ContentLayerType.Overlay:
+                            Logging.Log("FIXME: stub Add plugin to Overlay layer");
                             break;
                     }
 
-                    var pluginSidebarPage = pl.CreateSidebarPage();
+                    var pluginSidebarPage = pl.CreateDrawablePluginPage();
 
                     //如果插件有侧边栏页面
                     if (pluginSidebarPage == null) continue;
 
-                    sidebar.Add(pluginSidebarPage);
+                    Logging.Log(level: LogLevel.Important, message: "FIXME: fix sidebar page");
+                    /*sidebar.Add(pluginSidebarPage);
                     var btn = pluginSidebarPage.GetFunctionEntry();
 
                     //如果插件的侧边栏页面有入口按钮
@@ -930,15 +954,18 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                         {
                             if (!pl.Disabled.Value) btn?.Active();
                         }));
-                    }
+                    }*/
                 }
                 catch (Exception e)
                 {
-                    Logging.Log($"在添加 {key} 时出现问题, 请联系你的插件提供方: {e.Message}", level: LogLevel.Important);
+                    Logging.Log($"在添加 {provider.GetID()} 时出现问题, 请联系你的插件提供方: {e.Message}", level: LogLevel.Important);
                     Logging.Log(e.Message);
                     Logging.Log(e.StackTrace);
                 }
             }
+
+            sessionPluginManager.OnPluginEnable += loadPluginAsync;
+            sessionPluginManager.OnPluginDisable += discardPlugin;
 
             bgBlur.BindValueChanged(v => updateBackground(Beatmap.Value));
             idleBgDim.BindValueChanged(v => applyBackgroundBrightness(true, v.NewValue));
@@ -976,18 +1003,28 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             });
 
             //更新当前音乐控制插件
-            currentAudioControlProviderSetting.BindValueChanged(v =>
+            audioControlName.BindValueChanged(v =>
             {
-                Schedule(() => changeAudioControlProvider(sessionPluginManager.GetPluginWithType<IProvideAudioControlPlugin>(v.NewValue)));
+                Schedule(() => changeAudioControlProvider(v.NewValue));
             }, true);
 
             //更新当前功能条
-            currentFunctionbarSetting.BindValueChanged(v =>
+            functionBarName.BindValueChanged(v =>
             {
-                Schedule(() => changeFunctionBarProvider(sessionPluginManager.GetPluginWithType<IFunctionBarProvider>(v.NewValue)));
+                Schedule(() => changeFunctionBarProvider(v.NewValue));
             }, true);
 
             blackBackground.BindValueChanged(_ => applyBackgroundBrightness());
+        }
+
+        private void discardPlugin((string id, DrawableHikariiiPlugin plugin) pair)
+        {
+            Logging.Log(level: LogLevel.Important, message: "FIXME: implement late plugin discard");
+        }
+
+        private void loadPluginAsync((string id, DrawableHikariiiPlugin plugin) pair)
+        {
+            Logging.Log(level: LogLevel.Important, message: "FIXME: implement late plugin loading");
         }
 
         protected override void LoadComplete()

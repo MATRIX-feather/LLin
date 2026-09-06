@@ -8,6 +8,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.BuiltinControlBar;
 using osuTK;
 using osuTK.Graphics;
 
@@ -73,7 +74,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFu
 
         public override void Show()
         {
-            LLin?.AddBottomSafeArea(this, this.Height);
+            //LLin?.AddBottomSafeArea(this, this.Height);
             base.Show();
         }
 

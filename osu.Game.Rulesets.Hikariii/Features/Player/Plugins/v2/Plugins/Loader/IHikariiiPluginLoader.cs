@@ -1,4 +1,4 @@
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Loader;
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 
 public interface IHikariiiPluginLoader
 {

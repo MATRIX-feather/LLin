@@ -6,9 +6,9 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Loader;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 
 public partial class HikariiiPluginHub : CompositeDrawable, IHikariiiPluginManager
 {

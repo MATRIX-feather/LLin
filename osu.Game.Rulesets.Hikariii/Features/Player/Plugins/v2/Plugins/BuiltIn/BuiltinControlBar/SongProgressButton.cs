@@ -6,7 +6,7 @@ using osu.Framework.Graphics.Audio;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.BuiltinControlBar
 {
     public partial class SongProgressButton : ToggleableBarButton
     {

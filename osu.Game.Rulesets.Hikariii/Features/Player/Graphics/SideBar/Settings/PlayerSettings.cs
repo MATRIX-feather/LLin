@@ -7,11 +7,11 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Graphics.Containers;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Sections;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings
@@ -32,16 +32,19 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings
         public IconUsage Icon { get; } = FontAwesome.Solid.Cog;
 
         [BackgroundDependencyLoader]
-        private void load(MConfigManager config, LLinPluginManager pluginManager)
+        private void load(IHikariiiPluginManager pluginManager)
         {
             ScrollbarVisible = false;
             RelativeSizeAxes = Axes.Both;
             Add(fillFlow);
 
-            foreach (var pl in pluginManager.GetAllPluginProviders().Values)
+            foreach (var provider in pluginManager.GetAllPluginProviders().Values)
             {
-                if (pluginManager.GetSettingsFor(pl).Length > 0)
-                    AddSection(new NewPluginSettingsSection(pl));
+                var config = pluginManager.TryGetPluginConfig<IPluginConfigManager>(provider);
+                var entries = provider.GetSettingsEntries(config);
+
+                if (entries.Length > 0)
+                    AddSection(new NewPluginSettingsSection(provider.GetPluginDescription().Name, entries));
             }
         }
 

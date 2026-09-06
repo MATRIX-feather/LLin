@@ -9,6 +9,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
 {
@@ -129,17 +130,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         /// <summary>
         /// 请求接手音频控制
         /// </summary>
-        /// <param name="pacp">请求的插件</param>
+        /// <param name="name">要使用的插件</param>
         /// <param name="message">要显示的消息</param>
         /// <param name="onDeny">请求拒绝时的动作</param>
         /// <param name="onAllow">请求接受时的动作</param>
-        public void RequestAudioControl(IProvideAudioControlPlugin pacp, LocalisableString message, Action? onDeny, Action? onAllow);
+        public void RequestAudioControl(string name, LocalisableString message, Action? onDeny, Action? onAllow);
 
         /// <summary>
         /// 释放音频控制插件
         /// </summary>
-        /// <param name="pacp">要释放的插件</param>
-        public void ReleaseAudioControlFrom(IProvideAudioControlPlugin pacp);
+        /// <param name="name">要释放的插件</param>
+        public void ReleaseAudioControlFrom(string name);
 
         #endregion
 
@@ -170,9 +171,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         /// </summary>
         public IBindable<float> BottomSafeAreaPadding { get; }
 
-        public void AddBottomSafeArea(LLinPlugin plugin, float amount);
+        public void AddBottomSafeArea(DrawableHikariiiPlugin plugin, float amount);
 
-        public void RemoveBottomSafeArea(LLinPlugin plugin);
+        public void RemoveBottomSafeArea(DrawableHikariiiPlugin plugin);
 
         /// <summary>
         /// 当前谱面

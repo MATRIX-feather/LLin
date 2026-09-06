@@ -7,7 +7,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Input.Events;
 using osu.Game.Graphics.Containers;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 
@@ -72,7 +71,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs
         }
 
         [BackgroundDependencyLoader]
-        private void load(MConfigManager config)
+        private void load()
         {
             anchorTarget = new Bindable<TabControlPosition>();
 

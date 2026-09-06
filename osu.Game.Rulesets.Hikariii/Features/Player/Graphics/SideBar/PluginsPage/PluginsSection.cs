@@ -6,7 +6,8 @@ using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Sections;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
@@ -60,14 +61,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                 }
             });
 
-            manager.OnPluginAdded += addPiece;
-            manager.OnPluginRemoved += removePiece;
+            manager.OnPluginEnable += addPiece;
+            manager.OnPluginDisable += removePiece;
         }
 
         protected override void LoadComplete()
         {
-            foreach (var pl in manager.PluginsDictionary().Values)
-                addPiece(pl);
+            foreach (var pl in manager.PluginsDictionary())
+                addPiece((pl.Key, pl.Value));
 
             FillFlow.LayoutEasing = Easing.OutQuint;
             FillFlow.LayoutDuration = 250;
@@ -75,14 +76,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
             base.LoadComplete();
         }
 
-        private void addPiece(LLinPlugin plugin)
+        private void addPiece((string id, DrawableHikariiiPlugin plugin) pair)
         {
-            Add(new PluginPiece(plugin));
+            Add(new PluginPiece(pair.id));
 
             placeholder.FadeOut(300, Easing.OutQuint);
         }
 
-        private void removePiece(LLinPlugin plugin)
+        private void removePiece((string id, DrawableHikariiiPlugin plugin) pair)
         {
             int childrenCount = 0;
 
@@ -90,7 +91,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
             {
                 childrenCount += FillFlow.Children.Count;
 
-                if (d is PluginPiece piece && piece.Plugin == plugin)
+                if (d is PluginPiece piece && piece.Id.Equals(pair.id))
                 {
                     piece.Hide();
                     break;

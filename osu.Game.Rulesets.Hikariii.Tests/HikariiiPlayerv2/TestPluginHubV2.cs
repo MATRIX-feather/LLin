@@ -8,7 +8,8 @@ using osu.Framework.Platform;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Loader;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Hikariii.Tests.HikariiiPlayerV2;

@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection
         protected override bool PostInit() => true;
 
         public override PluginSidebarPage CreateSidebarPage()
-            => new CollectionPluginPage(this);
+            => new CollectionPluginPage(null); //todo: FIXME fix null plugin in collection plugin page
 
         public CollectionHelper(LLinPluginProvider provider)
             : base(provider)

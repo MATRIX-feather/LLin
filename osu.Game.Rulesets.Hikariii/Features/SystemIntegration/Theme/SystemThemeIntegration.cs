@@ -55,14 +55,14 @@ public partial class SystemThemeIntegration : CompositeDrawable
     private CustomColourProvider customColors { get; set; } = null!;
 
     [Resolved]
-    private MConfigManager config { get; set; } = null!;
+    private LLinGlobalConfigManager config { get; set; } = null!;
 
     private readonly BindableBool usePlatformAccentColor = new();
 
     [BackgroundDependencyLoader]
     private void load()
     {
-        config.BindWith(MSetting.UsePlatformAccentColor, usePlatformAccentColor);
+        config.BindWith(LLinGlobal.UsePlatformAccentColor, usePlatformAccentColor);
         AddInternal(defaultAccentColorImpl);
     }
 

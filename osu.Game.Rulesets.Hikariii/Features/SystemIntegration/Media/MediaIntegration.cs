@@ -138,9 +138,9 @@ public partial class MediaIntegration : CompositeComponent
     private readonly BindableBool ignoreMediaControlWhenFocused = new(false);
 
     [BackgroundDependencyLoader]
-    private void load(MConfigManager config)
+    private void load(LLinGlobalConfigManager config)
     {
-        config.BindWith(MSetting.IgnoreMediaControlWhenFocused, ignoreMediaControlWhenFocused);
+        config.BindWith(LLinGlobal.IgnoreMediaControlWhenFocused, ignoreMediaControlWhenFocused);
 
         var impl = selectImplementation();
 

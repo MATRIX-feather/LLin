@@ -4,14 +4,13 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Collections;
 using osu.Game.Graphics.Containers;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
-using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 using osuTK;
 using osuTK.Input;
 
@@ -22,7 +21,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         [Resolved]
         private IImplementLLin mvisScreen { get; set; } = null!;
 
-        private readonly CollectionHelper collectionHelper;
+        //todo: FIXME fix null collection helper in it's sidebar page
+        private readonly CollectionHelper collectionHelper = null;
 
         private readonly Bindable<BeatmapCollection> selectedCollection = new Bindable<BeatmapCollection>();
         private readonly Bindable<CollectionPanel> selectedPanel = new Bindable<CollectionPanel>();
@@ -34,12 +34,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         private Container scrollContainer = null!;
         private DrawableCollectionInfo info = null!;
 
-        public CollectionPluginPage(LLinPlugin plugin)
-            : base(plugin)
+        public CollectionPluginPage(string id)
+            : base(id)
         {
             Icon = FontAwesome.Solid.Check;
             RelativeSizeAxes = Axes.Both;
-            collectionHelper = (CollectionHelper)plugin;
         }
 
         private DependencyContainer dependencies = null!;
@@ -51,7 +50,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
         public override Key ShortcutKey => Key.Period;
 
         [BackgroundDependencyLoader]
-        private void load(MConfigManager config)
+        private void load()
         {
             dependencies.Cache(collectionHelper);
 
@@ -205,7 +204,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.S
             if (!requestedOnce)
             {
                 requestedOnce = true;
-                mvisScreen?.RequestAudioControl((CollectionHelper)Plugin, CollectionStrings.AudioControlRequest, null, null);
+
+                Logging.Log(level: LogLevel.Important, message: "FIXME: collection audio control request");
+                //mvisScreen?.RequestAudioControl((CollectionHelper)Plugin, CollectionStrings.AudioControlRequest, null, null);
             }
         }
 

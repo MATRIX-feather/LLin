@@ -30,11 +30,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase
         private readonly BindableFloat iB = new BindableFloat();
 
         [BackgroundDependencyLoader]
-        private void load(MConfigManager config)
+        private void load(LLinGlobalConfigManager config)
         {
-            config.BindWith(MSetting.MvisInterfaceRed, iR);
-            config.BindWith(MSetting.MvisInterfaceGreen, iG);
-            config.BindWith(MSetting.MvisInterfaceBlue, iB);
+            config.BindWith(LLinGlobal.AccentRed, iR);
+            config.BindWith(LLinGlobal.AccentGreen, iG);
+            config.BindWith(LLinGlobal.AccentBlue, iB);
 
             Height = 75;
             RelativeSizeAxes = Axes.X;

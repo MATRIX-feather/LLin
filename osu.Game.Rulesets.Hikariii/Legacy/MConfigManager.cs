@@ -7,21 +7,19 @@ using osu.Framework.Configuration;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Tabs;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Configuration
 {
     [Obsolete("This is gonna be removed in future versions")]
-    public class MConfigManager : IniConfigManager<MSetting>
+    public class DeprecatedMConfigManager : IniConfigManager<MSetting>
     {
         protected override string Filename => "mf.ini";
 
-        private static MConfigManager instance;
-        public static MConfigManager GetInstance() => instance;
+        private static DeprecatedMConfigManager instance;
+        public static DeprecatedMConfigManager GetInstance() => instance;
 
-        public MConfigManager(Storage storage)
+        public DeprecatedMConfigManager(Storage storage)
             : base(storage)
         {
             instance = this;
@@ -58,8 +56,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             SetDefault(MSetting.MvisInterfaceRed, value: 0, 0, 255f);
             SetDefault(MSetting.MvisInterfaceGreen, value: 119f, 0, 255f);
             SetDefault(MSetting.MvisInterfaceBlue, value: 255f, 0, 255f);
-            SetDefault(MSetting.MvisCurrentAudioProvider, OsuAudioPluginProvider.ID);
-            SetDefault(MSetting.MvisCurrentFunctionBar, StandardBottomBarProvider.ID);
+            SetDefault(MSetting.MvisCurrentAudioProvider, "no");
+            SetDefault(MSetting.MvisCurrentFunctionBar, "no");
 
             // Obsolete
             SetDefault(MSetting.MvisTabControlPosition, TabControlPosition.Right);
@@ -92,15 +90,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             //Mpris
             SetDefault(MSetting.MprisUseAvatarlogoAsCover, true);
             SetDefault(MSetting.MprisUpdateInterval, 500d, 100d, 1000d);
-
-            SetDefault(MSetting.MvisEnableAdvancedEnterLeaveAnimation, true);
-
-            SetDefault(MSetting.InjectButtonToNewSongSelect, true);
-
-            SetDefault(MSetting.UsePlatformAccentColor, true);
-
-            SetDefault(MSetting.IgnoreMediaControlWhenFocused, OperatingSystem.IsWindows());
-            SetDefault(MSetting.EnableOSDoNotDisturbWhenPlaying, true);
         }
 
         public Color4 GetCustomLoaderColor()
@@ -166,14 +155,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
         MvisAutoVSync,
         MvisPlayerSettingsMaxWidth,
         MvisUseTriangleV2,
-
-        MvisEnableAdvancedEnterLeaveAnimation,
-
-        InjectButtonToNewSongSelect,
-
-        UsePlatformAccentColor,
-        IgnoreMediaControlWhenFocused,
-        EnableOSDoNotDisturbWhenPlaying
     }
 
     public enum GamemodeActivateCondition

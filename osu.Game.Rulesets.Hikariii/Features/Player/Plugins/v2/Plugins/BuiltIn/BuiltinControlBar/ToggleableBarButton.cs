@@ -6,7 +6,7 @@ using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.BuiltinControlBar
 {
     public partial class ToggleableBarButton : SimpleBarButton
     {

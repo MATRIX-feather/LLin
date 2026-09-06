@@ -2,6 +2,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Logging;
 using osu.Framework.Screens;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics.UserInterface;
@@ -18,8 +19,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
     {
         private LoadingSpinner loading = null!;
 
-        public LyricSidebarSectionContainer(LLinPlugin plugin)
-            : base(plugin)
+        public LyricSidebarSectionContainer(string id)
+            : base(id)
         {
             Icon = FontAwesome.Solid.Music;
         }
@@ -29,8 +30,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
 
         [Resolved]
         private IImplementLLin mvisScreen { get; set; } = null!;
-
-        private LyricPlugin plugin => (LyricPlugin)Plugin;
 
         public int BeatmapSetId;
 
@@ -69,7 +68,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
                 }
             };
 
-            plugin.CurrentStatus.BindValueChanged(v =>
+            Logging.Log(level: LogLevel.Important, message: "FIXME: fix lyric sidebar plugin status detection");
+            /*plugin.CurrentStatus.BindValueChanged(v =>
             {
                 switch (v.NewValue)
                 {
@@ -82,7 +82,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.S
                         loading.Show();
                         break;
                 }
-            }, true);
+            }, true);*/
 
             screenStack.ScreenPushed += onScreenChanged;
             screenStack.ScreenExited += onScreenChanged;

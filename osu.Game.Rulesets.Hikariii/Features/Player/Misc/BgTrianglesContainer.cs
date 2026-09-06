@@ -4,7 +4,9 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
@@ -17,12 +19,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
         private readonly BindableBool trianglesV2 = new BindableBool();
 
         [BackgroundDependencyLoader]
-        private void load(MConfigManager config)
+        private void load(IHikariiiPluginManager plugins)
         {
+            var config = plugins.TryGetPluginConfigOrThrow<HikariiiCoreConfigManager>(plugins.GetPluginProviderOrThrow(HikariiiCore.ID));
+
             RelativeSizeAxes = Axes.Both;
             State.Value = Visibility.Visible;
 
-            config.BindWith(MSetting.MvisUseTriangleV2, trianglesV2);
+            config.BindWith(HikariiiCoreSetting.HollowTriangles, trianglesV2);
 
             Child = trianglesContainer = new MBgTriangles(triangleScale: 4f, withBeat: true)
             {
@@ -31,7 +35,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc
                 UseV2 = { BindTarget = trianglesV2 }
             };
 
-            config.BindWith(MSetting.MvisEnableBgTriangles, enableBgTriangles);
+            config.BindWith(HikariiiCoreSetting.TrianglesInBackground, enableBgTriangles);
         }
 
         protected override void LoadComplete()

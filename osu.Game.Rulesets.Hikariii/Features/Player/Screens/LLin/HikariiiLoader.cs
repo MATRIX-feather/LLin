@@ -4,27 +4,28 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Screens;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
 using osu.Game.Screens;
 using osuTK;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 
-public partial class LLinLoader : OsuScreen
+public partial class HikariiiLoader : OsuScreen
 {
     public override bool HideOverlaysOnEnter => true;
     public override bool? ApplyModTrackAdjustments => true;
 
     private readonly Func<LLinScreen> createScreen;
 
-    public LLinLoader(Func<LLinScreen> createScreen)
+    public HikariiiLoader(Func<LLinScreen> createScreen)
     {
         this.createScreen = createScreen;
         this.Depth = -100;
 
-        this.enterExitAnimation = new EnterExitAnimation();
+        this.enterExitAnimation = new HikariiiLoadAnimation();
         this.loadingSpinner = new LoadingIndicator
         {
             Anchor = Anchor.BottomCentre,
@@ -37,7 +38,7 @@ public partial class LLinLoader : OsuScreen
     }
 
     protected LLinScreen? TargetScreen;
-    private readonly EnterExitAnimation enterExitAnimation;
+    private readonly HikariiiLoadAnimation enterExitAnimation;
     private readonly BindableBool enableEnterLeaveAnimation = new(true);
     private readonly LoadingIndicator loadingSpinner;
 
@@ -45,12 +46,18 @@ public partial class LLinLoader : OsuScreen
     private bool canPush { get; set; }
 
     [BackgroundDependencyLoader]
-    private void load(MConfigManager config)
+    private void load(IHikariiiPluginManager pluginManager)
     {
         this.AddInternal(enterExitAnimation);
         AddInternal(loadingSpinner);
 
-        config.BindWith(MSetting.MvisEnableAdvancedEnterLeaveAnimation, enableEnterLeaveAnimation);
+        var provider = pluginManager.GetPluginProvider(HikariiiCore.ID);
+        if (provider == null) throw new InvalidOperationException($"No provider for core: {HikariiiCore.ID}");
+
+        var config = pluginManager.TryGetPluginConfig<HikariiiCoreConfigManager>(provider);
+        if (config == null) throw new InvalidOperationException($"No config for core: {HikariiiCore.ID}");
+
+        config.BindWith(HikariiiCoreSetting.FancyHikariiiLoader, enableEnterLeaveAnimation);
     }
 
     private readonly CancellationTokenSource cancellation = new();

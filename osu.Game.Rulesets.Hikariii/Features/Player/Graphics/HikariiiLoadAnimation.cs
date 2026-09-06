@@ -10,27 +10,27 @@ using osu.Framework.Localisation;
 using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 
-public partial class EnterExitAnimation : InputBlockingContainer
+public partial class HikariiiLoadAnimation : InputBlockingContainer
 {
     private FillFlowContainer descriptionContainer = null!;
-    private Container movingContainer;
-    private BeatmapCover beatmapBackground;
+    private Container movingContainer = null!;
+    private BeatmapCover beatmapBackground = null!;
 
-    private Box topMovingLine;
-    private Box bottomMovingLine;
+    private Box topMovingLine = null!;
+    private Box bottomMovingLine = null!;
 
-    private OsuSpriteText titleText;
-    private OsuSpriteText nowPlayingText;
+    private OsuSpriteText titleText = null!;
+    private OsuSpriteText nowPlayingText = null!;
 
-    public EnterExitAnimation()
+    public HikariiiLoadAnimation()
     {
         RelativeSizeAxes = Axes.Both;
         RelativePositionAxes = Axes.Both;
@@ -46,11 +46,11 @@ public partial class EnterExitAnimation : InputBlockingContainer
     private readonly BindableBool triangelesUseV2 = new BindableBool();
 
     [BackgroundDependencyLoader]
-    private void load(MConfigManager config)
+    private void load(HikariiiCoreConfigManager config)
     {
         Masking = true;
 
-        config.BindWith(MSetting.MvisUseTriangleV2, triangelesUseV2);
+        config.BindWith(HikariiiCoreSetting.HollowTriangles, triangelesUseV2);
 
         beatmapBackground = new BeatmapCover(beatmap.Value)
         {

@@ -18,12 +18,12 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.DummyBase;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 {
+    [Obsolete("Gonna be removed in future")]
     public partial class LLinPluginManager : CompositeDrawable
     {
         #region 插件管理
@@ -47,7 +47,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 
         public OsuMusicControllerWrapper AcquireOsuAudioController()
         {
-            return (OsuMusicControllerWrapper)AcquireProviderOrThrow<OsuAudioPluginProvider>(OsuAudioPluginProvider.ID).CreatePlugin();
+            throw new NotImplementedException();
+            //return (OsuMusicControllerWrapper)AcquireProviderOrThrow<OsuAudioPluginProvider>(OsuAudioPluginProvider.ID).CreatePlugin();
         }
 
         #endregion
@@ -134,7 +135,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         }
 
         [BackgroundDependencyLoader]
-        private void load(OsuGameBase gameBase, MConfigManager config)
+        private void load(OsuGameBase gameBase, DeprecatedMConfigManager config)
         {
             // Uncomment if we ever want blocking plugins feature back again
             /*
@@ -169,8 +170,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             // 随Ruleset附送
             var bundledPlugins = new LLinPluginProvider[]
             {
-                new DummyBasePluginProvider(config, this),
-                new OsuAudioPluginProvider(config),
                 new FallbackFunctionBarProvider(),
 
                 new SandboxPanelProvider(),

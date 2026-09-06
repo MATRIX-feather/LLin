@@ -2,6 +2,7 @@ using System;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.test;
 

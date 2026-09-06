@@ -164,10 +164,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
         {
             float total = safeAreaModifiers.Values.Sum();
 
-            if (total <= 0f)
+            //todo: FIXME fix after migrating this to the new DrawableHikariiiPlugin form
+            /*if (total <= 0f)
                 LLin?.RemoveBottomSafeArea(this);
             else
-                LLin?.AddBottomSafeArea(this, total + 15);
+                LLin?.AddBottomSafeArea(this, total + 15);*/
         }
 
         public bool OkForHide() => !IsHovered;

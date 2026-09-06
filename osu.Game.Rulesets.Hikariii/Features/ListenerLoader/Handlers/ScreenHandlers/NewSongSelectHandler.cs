@@ -35,9 +35,9 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
     private readonly BindableBool enableInject = new();
 
     [BackgroundDependencyLoader]
-    private void load(MConfigManager config)
+    private void load(LLinGlobalConfigManager config)
     {
-        config.BindWith(MSetting.InjectButtonToNewSongSelect, enableInject);
+        config.BindWith(LLinGlobal.InjectButtonToNewSongSelect, enableInject);
     }
 
     public override void Handle(IScreen prev, IScreen next)
@@ -111,7 +111,7 @@ public partial class NewSongSelectHandler : AbstractScreenHandler
 
     private void pushPlayerScreen()
     {
-        Game.PerformFromScreen(s => s.Push(new LLinLoader(() => new LLinScreen())), new[]
+        Game.PerformFromScreen(s => s.Push(new HikariiiLoader(() => new LLinScreen())), new[]
         {
             typeof(MainMenu),
             typeof(SoloSongSelect)
