@@ -131,7 +131,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
 
         public LLinPluginManager()
         {
-            resolver = new LLinPluginResolver(this);
+            //resolver = new LLinPluginResolver(this);
         }
 
         [BackgroundDependencyLoader]

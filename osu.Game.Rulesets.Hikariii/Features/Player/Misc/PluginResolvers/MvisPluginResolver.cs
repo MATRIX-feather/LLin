@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers
     public class MvisPluginResolver : LLinPluginResolver
     {
         public MvisPluginResolver(LLinPluginManager pluginManager)
-            : base(pluginManager)
+            : base(null)
         {
         }
     }

@@ -2,12 +2,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers
 {
-    public class LLinPluginResolver(LLinPluginManager pluginManager)
+    public class LLinPluginResolver(IHikariiiPluginManager pluginManager)
     {
-        private readonly LLinPluginManager pluginManager = pluginManager;
+        private readonly IHikariiiPluginManager pluginManager = pluginManager;
 
         private readonly ConcurrentDictionary<string, LLinPluginProvider> audioPluginDictionary = new();
         private readonly ConcurrentDictionary<string, LLinPluginProvider> functionBarDictionary = new();

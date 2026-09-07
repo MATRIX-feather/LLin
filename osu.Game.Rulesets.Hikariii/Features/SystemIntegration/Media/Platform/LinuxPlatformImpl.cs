@@ -110,7 +110,7 @@ public partial class LinuxPlatformImpl : Drawable, IPlatformImpl
         }
         else
         {
-            string? target = storage?.GetFiles("custom", "avatarlogo*")
+            string? target = storage?.GetFiles("hikariii-data", "avatarlogo*")
                                     .FirstOrDefault(s => s.Contains("avatarlogo"));
 
             if (!string.IsNullOrEmpty(target))

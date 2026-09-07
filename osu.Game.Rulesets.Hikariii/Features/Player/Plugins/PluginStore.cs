@@ -18,11 +18,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
         public List<LLinPluginProvider> LoadedPluginProviders = new();
 
         public PluginStore(Storage storage, OsuGameBase gameBase)
-            : base(new StorageBackedResourceStore(storage), "custom")
+            : base(new StorageBackedResourceStore(storage), "hikariii-data/plugins")
         {
             this.gameBase = gameBase;
 
-            customStorage = storage.GetStorageForDirectory("custom");
+            customStorage = storage.GetStorageForDirectory("hikariii-data/plugins");
 
             prepareLoad();
         }

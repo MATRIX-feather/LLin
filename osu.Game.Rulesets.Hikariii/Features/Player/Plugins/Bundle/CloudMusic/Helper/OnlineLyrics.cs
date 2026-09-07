@@ -189,7 +189,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.H
             onSongSearchRequestFinish(meta, null);
         }
 
-        private static string lyricFilePath(WorkingBeatmap beatmap) => $"custom/lyrics/beatmap-{beatmap.BeatmapSetInfo.ID}.json";
+        private static string lyricFilePath(WorkingBeatmap beatmap) => $"hikariii-data/plugins/lyrics/beatmap-{beatmap.BeatmapSetInfo.ID}.json";
 
         /// <summary>
         /// 当歌曲搜索请求完成后...

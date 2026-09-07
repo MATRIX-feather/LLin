@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.H
 
         private WebRequest? currentRequest;
 
-        private string filePath = "custom/lyrics/definition.json";
+        private string filePath = "hikariii-data/plugins/lyrics/definition.json";
 
         public void UpdateDefinition(string? url = null, Action? onComplete = null, Action<Exception>? onFail = null)
         {

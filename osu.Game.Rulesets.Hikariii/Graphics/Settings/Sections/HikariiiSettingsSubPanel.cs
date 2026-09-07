@@ -3,8 +3,9 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Graphics.Settings.Sections;
 
@@ -16,9 +17,9 @@ public partial class HikariiiSettingsSubPanel : SettingsSubPanel
     }
 
     [BackgroundDependencyLoader]
-    private void load(LLinPluginManager manager)
+    private void load(IHikariiiPluginManager manager)
     {
-        foreach (var pl in manager.GetAllPluginProviders().Values.Where(pl => manager.GetSettingsFor(pl)?.Length > 0))
+        foreach (var pl in manager.GetAllPluginProviders().Values.Where(pl => pl.GetSettingsEntries(manager.TryGetPluginConfigOrThrow<IPluginConfigManager>(pl)).Length > 0))
             AddSection(new PluginSettingsSubsection(pl));
     }
 }

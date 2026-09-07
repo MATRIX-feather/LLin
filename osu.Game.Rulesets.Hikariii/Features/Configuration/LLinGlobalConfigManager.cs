@@ -19,6 +19,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
 
             base.InitialiseDefaults();
         }
+
+        protected override string Filename => "hikariii-data/llin-misc.ini";
     }
 
     public enum LLinGlobal
