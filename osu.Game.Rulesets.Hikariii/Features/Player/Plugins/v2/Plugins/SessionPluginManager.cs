@@ -2,9 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
@@ -25,25 +25,13 @@ public partial class SessionPluginManager : CompositeDrawable
     private void load(HikariiiCoreConfigManager config)
     {
         config.BindWith(HikariiiCoreSetting.EnabledPlugins, configEnabledPluginNames);
-        configEnabledPluginNames.BindValueChanged(this.onConfigChanged);
+        loadAllowedPlugins(configEnabledPluginNames.Value);
     }
 
-    private void onConfigChanged(ValueChangedEvent<string> e)
+    private void loadAllowedPlugins(string configValue)
     {
-        string[] fullList = configEnabledPluginNames.Value.Split(" ");
-
-        allowedPlugins.Clear();
+        string[] fullList = [.. configValue.Split(",").Where(s => !string.IsNullOrEmpty(s))];
         allowedPlugins.AddRange(fullList);
-
-        string[] newlyEnabledPlugins = fullList.Concat(allowedPlugins)
-                                               .Distinct()
-                                               .ToArray();
-
-        string[] newlyDisabledPlugins = fullList.Except(allowedPlugins)
-                                                .ToArray();
-
-        newlyEnabledPlugins.ForEach(n => EnablePlugin(n));
-        newlyDisabledPlugins.ForEach(DisablePlugin);
     }
 
     public IHikariiiPluginProvider[] AllowedPluginProviders()
@@ -94,6 +82,13 @@ public partial class SessionPluginManager : CompositeDrawable
         var plugin = plugins.GetPluginProviderOrThrow(id).CreateDrawablePlugin();
         trackingPlugins[id] = plugin;
         OnPluginEnable?.Invoke((id, plugin));
+
+        if (!allowedPlugins.Contains(id))
+        {
+            allowedPlugins.Add(id);
+            savePlugins();
+        }
+
         return plugin;
     }
 
@@ -105,6 +100,16 @@ public partial class SessionPluginManager : CompositeDrawable
         if (plugin == null) return;
 
         OnPluginDisable?.Invoke((id, plugin));
+        allowedPlugins.Remove(id);
+        savePlugins();
+    }
+
+    private void savePlugins()
+    {
+        StringBuilder builder = new StringBuilder();
+        allowedPlugins.ForEach(p => builder.Append($",{p}"));
+
+        configEnabledPluginNames.Value = builder.ToString();
     }
 
     public bool IsPluginEnabled(string id)
@@ -112,6 +117,6 @@ public partial class SessionPluginManager : CompositeDrawable
         return trackingPlugins.ContainsKey(id);
     }
 
-    public Action<(string id, DrawableHikariiiPlugin drawablePlugin)> OnPluginEnable;
-    public Action<(string id, DrawableHikariiiPlugin drawablePlugin)> OnPluginDisable;
+    public Action<(string id, DrawableHikariiiPlugin drawablePlugin)>? OnPluginEnable;
+    public Action<(string id, DrawableHikariiiPlugin drawablePlugin)>? OnPluginDisable;
 }
