@@ -916,14 +916,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             //加载插件
             foreach (var provider in SessionPluginManager.AllowedPluginProviders())
             {
-                var pl = provider.CreateDrawablePlugin();
-
                 try
                 {
-                    SessionPluginManager.EnablePlugin(provider.GetID());
-                    loadPluginAsync((provider.GetID(), pl)).Wait();
-                    //LoadComponent(pl);
-                    //addPlugin(provider.GetID(), pl);
+                    loadPluginAsync((provider.GetID(), SessionPluginManager.EnablePlugin(provider.GetID()))).Wait();
                 }
                 catch (Exception e)
                 {
@@ -991,7 +986,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
         // Remove a disabled plugin from the player
         private void discardPlugin((string id, DrawableHikariiiPlugin plugin) pair)
         {
-            string id = pair.id;
             var plugin = pair.plugin;
 
             if (plugin.HasExitAnimation)
@@ -1000,9 +994,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (plugin.Parent is Container container)
                 this.Delay(plugin.HasExitAnimation ? 3000 : 0).Schedule(() => container.Remove(plugin, true));
             else if (plugin.Parent != null)
-                throw new InvalidOperationException($"PANIC! Parent of the drawable plugin {plugin} is not a container, this should not happen! is the plugin already disabled?");
-
-            Logging.Log(level: LogLevel.Important, message: "FIXME: implement late plugin discard");
+                throw new InvalidOperationException($"PANIC! Parent of the drawable plugin {pair.id} -> {plugin} is not a container, this should not happen! is the plugin already disabled?");
         }
 
         // Load an enabled plugin then add it to the player
@@ -1022,14 +1014,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             markAsLoading(id);
 
             Logging.Log($"Loading {id}");
+            var tokenSource = new CancellationTokenSource();
+            cancellationTokenSources[id] = tokenSource;
             return this.LoadComponentAsync(plugin, loadedDrawable =>
             {
-                //onPluginLoadFinishAnyState(id);
                 addPlugin(id, loadedDrawable);
-            }).ContinueWith(t =>
+            }, tokenSource.Token).ContinueWith(t =>
             {
                 onPluginLoadFinishAnyState(id);
-            });
+            }, tokenSource.Token);
         }
 
         private void onPluginLoadFinishAnyState(string id)
