@@ -19,7 +19,6 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
@@ -45,7 +44,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
         [Resolved]
         private IDialogOverlay dialog { get; set; }
 
-        private readonly BindableBool disabled = new BindableBool();
+        public readonly BindableBool PluginDisabled = new BindableBool();
         private GridContainer buttonsGrid;
         private Circle statusCircle;
         private Box bgBox;
@@ -175,7 +174,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                                         Height = 30,
                                         RelativeSizeAxes = Axes.X,
                                         Width = 0.95f,
-                                        Text = "禁用此插件",
+                                        Text = "禁用",
                                         Action = () => manager.DisablePlugin(Id),
                                         Enabled = { Value = false },
                                         Anchor = Anchor.BottomCentre,
@@ -186,7 +185,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                                         Height = 30,
                                         RelativeSizeAxes = Axes.X,
                                         Width = 0.95f,
-                                        Text = "启用此插件",
+                                        Text = "启用",
                                         Action = () => manager.EnablePlugin(Id),
                                         Enabled = { Value = false },
                                         Anchor = Anchor.BottomCentre,
@@ -199,26 +198,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                 },
                 new HoverClickSounds()
             };
-/*
-            if (Plugin.Flags.Contains(DrawableHikariiiPlugin.PluginFlags.CanDisable))
-            {
-                disabled.BindTo(Plugin.Disabled);
 
-                disabled.BindValueChanged(v =>
-                {
-                    enableButton.Enabled.Value = v.NewValue;
-                    disableButton.Enabled.Value = !v.NewValue;
-                    statusCircle.FadeColour(v.NewValue
-                        ? colourProvider.Background5
-                        : colourProvider.Light2, 200, Easing.OutQuint);
-                    TooltipText = string.Empty;
-                }, true);
-            }
-            else
+            PluginDisabled.BindValueChanged(v =>
             {
-                TooltipText = "目前不能通过此面板禁用该插件";
-            }
-*/
+                enableButton.Enabled.Value = v.NewValue;
+                disableButton.Enabled.Value = !v.NewValue;
+                statusCircle.FadeColour(v.NewValue
+                    ? colourProvider.Background5
+                    : colourProvider.Light2, 200, Easing.OutQuint);
+                TooltipText = string.Empty;
+            }, true);
+
             colourProvider.HueColour.BindValueChanged(_ => updateColors(), true);
         }
 
@@ -285,9 +275,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
             if (HasFocus)
             {
                 if (manager.IsPluginEnabled(Id))
-                    enableButton.TriggerClick();
-                else
                     disableButton.TriggerClick();
+                else
+                    enableButton.TriggerClick();
             }
 
             return true;

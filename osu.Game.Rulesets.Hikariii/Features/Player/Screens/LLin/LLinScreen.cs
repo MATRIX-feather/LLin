@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework;
@@ -57,6 +58,8 @@ using osu.Game.Screens.Play;
 using osuTK;
 using osuTK.Graphics;
 
+[assembly: InternalsVisibleTo("osu.Game.Rulesets.Hikariii.Tests")]
+
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 {
     [Cached(typeof(IImplementLLin))]
@@ -94,6 +97,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         [Cached]
         private SessionPluginManager sessionPluginManager = new();
+
+        internal SessionPluginManager SessionPluginManager => sessionPluginManager;
 
         #endregion
 
@@ -184,9 +189,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (lastAudioController != null)
                 lastAudioController.IsCurrent = false;
 
-            sessionPluginManager.DisablePlugin(last);
+            SessionPluginManager.DisablePlugin(last);
 
-            var plugin = sessionPluginManager.EnablePlugin(next);
+            var plugin = SessionPluginManager.EnablePlugin(next);
             var nextAsController = plugin as IProvideAudioControlPlugin ?? throw new Exception("Why could this happen?");
 
             //如果没找到(为null)，则解锁Beatmap.Disabled
@@ -249,8 +254,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                     RemoveBottomSafeArea(oldAsPlugin);
             }
 
-            sessionPluginManager.DisablePlugin(next);
-            var plugin = sessionPluginManager.EnablePlugin(next);
+            SessionPluginManager.DisablePlugin(next);
+            var plugin = SessionPluginManager.EnablePlugin(next);
             var newProvider = plugin as IFunctionBarProvider ?? throw new Exception("Why could this happen?");
 
             //todo: FIXME investigate this.
@@ -266,7 +271,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (controlDisplayTemp.Value > 0f)
                 newProvider.ShowFunctionControl();
 
-            sessionPluginManager.EnablePlugin(next);
+            SessionPluginManager.EnablePlugin(next);
             //Logging.Log($"更改底栏到{newProvider}");
         }
 
@@ -880,7 +885,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 sidebar,
                 tabControl,
                 lLinMediaSource,
-                sessionPluginManager
+                SessionPluginManager
             ]);
 
             loadingIndicator.Hide();
@@ -909,13 +914,13 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             }
 
             //加载插件
-            foreach (var provider in sessionPluginManager.AllowedPluginProviders())
+            foreach (var provider in SessionPluginManager.AllowedPluginProviders())
             {
                 var pl = provider.CreateDrawablePlugin();
 
                 try
                 {
-                    sessionPluginManager.EnablePlugin(provider.GetID());
+                    SessionPluginManager.EnablePlugin(provider.GetID());
                     loadPluginAsync((provider.GetID(), pl)).Wait();
                     //LoadComponent(pl);
                     //addPlugin(provider.GetID(), pl);
@@ -926,8 +931,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 }
             }
 
-            sessionPluginManager.OnPluginEnable += pair => loadPluginAsync(pair);
-            sessionPluginManager.OnPluginDisable += discardPlugin;
+            SessionPluginManager.OnPluginEnable += pair => loadPluginAsync(pair);
+            SessionPluginManager.OnPluginDisable += discardPlugin;
 
             bgBlur.BindValueChanged(v => updateBackground(Beatmap.Value));
             idleBgDim.BindValueChanged(v => applyBackgroundBrightness(true, v.NewValue));
@@ -989,8 +994,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             string id = pair.id;
             var plugin = pair.plugin;
 
+            if (plugin.HasExitAnimation)
+                plugin.PlayExit();
+
             if (plugin.Parent is Container container)
-                container.Remove(plugin, true);
+                this.Delay(plugin.HasExitAnimation ? 3000 : 0).Schedule(() => container.Remove(plugin, true));
             else if (plugin.Parent != null)
                 throw new InvalidOperationException($"PANIC! Parent of the drawable plugin {plugin} is not a container, this should not happen! is the plugin already disabled?");
 

@@ -11,7 +11,6 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Input;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
@@ -21,12 +20,20 @@ using osu.Game.Tests.Visual;
 
 namespace osu.Game.Rulesets.Hikariii.Tests;
 
-public partial class TestSceneSongPlayerScreen : OsuTestScene
+public partial class TestSceneSongPlayerScreenBase : OsuTestScene
 {
     private OsuScreenStack stack = null!;
 
     private BackButton backButton = null!;
     private ScreenStackFooter screenFooter = null!;
+    protected HikariiiPluginHub PluginHub;
+
+    protected LLinScreen? CurrentLLin { get; set; }
+
+    public TestSceneSongPlayerScreenBase()
+    {
+        PluginHub = new HikariiiPluginHub();
+    }
 
     [Resolved]
     private HikariiiTestBrowser testBrowser { get; set; } = null!;
@@ -46,10 +53,9 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
         Dependencies.Cache(new CustomColourProvider());
         Dependencies.Cache(new LLinGlobalConfigManager(storage));
 
-        HikariiiPluginHub pluginHub;
-        cacheAndAdd(pluginHub = new HikariiiPluginHub());
-        Dependencies.CacheAs(typeof(IHikariiiPluginManager), pluginHub);
-        pluginHub.LoadFrom(new HikariiiBundledPluginLoader(), out _);
+        cacheAndAdd(PluginHub);
+        Dependencies.CacheAs(typeof(IHikariiiPluginManager), PluginHub);
+        PluginHub.LoadFrom(new HikariiiBundledPluginLoader(), out _);
 
         var dialog = new DialogOverlay();
 
@@ -124,6 +130,12 @@ public partial class TestSceneSongPlayerScreen : OsuTestScene
         while (stack.CurrentScreen != null)
             stack.Exit();
 
-        stack.Push(new LLinScreen());
+        var next = new LLinScreen();
+        stack.Push(CurrentLLin = next);
+        next.Exiting += () =>
+        {
+            if (CurrentLLin == next)
+                CurrentLLin = null;
+        };
     }
 }

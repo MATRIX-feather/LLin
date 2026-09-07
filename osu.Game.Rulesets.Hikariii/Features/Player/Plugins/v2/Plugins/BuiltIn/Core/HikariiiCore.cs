@@ -23,7 +23,7 @@ public class HikariiiCore : IHikariiiPluginProvider
         return typeof(HikariiiCoreConfigManager);
     }
 
-    public PluginDescription GetPluginDescription() => new("Hikariii", "播放器基础设置", ["mfosu"]);
+    public PluginDescription GetPluginDescription() => new("Hikariii", "Hikariii 播放器", ["mfosu"]);
 
     public DrawableHikariiiPlugin CreateDrawablePlugin()
     {

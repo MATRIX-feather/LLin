@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -6,9 +7,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Sections;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 
@@ -19,6 +18,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
         [Resolved]
         private SessionPluginManager manager { get; set; } = null!;
 
+        [Resolved]
+        private IHikariiiPluginManager globalPlugins { get; set; }
+
         private FillFlowContainer? placeholder;
 
         public PluginsSection()
@@ -26,6 +28,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
             Title = "插件";
             Icon = FontAwesome.Solid.Boxes;
         }
+
+        private readonly IDictionary<string, PluginPiece> pluginPieces = new Dictionary<string, PluginPiece>();
 
         [BackgroundDependencyLoader]
         private void load()
@@ -61,14 +65,26 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                 }
             });
 
-            manager.OnPluginEnable += addPiece;
-            manager.OnPluginDisable += removePiece;
+            manager.OnPluginEnable += pair => activate(pair.id);
+            manager.OnPluginDisable += pair => deactivate(pair.id);
         }
 
         protected override void LoadComplete()
         {
-            foreach (var pl in manager.PluginsDictionary())
-                addPiece((pl.Key, pl.Value));
+            foreach (var pl in globalPlugins.GetAllPluginProviders())
+            {
+                string id = pl.Key;
+                PluginPiece pluginPiece;
+
+                Add(pluginPiece = new PluginPiece(id)
+                {
+                    PluginDisabled = { Value = !manager.IsPluginEnabled(id) }
+                });
+                pluginPieces[id] = pluginPiece;
+            }
+
+            if (pluginPieces.Count != 0)
+                placeholder.FadeOut(300, Easing.OutQuint);
 
             FillFlow.LayoutEasing = Easing.OutQuint;
             FillFlow.LayoutDuration = 250;
@@ -76,29 +92,22 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
             base.LoadComplete();
         }
 
-        private void addPiece((string id, DrawableHikariiiPlugin plugin) pair)
+        private void activate(string id)
         {
-            Add(new PluginPiece(pair.id));
+            bool hasExistingPiece = pluginPieces.TryGetValue(id, out PluginPiece pluginPiece);
 
-            placeholder.FadeOut(300, Easing.OutQuint);
+            if (!hasExistingPiece)
+                return;
+
+            pluginPiece!.PluginDisabled.Value = false;
         }
 
-        private void removePiece((string id, DrawableHikariiiPlugin plugin) pair)
+        private void deactivate(string id)
         {
-            int childrenCount = 0;
+            pluginPieces.TryGetValue(id, out PluginPiece pluginPiece);
+            if (pluginPiece == null) return;
 
-            foreach (var d in FillFlow)
-            {
-                childrenCount += FillFlow.Children.Count;
-
-                if (d is PluginPiece piece && piece.Id.Equals(pair.id))
-                {
-                    piece.Hide();
-                    break;
-                }
-            }
-
-            if (childrenCount - 1 <= 0) placeholder.FadeIn(300, Easing.OutQuint);
+            pluginPiece.PluginDisabled.Value = true;
         }
     }
 }

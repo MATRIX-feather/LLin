@@ -1,44 +1,89 @@
 using System;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Platform;
+using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
+using osuTK;
+using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.test;
-
-public class TestProviderA : IHikariiiPluginProvider
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.test
 {
-    public class TestConfigA : IPluginConfigManager
+    public class TestProviderA : IHikariiiPluginProvider
     {
-        public void Dispose()
+        public string GetID() => "test-a";
+
+        public IPluginConfigManager CreatePluginConfig(Storage storageAccess)
         {
+            return new DummyPluginConfigManager();
         }
+
+        public Type GetPluginConfigType()
+        {
+            return typeof(DummyPluginConfigManager);
+        }
+
+        public PluginDescription GetPluginDescription() => new("NameA", "DescriptionA", ["author1", "author2"]);
+
+        public DrawableHikariiiPlugin CreateDrawablePlugin()
+        {
+            return new DrawableTestA();
+        }
+
+        public SettingsEntry[] GetSettingsEntries(IPluginConfigManager config) => [];
     }
 
-    public string GetID() => "TestA";
-
-    public IPluginConfigManager CreatePluginConfig(Storage storageAccess)
+    public partial class DrawableTestA : DrawableHikariiiPlugin
     {
-        return new TestConfigA();
-    }
+        public override ContentLayerType ContentLayer => ContentLayerType.Foreground;
 
-    public Type GetPluginConfigType()
-    {
-        return typeof(TestConfigA);
-    }
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            RelativeSizeAxes = Axes.Both;
+            Size = new Vector2(0.1f, 0.1f);
 
-    public PluginDescription GetPluginDescription()
-    {
-        throw new NotImplementedException();
-    }
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
 
-    public DrawableHikariiiPlugin CreateDrawablePlugin()
-    {
-        throw new NotImplementedException();
-    }
+            Scale = new Vector2(0);
 
-    public SettingsEntry[] GetSettingsEntries(IPluginConfigManager config)
-    {
-        throw new NotImplementedException();
+            Children =
+            [
+                new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = Color4.Black
+                },
+                new OsuSpriteText
+                {
+                    Text = "DrawableA!",
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre
+                }
+            ];
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            this.FadeInFromZero(300)
+                .ScaleTo(new Vector2(1f), 300, Easing.OutQuint);
+        }
+
+        public override bool HasExitAnimation => true;
+
+        public override void PlayExit()
+        {
+            base.PlayExit();
+
+            this.FadeOut(300)
+                .ScaleTo(new Vector2(0.6f), 300, Easing.OutQuint);
+        }
     }
 }
