@@ -1,6 +1,7 @@
 using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay.Config;
@@ -8,7 +9,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay.Confi
 public class ReplayConfigManager : PluginConfigManager<ReplaySettings>
 {
     public ReplayConfigManager(Storage storage)
-        : base(storage)
+        : base(storage, null) //todo: FIXME fix null provider
     {
     }
 
@@ -22,8 +23,6 @@ public class ReplayConfigManager : PluginConfigManager<ReplaySettings>
         SetDefault(ReplaySettings.OnlyUsePassedScores, true);
         base.InitialiseDefaults();
     }
-
-    protected override string ConfigName => "BackgroundReplay";
 }
 
 public enum ReplaySettings

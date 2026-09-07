@@ -1,13 +1,14 @@
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Sorter;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.Config
 {
     public class CollectionHelperConfigManager : PluginConfigManager<CollectionSettings>
     {
         public CollectionHelperConfigManager(Storage storage)
-            : base(storage)
+            : base(storage, null) //todo: FIXME fix null provider
         {
         }
 
@@ -18,8 +19,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection.C
             SetDefault(CollectionSettings.BeatmapSortMethod, SortMethod.MostDifficultFirst);
             base.InitialiseDefaults();
         }
-
-        protected override string ConfigName => "CollectionSupport";
     }
 
     public enum CollectionSettings

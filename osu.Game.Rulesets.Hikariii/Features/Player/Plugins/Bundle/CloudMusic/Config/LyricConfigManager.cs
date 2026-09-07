@@ -2,13 +2,14 @@ using osu.Framework.Configuration;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.Config
 {
     public class LyricConfigManager : PluginConfigManager<LyricSettings>
     {
         public LyricConfigManager(Storage storage)
-            : base(storage)
+            : base(storage, null) //todo: FIXME fix null provider
         {
         }
 
@@ -34,7 +35,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic.C
         }
 
         //配置文件名，已更改的值将在"plugin-{ConfigName}.ini"中保存
-        protected override string ConfigName => "lyric";
     }
 
     public enum LyricSettings

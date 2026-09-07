@@ -2,6 +2,7 @@
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Screens.Visualizer.Components;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel.RulesetComponents.Configuration
 {
@@ -59,11 +60,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPan
         }
 
         public SandboxRulesetConfigManager(Storage storage)
-            : base(storage)
+            : base(storage, null) //todo: FIXME fix null provider
         {
         }
-
-        protected override string ConfigName => "RulesetPanel";
     }
 
     public enum SandboxRulesetSetting

@@ -2,6 +2,7 @@ using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
@@ -19,6 +20,6 @@ public partial class FallbackFunctionBarProvider : LLinPluginProvider
 
     public override IPluginConfigManager CreateConfigManager(Storage storage)
     {
-        return new DefaultPluginConfigManager(storage);
+        return new DummyPluginConfigManager();
     }
 }

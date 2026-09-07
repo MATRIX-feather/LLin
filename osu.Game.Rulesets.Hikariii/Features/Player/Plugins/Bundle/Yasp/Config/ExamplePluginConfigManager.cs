@@ -2,13 +2,14 @@ using System.ComponentModel;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config
 {
     public class YaspConfigManager : PluginConfigManager<YaspSettings>
     {
         public YaspConfigManager(Storage storage)
-            : base(storage)
+            : base(storage, null) //todo: FIXME fix null provider
         {
         }
 
@@ -26,7 +27,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config
         }
 
         //配置文件名，已更改的值将在"plugin-{ConfigName}.ini"中保存
-        protected override string ConfigName => "yap";
     }
 
     public enum YaspSettings

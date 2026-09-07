@@ -2,6 +2,7 @@ using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
@@ -13,9 +14,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
         public override PluginDescription GetDescription() => new(LLinPluginNameString.StandardBottomBar, "Hikariii 预装的标准底栏", ["mfosu"]);
 
-        public override DefaultPluginConfigManager CreateConfigManager(Storage storage)
+        public override DummyPluginConfigManager CreateConfigManager(Storage storage)
         {
-            return new DefaultPluginConfigManager(storage);
+            return new DummyPluginConfigManager();
         }
 
         public static readonly string ID = "standard_bottom_bar";

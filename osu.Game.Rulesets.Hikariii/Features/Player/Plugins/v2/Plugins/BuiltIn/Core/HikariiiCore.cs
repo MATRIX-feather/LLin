@@ -15,7 +15,7 @@ public class HikariiiCore : IHikariiiPluginProvider
 
     public IPluginConfigManager CreatePluginConfig(Storage storageAccess)
     {
-        return new HikariiiCoreConfigManager(storageAccess);
+        return new HikariiiCoreConfigManager(storageAccess, this);
     }
 
     public Type GetPluginConfigType()

@@ -1,15 +1,10 @@
 using osu.Framework.Platform;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core
 {
-    public class HikariiiCoreConfigManager : PluginConfigManager<HikariiiCoreSetting>, IPluginConfigManager
+    public class HikariiiCoreConfigManager(Storage storage, IHikariiiPluginProvider provider) : PluginConfigManager<HikariiiCoreSetting>(storage, provider)
     {
-        public HikariiiCoreConfigManager(Storage storage)
-            : base(storage)
-        {
-        }
-
         protected override void InitialiseDefaults()
         {
             SetDefault(HikariiiCoreSetting.BackgroundBlur, 0.2f, 0f, 1f);
@@ -29,10 +24,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.
             SetDefault(HikariiiCoreSetting.FancyHikariiiLoader, true);
             SetDefault(HikariiiCoreSetting.HollowTriangles, false);
 
-            SetDefault(HikariiiCoreSetting.EnabledPlugins, $"{HikariiiCore.ID} {OsuAudio.OsuAudio.ID}");
+            SetDefault(HikariiiCoreSetting.EnabledPlugins, $"{HikariiiCore.ID}");
         }
-
-        protected override string ConfigName => "core";
     }
 
     public enum HikariiiCoreSetting
