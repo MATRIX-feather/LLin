@@ -6,13 +6,12 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Platform;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 using osu.Game.Tests.Visual;
 
-namespace osu.Game.Rulesets.Hikariii.Tests.HikariiiPlayerV2;
+namespace osu.Game.Rulesets.Hikariii.Tests.HikariiiPlayerv2;
 
 public partial class TestPluginHubV2 : OsuTestScene
 {

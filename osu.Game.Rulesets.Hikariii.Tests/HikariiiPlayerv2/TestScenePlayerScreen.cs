@@ -18,7 +18,7 @@ using osu.Game.Screens;
 using osu.Game.Screens.Footer;
 using osu.Game.Tests.Visual;
 
-namespace osu.Game.Rulesets.Hikariii.Tests;
+namespace osu.Game.Rulesets.Hikariii.Tests.HikariiiPlayerv2;
 
 public partial class TestSceneSongPlayerScreenBase : OsuTestScene
 {

@@ -2,8 +2,8 @@ using System;
 using osu.Framework.Allocation;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.test;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
+using osu.Game.Rulesets.Hikariii.Tests.HikariiiPlayerv2.test;
 
 namespace osu.Game.Rulesets.Hikariii.Tests.HikariiiPlayerv2;
 
