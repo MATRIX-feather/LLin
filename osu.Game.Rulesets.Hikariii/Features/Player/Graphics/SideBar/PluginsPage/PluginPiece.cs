@@ -1,8 +1,7 @@
-#nullable disable
-
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
@@ -27,7 +26,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPage
 {
-    public partial class PluginPiece : CompositeDrawable, IHasTooltip
+    public partial class PluginPiece : CompositeDrawable, IHasCustomTooltip
     {
         public readonly string Id;
         private RoundedButton disableButton;
@@ -49,6 +48,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
         private Circle statusCircle;
         private Box bgBox;
         private DelayedLoadUnloadWrapper textureWrapper;
+        private IHikariiiPluginProvider provider;
 
         [Resolved]
         private SessionPluginManager manager { get; set; }
@@ -71,7 +71,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
 
             Anchor = Origin = Anchor.TopCentre;
 
-            var provider = plugins.GetPluginProviderOrThrow(Id);
+            provider = plugins.GetPluginProviderOrThrow(Id);
             var desc = provider.GetPluginDescription();
 
             InternalChildren = new Drawable[]
@@ -206,10 +206,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
                 statusCircle.FadeColour(v.NewValue
                     ? colourProvider.Background5
                     : colourProvider.Light2, 200, Easing.OutQuint);
-                TooltipText = string.Empty;
             }, true);
 
             colourProvider.HueColour.BindValueChanged(_ => updateColors(), true);
+
+            tooltip = new PluginTooltip(provider);
         }
 
         private void updateColors()
@@ -232,8 +233,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
 
             this.Delay(200).Expire();
         }
-
-        public LocalisableString TooltipText { get; set; }
 
         public override bool AcceptsFocus => true;
 
@@ -300,6 +299,135 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.PluginsPag
             {
                 Texture = textures.Get(target);
             }
+        }
+
+        public ITooltip GetCustomTooltip()
+        {
+            return tooltip ?? (ITooltip)emptyTooltip;
+        }
+
+        private readonly EmptyTooltip emptyTooltip = new();
+        private PluginTooltip? tooltip;
+
+        public object TooltipContent => provider;
+    }
+
+    public partial class EmptyTooltip : CompositeDrawable, ITooltip
+    {
+        public void SetContent(object content)
+        {
+        }
+
+        public void Move(Vector2 pos)
+        {
+            this.MoveTo(pos);
+        }
+    }
+
+    public partial class PluginTooltip(IHikariiiPluginProvider provider) : Container, ITooltip
+    {
+        private readonly Bindable<IHikariiiPluginProvider> provider = new();
+        private FillFlowContainer textContainer;
+
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            provider.BindValueChanged(this.refreshContent);
+
+            AutoSizeAxes = Axes.Both;
+
+            Children =
+            [
+                new Box
+                {
+                    Colour = Color4.Black,
+                    RelativeSizeAxes = Axes.Both
+                },
+                textContainer = new FillFlowContainer
+                {
+                    AutoSizeAxes = Axes.Both,
+                    Margin = new MarginPadding(10),
+                    Spacing = new Vector2(0, 10f),
+                    Direction = FillDirection.Vertical,
+                }
+            ];
+        }
+
+        private void refreshContent(ValueChangedEvent<IHikariiiPluginProvider> e)
+        {
+            var provider = e.NewValue;
+            var description = provider.GetPluginDescription();
+
+            textContainer.Clear();
+            textContainer.AddRange(
+            [
+                new MetadataSection
+                {
+                    Title = "名称",
+                    Text = [description.Name]
+                },
+                new MetadataSection
+                {
+                    Title = "描述",
+                    Text = [description.Description]
+                },
+                new MetadataSection
+                {
+                    Title = "作者",
+                    Text = description.Authors
+                }
+            ]);
+
+            var credits = provider.GetPluginDescription().Credits;
+
+            if (credits.Length != 0)
+            {
+                textContainer.Add(new MetadataSection
+                {
+                    Title = "鸣谢",
+                    Text = credits
+                });
+            }
+        }
+
+        private partial class MetadataSection : Container
+        {
+            public LocalisableString Title { get; set; }
+            public LocalisableString[] Text { get; set; } = [];
+
+            [BackgroundDependencyLoader]
+            private void load()
+            {
+                TextFlowContainer textFlow;
+                AutoSizeAxes = Axes.Both;
+
+                Children =
+                [
+                    new OsuSpriteText
+                    {
+                        Text = Title,
+                        Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 18),
+                    },
+                    textFlow = new TextFlowContainer
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Margin = new MarginPadding { Top = 18 + 4 },
+                        MaximumSize = new Vector2(300f, 1000f),
+                    }
+                ];
+
+                Text.ForEach(t => textFlow.AddParagraph(t));
+            }
+        }
+
+        public void SetContent(object content)
+        {
+            if (content is IHikariiiPluginProvider p) provider.Value = p;
+        }
+
+        public void Move(Vector2 pos)
+        {
+            this.MoveTo(pos);
         }
     }
 }

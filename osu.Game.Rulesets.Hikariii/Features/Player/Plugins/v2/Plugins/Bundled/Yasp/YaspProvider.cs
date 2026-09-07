@@ -16,7 +16,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.
 
         public Type GetPluginConfigType() => typeof(YaspConfigManager);
 
-        public PluginDescription GetPluginDescription() => new("Yasp", "某人自己写的歌曲信息面板", ["MATRIX-feather"]);
+        public PluginDescription GetPluginDescription() => new("Yasp",
+            "某人自己写的歌曲信息面板",
+            ["MATRIX-feather"],
+            ["“封面”样式的设计来源于后面的B站视频，喜欢的话不妨给 UP 主点个关注: https://www.bilibili.com/video/BV1Xb411o7ij"]);
 
         public DrawableHikariiiPlugin CreateDrawablePlugin() => new DrawableYaspPlugin(this);
 
