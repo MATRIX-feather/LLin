@@ -10,11 +10,11 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Online.API;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp.Config;
 using osu.Game.Users.Drawables;
 using osuTK;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Panels;
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp.Panels;
 
 public partial class CoverIIPanel : CompositeDrawable, IPanel
 {
@@ -77,9 +77,8 @@ public partial class CoverIIPanel : CompositeDrawable, IPanel
     private FillFlowContainer? flowContainer;
 
     [BackgroundDependencyLoader]
-    private void load(YaspPlugin plugin)
+    private void load(YaspConfigManager config)
     {
-        var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin.Provider.Identifier());
         config.BindWith(YaspSettings.CoverIIUseUserAvatar, useUserAvatar);
 
         Anchor = Anchor.Centre;

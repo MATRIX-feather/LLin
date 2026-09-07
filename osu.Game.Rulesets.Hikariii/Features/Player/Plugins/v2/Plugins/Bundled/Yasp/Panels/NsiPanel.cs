@@ -16,7 +16,7 @@ using Color4 = osuTK.Graphics.Color4;
 
 #nullable disable
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Panels
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp.Panels
 {
     public partial class NsiPanel : CompositeDrawable, IPanel
     {

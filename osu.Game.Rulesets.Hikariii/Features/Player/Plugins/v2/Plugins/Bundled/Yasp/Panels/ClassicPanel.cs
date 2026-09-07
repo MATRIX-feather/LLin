@@ -9,20 +9,19 @@ using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp.Config;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Panels
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp.Panels
 {
     public partial class ClassicPanel : CompositeDrawable, IPanel
     {
         private readonly Bindable<float> scaleBindable = new BindableFloat();
 
         [BackgroundDependencyLoader]
-        private void load(YaspPlugin plugin)
+        private void load(YaspConfigManager config)
         {
-            var config = (YaspConfigManager)Dependencies.Get<LLinPluginManager>().GetConfigManager(plugin.Provider.Identifier());
             config.BindWith(YaspSettings.Scale, scaleBindable);
             scaleBindable.BindValueChanged(v =>
             {

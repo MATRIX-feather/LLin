@@ -1,25 +1,18 @@
 using System.ComponentModel;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Config;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp.Config
 {
-    public class YaspConfigManager : PluginConfigManager<YaspSettings>
+    public class YaspConfigManager(Storage storage, IHikariiiPluginProvider provider) : PluginConfigManager<YaspSettings>(storage, provider)
     {
-        public YaspConfigManager(Storage storage)
-            : base(storage, null) //todo: FIXME fix null provider
-        {
-        }
-
         /// <summary>
         /// 在这里初始化默认值, 更多用法请见 <see cref="ConfigManager"/>
         /// </summary>
         protected override void InitialiseDefaults()
         {
             SetDefault(YaspSettings.Scale, 1, 0, 5f);
-            SetDefault(YaspSettings.EnablePlugin, true);
             SetDefault(YaspSettings.PanelType, PanelType.Classic);
             SetDefault(YaspSettings.CoverIIUseUserAvatar, false);
 
@@ -32,7 +25,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config
     public enum YaspSettings
     {
         Scale,
-        EnablePlugin,
 
         PanelType,
         CoverIIUseUserAvatar

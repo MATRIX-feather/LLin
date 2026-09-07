@@ -1,27 +1,26 @@
+using System;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
-using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
-using osu.Game.Rulesets.Hikariii.Localisation.LLin;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp.Config;
 using osu.Game.Rulesets.Hikariii.Localisation.LLin.Plugins;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Yasp
 {
-    public class YaspProvider : LLinPluginProvider
+    public class YaspProvider : IHikariiiPluginProvider
     {
-        //在这里制定该Provider要提供的插件
-        public override LLinPlugin CreatePlugin() => new YaspPlugin(this);
+        public string GetID() => "yasp";
 
-        public override PluginDescription GetDescription() => new("Yasp", "某人自己写的歌曲信息面板", ["MATRIX-feather"]);
+        public IPluginConfigManager CreatePluginConfig(Storage storageAccess) => new YaspConfigManager(storageAccess, this);
 
-        public override YaspConfigManager CreateConfigManager(Storage storage)
-        {
-            return new YaspConfigManager(storage);
-        }
+        public Type GetPluginConfigType() => typeof(YaspConfigManager);
 
-        public override SettingsEntry[] GetSettingEntries(IPluginConfigManager ipcm)
+        public PluginDescription GetPluginDescription() => new("Yasp", "某人自己写的歌曲信息面板", ["MATRIX-feather"]);
+
+        public DrawableHikariiiPlugin CreateDrawablePlugin() => new DrawableYaspPlugin(this);
+
+        public SettingsEntry[] GetSettingsEntries(IPluginConfigManager ipcm)
         {
             var config = (YaspConfigManager)ipcm;
             return
@@ -35,11 +34,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
                 },
                 new BooleanSettingsEntry
                 {
-                    Name = LLinGenericStrings.EnablePlugin,
-                    Bindable = config.GetBindable<bool>(YaspSettings.EnablePlugin)
-                },
-                new BooleanSettingsEntry
-                {
                     Name = YaspStrings.UseAvatarForCoverIICover,
                     Bindable = config.GetBindable<bool>(YaspSettings.CoverIIUseUserAvatar),
                 },
@@ -50,7 +44,5 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp
                 }
             ];
         }
-
-        public override string Identifier() => "yasp";
     }
 }

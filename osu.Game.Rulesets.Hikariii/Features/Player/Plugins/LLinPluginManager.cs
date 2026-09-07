@@ -16,7 +16,6 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.SandboxToPanel;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Yasp;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio;
@@ -178,7 +177,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 new StoryboardPluginProvider(),
 
                 new LyricPluginProvider(),
-                new YaspProvider(),
 
                 new ReplayPluginProvider()
 
