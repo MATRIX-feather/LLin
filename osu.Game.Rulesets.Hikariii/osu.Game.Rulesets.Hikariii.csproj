@@ -22,4 +22,7 @@
     <ProjectReference Include="..\LLin.OSIntegrations\LLin.OSIntegrations.csproj" />
     <ProjectReference Include="..\M.Resources\M.Resources.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Textures\" />
+  </ItemGroup>
 </Project>

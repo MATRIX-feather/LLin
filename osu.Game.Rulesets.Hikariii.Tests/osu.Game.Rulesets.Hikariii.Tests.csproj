@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuildHikariii\BuildHikariii.csproj" />
+    <ProjectReference Include="..\LLin.Extras\LLin.Extras.csproj" />
     <ProjectReference Include="..\osu.Game.Rulesets.Hikariii\osu.Game.Rulesets.Hikariii.csproj" />
   </ItemGroup>
   <PropertyGroup Label="Project">

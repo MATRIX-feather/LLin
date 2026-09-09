@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Hikariii.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildHikariii.Windows", "BuildHikariii.Windows\BuildHikariii.Windows.csproj", "{FD2129AB-CC30-4D8E-863F-4E24A119A763}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLin.Extras", "LLin.Extras\LLin.Extras.csproj", "{07B64DFF-AE69-444B-A0C6-F3078B3B4CA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu.Game.Rulesets.Sandbox", "submodules\lazer-sandbox\osu.Game.Rulesets.Sandbox\osu.Game.Rulesets.Sandbox.csproj", "{92B73FFC-690E-45C2-A738-638DDB8BB5AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +84,18 @@ Global
 		{396E5160-730B-4CB8-8AF1-24245A649494}.Release|Any CPU.Build.0 = Release|Any CPU
 		{396E5160-730B-4CB8-8AF1-24245A649494}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
 		{396E5160-730B-4CB8-8AF1-24245A649494}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{07B64DFF-AE69-444B-A0C6-F3078B3B4CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07B64DFF-AE69-444B-A0C6-F3078B3B4CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07B64DFF-AE69-444B-A0C6-F3078B3B4CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07B64DFF-AE69-444B-A0C6-F3078B3B4CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07B64DFF-AE69-444B-A0C6-F3078B3B4CA9}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{07B64DFF-AE69-444B-A0C6-F3078B3B4CA9}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
+		{92B73FFC-690E-45C2-A738-638DDB8BB5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92B73FFC-690E-45C2-A738-638DDB8BB5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92B73FFC-690E-45C2-A738-638DDB8BB5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92B73FFC-690E-45C2-A738-638DDB8BB5AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92B73FFC-690E-45C2-A738-638DDB8BB5AA}.VisualTests|Any CPU.ActiveCfg = Debug|Any CPU
+		{92B73FFC-690E-45C2-A738-638DDB8BB5AA}.VisualTests|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

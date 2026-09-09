@@ -1,5 +1,6 @@
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 
-public class HikariiiExternalPluginLoader
+public class HikariiiExternalPluginLoader : IHikariiiPluginLoader
 {
+    public IHikariiiPluginProvider[] LoadPlugins() => [];
 }

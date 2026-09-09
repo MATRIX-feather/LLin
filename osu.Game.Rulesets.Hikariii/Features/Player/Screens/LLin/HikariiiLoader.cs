@@ -6,6 +6,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Screens;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.Core;
 using osu.Game.Screens;
@@ -45,19 +46,22 @@ public partial class HikariiiLoader : OsuScreen
     private bool screenMasked { get; set; }
     private bool canPush { get; set; }
 
+    private DependencyContainer dependencies;
+
+    protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
+        => dependencies = new DependencyContainer(base.CreateChildDependencies(parent));
+
     [BackgroundDependencyLoader]
     private void load(IHikariiiPluginManager pluginManager)
     {
-        this.AddInternal(enterExitAnimation);
-        AddInternal(loadingSpinner);
-
-        var provider = pluginManager.GetPluginProvider(HikariiiCore.ID);
-        if (provider == null) throw new InvalidOperationException($"No provider for core: {HikariiiCore.ID}");
-
-        var config = pluginManager.TryGetPluginConfig<HikariiiCoreConfigManager>(provider);
-        if (config == null) throw new InvalidOperationException($"No config for core: {HikariiiCore.ID}");
+        var provider = pluginManager.GetPluginProviderOrThrow(HikariiiCore.ID);
+        var config = pluginManager.TryGetPluginConfigOrThrow<HikariiiCoreConfigManager>(provider);
 
         config.BindWith(HikariiiCoreSetting.FancyHikariiiLoader, enableEnterLeaveAnimation);
+        dependencies.Cache(config);
+
+        this.AddInternal(enterExitAnimation);
+        AddInternal(loadingSpinner);
     }
 
     private readonly CancellationTokenSource cancellation = new();
