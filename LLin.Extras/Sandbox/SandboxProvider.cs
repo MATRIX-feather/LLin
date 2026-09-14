@@ -19,12 +19,12 @@ public class SandboxProvider : IHikariiiPluginProvider
     (
         "Sandbox to panel",
         "sandbox to panel",
-        ["EVAST9919 (the original ruleset)", "MATRIX-feather (\"port\" to hikariii)"]
+        ["EVAST9919 (Author of the sandbox ruleset)", "MATRIX-feather (Author of the sandbox-to-panel plugin)"]
     );
 
     private readonly SandboxLoader sandboxLoader = new SandboxLoader();
 
-    public DrawableHikariiiPlugin CreateDrawablePlugin() => sandboxLoader.Check() == null ? new DrawableSandboxPlugin() : new DrawableNoDepWarning("Sandbox");
+    public DrawableHikariiiPlugin CreateDrawablePlugin() => sandboxLoader.Check() == null ? new DrawableSandboxPlugin() : new DrawableNoDepWarning("Sandbox规则集", "https://github.com/EVAST9919/lazer-sandbox/releases/latest");
 
     public SettingsEntry[] GetSettingsEntries(IPluginConfigManager config) => [];
 }
