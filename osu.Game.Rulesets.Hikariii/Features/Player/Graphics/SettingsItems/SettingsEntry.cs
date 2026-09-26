@@ -13,6 +13,7 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
+using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items.v2;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
@@ -59,6 +60,8 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 
         public abstract Drawable ToSettingsItem();
         public abstract Drawable? ToLLinSettingsItem();
+
+        public virtual Drawable? ToLLinSettingsItemV2() => null;
     }
 
     public class SeparatorSettingsEntry : SettingsEntry
@@ -147,6 +150,17 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
             {
                 Description = Name,
                 TooltipText = Description,
+                Bindable = (Bindable<bool>)Bindable.GetBoundCopy(),
+                Icon = this.Icon
+            };
+        }
+
+        public override Drawable? ToLLinSettingsItemV2()
+        {
+            return new SettingsBooleanPieceV2
+            {
+                Title = Name,
+                Description = Description,
                 Bindable = (Bindable<bool>)Bindable.GetBoundCopy(),
                 Icon = this.Icon
             };
