@@ -21,7 +21,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.
             SetDefault(HikariiiCoreSetting.AdjustTrackPitch, true);
             SetDefault(HikariiiCoreSetting.NightcoreBeat, false);
 
-            SetDefault(HikariiiCoreSetting.FancyHikariiiLoader, true);
             SetDefault(HikariiiCoreSetting.HollowTriangles, false);
 
             SetDefault(HikariiiCoreSetting.EnabledPlugins, $"{HikariiiCore.ID}");
@@ -43,8 +42,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.
         PlaybackSpeed,
         AdjustTrackPitch,
         NightcoreBeat,
-
-        FancyHikariiiLoader,
         HollowTriangles,
 
         EnabledPlugins

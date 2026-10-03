@@ -1,9 +1,16 @@
 using System;
+using System.Collections;
 using System.Threading;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Sprites;
+using osu.Framework.Platform;
 using osu.Framework.Screens;
+using osu.Game.Overlays;
+using osu.Game.Overlays.Dialog;
+using osu.Game.Overlays.Notifications;
+using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
@@ -44,7 +51,8 @@ public partial class HikariiiLoader : OsuScreen
     private readonly LoadingIndicator loadingSpinner;
 
     private bool screenMasked { get; set; }
-    private bool canPush { get; set; }
+
+    private Stack pushBlockingStack = new();
 
     private DependencyContainer dependencies;
 
@@ -57,7 +65,7 @@ public partial class HikariiiLoader : OsuScreen
         var provider = pluginManager.GetPluginProviderOrThrow(HikariiiCore.ID);
         var config = pluginManager.TryGetPluginConfigOrThrow<HikariiiCoreConfigManager>(provider);
 
-        config.BindWith(HikariiiCoreSetting.FancyHikariiiLoader, enableEnterLeaveAnimation);
+        config.BindWith(HikariiiCoreSetting.EnableFancyIntroOutro, enableEnterLeaveAnimation);
         dependencies.Cache(config);
 
         this.AddInternal(enterExitAnimation);
@@ -66,18 +74,69 @@ public partial class HikariiiLoader : OsuScreen
 
     private readonly CancellationTokenSource cancellation = new();
 
+    [Resolved]
+    private Storage storage { get; set; }
+
+    [Resolved]
+    private IDialogOverlay dialogOverlay { get; set; }
+
+    [Resolved]
+    private INotificationOverlay notificationOverlay { get; set; }
+
     protected override void LoadComplete()
     {
         base.LoadComplete();
 
+        //region migrate config
+
+        if (storage.Exists("mf.ini"))
+        {
+            pushBlockingStack.Push(null); // migrate config
+
+            var migrator = new LegacyConfigMigrator();
+            this.LoadComponent(migrator);
+
+            var dialog = new ConfirmDialog("检测到旧的播放器设置",
+                () => // confirm
+                {
+                    migrator.StartMigrate();
+                    migrator.MoveLegacyConfigFile();
+
+                    notificationOverlay.Post(new SimpleNotification
+                    {
+                        Text = "迁移已完成，旧的配置将移动到 mf.ini.bak",
+                        Icon = FontAwesome.Regular.CheckCircle
+                    });
+
+                    pushBlockingStack.Pop();
+                },
+                () => // cancel
+                {
+                    migrator.MoveLegacyConfigFile();
+
+                    notificationOverlay.Post(new SimpleNotification
+                    {
+                        Text = "迁移未进行，旧的配置将移动到 mf.ini.bak"
+                    });
+
+                    pushBlockingStack.Pop();
+                })
+            {
+                BodyText = "该版本的 Hikariii 已不再读取 mf.ini\n是否执行配置迁移?"
+            };
+            dialogOverlay.Push(dialog);
+        }
+
+        //endregion migrate config
+
         TargetScreen = createScreen();
         LoadComponentAsync(TargetScreen, OnScreenLoaded, cancellation.Token);
 
-        enableEnterLeaveAnimation.BindValueChanged(v =>
+        /*enableEnterLeaveAnimation.BindValueChanged(v =>
         {
             if (!v.NewValue)
-                canPush = true;
-        }, true);
+                pushBlockingStack.Pop();
+        }, true);*/
     }
 
     protected override void Update()
@@ -87,7 +146,7 @@ public partial class HikariiiLoader : OsuScreen
         if (TargetScreen == null)
             return;
 
-        if (canPush && TargetScreen.LoadState == LoadState.Ready && screenMasked && this.IsCurrentScreen())
+        if (pushBlockingStack.Count == 0 && TargetScreen.LoadState == LoadState.Ready && screenMasked && this.IsCurrentScreen())
         {
             if (enableEnterLeaveAnimation.Value)
                 enterExitAnimation.FoldToTop();
@@ -107,7 +166,8 @@ public partial class HikariiiLoader : OsuScreen
         else
             screenMasked = true;
 
-        this.Delay(600).Schedule(() => canPush = true);
+        pushBlockingStack.Push(null); // animation
+        this.Delay(600).Schedule(() => pushBlockingStack.Pop());
         this.Delay(2500).Schedule(() =>
         {
             if (TargetScreen != null && TargetScreen.LoadState < LoadState.Ready)
@@ -152,7 +212,7 @@ public partial class HikariiiLoader : OsuScreen
     {
         TargetScreen = null;
         cancellation.Cancel();
-        canPush = false;
+        pushBlockingStack.Push(this);
 
         if (!alreadyPlayingExit && enableEnterLeaveAnimation.Value)
             enterExitAnimation.PlayHide("Leaving Hikariii", () => { });

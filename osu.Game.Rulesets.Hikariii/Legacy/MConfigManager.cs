@@ -25,6 +25,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             instance = this;
         }
 
+        protected override bool PerformSave()
+        {
+            return false;
+        }
+
         protected override void InitialiseDefaults()
         {
             base.InitialiseDefaults();
@@ -90,6 +95,15 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
             //Mpris
             SetDefault(MSetting.MprisUseAvatarlogoAsCover, true);
             SetDefault(MSetting.MprisUpdateInterval, 500d, 100d, 1000d);
+
+            SetDefault(MSetting.MvisEnableAdvancedEnterLeaveAnimation, true);
+
+            SetDefault(MSetting.InjectButtonToNewSongSelect, true);
+
+            SetDefault(MSetting.UsePlatformAccentColor, true);
+
+            SetDefault(MSetting.IgnoreMediaControlWhenFocused, OperatingSystem.IsWindows());
+            SetDefault(MSetting.EnableOSDoNotDisturbWhenPlaying, true);
         }
 
         public Color4 GetCustomLoaderColor()
@@ -155,6 +169,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Configuration
         MvisAutoVSync,
         MvisPlayerSettingsMaxWidth,
         MvisUseTriangleV2,
+
+        MvisEnableAdvancedEnterLeaveAnimation,
+
+        InjectButtonToNewSongSelect,
+
+        UsePlatformAccentColor,
+        IgnoreMediaControlWhenFocused,
+        EnableOSDoNotDisturbWhenPlaying
     }
 
     public enum GamemodeActivateCondition

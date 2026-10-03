@@ -929,7 +929,11 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             SessionPluginManager.OnPluginEnable += pair => loadPluginAsync(pair);
             SessionPluginManager.OnPluginDisable += discardPlugin;
 
-            bgBlur.BindValueChanged(v => updateBackground(Beatmap.Value));
+            bgBlur.BindValueChanged(v =>
+            {
+                if (this.IsCurrentScreen())
+                    updateBackground(Beatmap.Value);
+            });
             idleBgDim.BindValueChanged(v => applyBackgroundBrightness(true, v.NewValue));
             musicSpeed.BindValueChanged(_ => updateTrackAdjustments());
             adjustFreq.BindValueChanged(_ => updateTrackAdjustments());
