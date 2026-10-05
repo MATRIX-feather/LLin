@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 
@@ -18,6 +19,13 @@ public interface IHikariiiPluginManager
     /// <param name="id">The ID to use</param>
     /// <returns>An instance of <see cref="LLinPluginProvider"/>, null if not found.</returns>
     public IHikariiiPluginProvider? GetPluginProvider(string id);
+
+    /// <summary>
+    /// Get the data storage for the plugin
+    /// </summary>
+    /// <param name="provider">The plugin provider</param>
+    /// <returns>A <see cref="Storage"/> that gives the access to plugin's data directory</returns>
+    public Storage GetPluginDataStorage(IHikariiiPluginProvider provider);
 
     /// <summary>
     /// Try register the given provider with the given ID.
