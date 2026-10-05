@@ -31,16 +31,14 @@ public partial class TestPluginHubV2 : OsuTestScene
             AutoSizeAxes = Axes.Y,
         });
 
-        Add(pluginHub = new HikariiiPluginHub
+        Add(pluginHub = new HikariiiPluginHub());
+        pluginHub.OnPluginRegister += pair =>
         {
-            InternalDebug_OnNewProviderRegister = pair =>
+            pluginList.Add(new OsuSpriteText
             {
-                pluginList.Add(new OsuSpriteText
-                {
-                    Text = $"ID {pair.Item1} Class {pair.Item2}"
-                });
-            }
-        });
+                Text = $"ID {pair.Item1} Class {pair.Item2}"
+            });
+        };
 
         hubAsInterface = pluginHub;
         Logging.Log("OK Added plugin Hub");

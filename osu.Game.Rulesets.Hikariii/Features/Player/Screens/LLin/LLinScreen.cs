@@ -28,7 +28,6 @@ using osu.Game.Beatmaps;
 using osu.Game.Graphics;
 using osu.Game.Input;
 using osu.Game.Input.Bindings;
-using osu.Game.Localisation;
 using osu.Game.Overlays;
 using osu.Game.Overlays.Notifications;
 using osu.Game.Overlays.Volume;
@@ -57,6 +56,7 @@ using osu.Game.Screens;
 using osu.Game.Screens.Play;
 using osuTK;
 using osuTK.Graphics;
+using CommonStrings = osu.Game.Localisation.CommonStrings;
 
 [assembly: InternalsVisibleTo("osu.Game.Rulesets.Hikariii.Tests")]
 
@@ -244,24 +244,24 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (provider.CreateDrawablePlugin() is not IFunctionBarProvider)
                 throw new InvalidOperationException($"The given plugin {next} does not offer function provider feature.");
 
-            //todo: FIXME investigate this.
-            //不要在此功能条禁用时再调用onFunctionBarPluginDisable
-            if (currentFunctionBar != null)
-            {
-                currentFunctionBar.OnDisable -= onFunctionBarDisable;
+            var prevPlugin = this.currentFunctionBar;
+            this.currentFunctionBar = null;
 
-                if (currentFunctionBar is DrawableHikariiiPlugin oldAsPlugin)
-                    RemoveBottomSafeArea(oldAsPlugin);
+            if (prevPlugin is DrawableHikariiiPlugin oldAsPlugin)
+            {
+                RemoveBottomSafeArea(oldAsPlugin);
+
+                string? trackingID = sessionPluginManager.LookupID(oldAsPlugin);
+                if (trackingID != null)
+                    sessionPluginManager.DisablePlugin(trackingID);
             }
 
             SessionPluginManager.DisablePlugin(next);
             var plugin = SessionPluginManager.EnablePlugin(next);
             var newProvider = plugin as IFunctionBarProvider ?? throw new Exception("Why could this happen?");
 
-            //todo: FIXME investigate this.
             //更新控制按钮
             Schedule(() => newProvider.SetFunctionControls(functionControls));
-            newProvider.OnDisable += onFunctionBarDisable;
 
             //更新currentFunctionBarProvider
             currentFunctionBar = newProvider;
@@ -274,8 +274,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             SessionPluginManager.EnablePlugin(next);
             //Logging.Log($"更改底栏到{newProvider}");
         }
-
-        private void onFunctionBarDisable() => changeFunctionBarProvider(BuiltinControlBar.ID);
 
         #endregion
 
@@ -999,6 +997,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 this.Delay(plugin.HasExitAnimation ? 3000 : 0).Schedule(() => container.Remove(plugin, true));
             else if (plugin.Parent != null)
                 throw new InvalidOperationException($"PANIC! Parent of the drawable plugin {pair.id} -> {plugin} is not a container, this should not happen! is the plugin already disabled?");
+
+            if (this.currentFunctionBar != null && this.currentFunctionBar == plugin)
+                changeFunctionBarProvider(BuiltinControlBar.ID);
+
+            if (this.audioControlPlugin != null && this.audioControlPlugin == plugin)
+                changeAudioControlProvider(OsuAudio.ID);
         }
 
         // Load an enabled plugin then add it to the player

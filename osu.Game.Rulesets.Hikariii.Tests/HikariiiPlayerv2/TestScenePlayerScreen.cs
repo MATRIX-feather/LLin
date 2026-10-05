@@ -11,6 +11,7 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Input;
 using osu.Game.Overlays;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
@@ -55,7 +56,10 @@ public partial class TestSceneSongPlayerScreenBase : OsuTestScene
 
         cacheAndAdd(PluginHub);
         Dependencies.CacheAs(typeof(IHikariiiPluginManager), PluginHub);
+        PluginHub.LoadFrom(new HikariiiCorePluginLoader(), out _);
+        PluginHub.LoadFrom(new HikariiiExternalPluginLoader(), out _);
         PluginHub.LoadFrom(new HikariiiBundledPluginLoader(), out _);
+        PluginHub.AttachConfig();
 
         var dialog = new DialogOverlay();
 

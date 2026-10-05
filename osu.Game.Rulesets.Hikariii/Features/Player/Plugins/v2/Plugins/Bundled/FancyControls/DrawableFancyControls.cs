@@ -4,22 +4,15 @@ using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar.Buttons;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.FancyControls.Buttons;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.FancyControls
 {
-    internal partial class StandardBottomBar : LLinPlugin, IFunctionBarProvider
+    internal partial class DrawableFancyControls : DrawableHikariiiPlugin, IFunctionBarProvider
     {
-        protected override Drawable CreateContent() => new PlaceHolder();
-
-        protected override bool OnContentLoaded(Drawable content) => true;
-
-        protected override bool PostInit() => true;
-
         private readonly FillFlowContainer<BottomBarButton> leftContent;
         private readonly FillFlowContainer<BottomBarButton> centreContent;
         private readonly FillFlowContainer<BottomBarButton> rightContent;
@@ -28,10 +21,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
         private readonly SongProgressBar progressBar;
         private readonly Container contentContainer;
 
-        public override ContentLayer Target => ContentLayer.Overlay;
+        public override ContentLayerType ContentLayer => ContentLayerType.Overlay;
 
-        public StandardBottomBar(LLinPluginProvider provider)
-            : base(provider)
+        public DrawableFancyControls()
         {
             Name = "底栏";
             Depth = -1;
@@ -309,13 +301,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
         }
 
         public List<IPluginFunctionProvider> GetAllPluginFunctionButton() => pluginButtons;
-        public Action? OnDisable { get; set; }
-
-        public override bool Disable()
-        {
-            OnDisable?.Invoke();
-            return base.Disable();
-        }
 
         public class ButtonNotFoundException : Exception
         {

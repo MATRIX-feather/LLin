@@ -7,6 +7,7 @@ using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.ListenerLoader.Handlers;
+using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Extensions;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Loader;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
@@ -85,7 +86,13 @@ public partial class ListenerLoader : AbstractHandler
             depMgr.CacheAs(typeof(LLinGlobalConfigManager), new LLinGlobalConfigManager(storage));
             depMgr.Cache(plMgr);
             depMgr.CacheAs(typeof(IHikariiiPluginManager), plMgr);
-            plMgr.OnLoadComplete += x => plMgr.LoadFrom(new HikariiiBundledPluginLoader(), out _);
+            plMgr.OnLoadComplete += x =>
+            {
+                plMgr.LoadFrom(new HikariiiCorePluginLoader(), out _);
+                plMgr.LoadFrom(new HikariiiExternalPluginLoader(), out _);
+                plMgr.LoadFrom(new HikariiiBundledPluginLoader(), out _);
+                plMgr.AttachAudioAndFunctionbarConfigChanges();
+            };
             depMgr.Cache(featureManager);
 
             if (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid())

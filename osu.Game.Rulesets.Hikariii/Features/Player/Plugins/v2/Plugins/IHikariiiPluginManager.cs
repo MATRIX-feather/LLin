@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
@@ -48,4 +49,9 @@ public interface IHikariiiPluginManager
     /// <param name="loader">The <see cref="rejectedProviders"/> to use.</param>
     /// <param name="rejectedProviders">Rejected plugin providers, mostly because of conflict ID, see logs for detail.</param>
     public void LoadFrom(IHikariiiPluginLoader loader, out IHikariiiPluginProvider[] rejectedProviders);
+
+    /// <summary>
+    /// Called when an instance of <see cref="IHikariiiPluginProvider"/> has been registered to this manager.
+    /// </summary>
+    event Action<(string id, IHikariiiPluginProvider provider)> OnPluginRegister;
 }

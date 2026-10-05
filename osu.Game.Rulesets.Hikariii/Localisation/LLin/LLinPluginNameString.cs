@@ -7,7 +7,7 @@ public class LLinPluginNameString
     private const string prefix = @"M.Resources.Localisation.LLin.LLinPluginNameStrings";
 
     public static LocalisableString FallbackFunctionBar => new TranslatableString(getKey(@"fallback_funtion_bar"), "Fallback control bar");
-    public static LocalisableString StandardBottomBar => new TranslatableString(getKey(@"standard_bottom_bar"), "Default control bar");
+    public static LocalisableString FancyControls => new TranslatableString(getKey(@"fancy_controls"), "Fancy controls");
 
     public static LocalisableString OsuMusicController => new TranslatableString(getKey(@"osu_music_controller"), "osu! music controller");
     public static LocalisableString CollectionMusicController => new TranslatableString(getKey(@"collection_music_controller"), "Collection music controller");

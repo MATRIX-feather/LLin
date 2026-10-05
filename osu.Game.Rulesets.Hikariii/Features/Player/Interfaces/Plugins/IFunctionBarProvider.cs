@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using osu.Framework.Graphics;
 
@@ -66,10 +65,5 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins
         /// 隐藏功能控制按钮
         /// </summary>
         public void HideFunctionControl();
-
-        /// <summary>
-        /// 被禁用时触发
-        /// </summary>
-        public Action? OnDisable { get; set; }
     }
 }

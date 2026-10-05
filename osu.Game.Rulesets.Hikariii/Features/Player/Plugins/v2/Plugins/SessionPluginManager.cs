@@ -44,6 +44,17 @@ public partial class SessionPluginManager : CompositeDrawable
         ];
     }
 
+    public string? LookupID(DrawableHikariiiPlugin plugin)
+    {
+        foreach (var keyValuePair in trackingPlugins!)
+        {
+            if (keyValuePair.Value == plugin)
+                return keyValuePair.Key;
+        }
+
+        return null;
+    }
+
     public DrawableHikariiiPlugin? GetPlugin(string id)
     {
         return trackingPlugins!.GetValueOrDefault(id, null);

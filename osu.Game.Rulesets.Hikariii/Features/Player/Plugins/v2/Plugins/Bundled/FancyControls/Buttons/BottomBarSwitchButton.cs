@@ -6,7 +6,7 @@ using osu.Framework.Input.Events;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar.Buttons
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.FancyControls.Buttons
 {
     public partial class BottomBarSwitchButton : BottomBarButton
     {

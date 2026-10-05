@@ -9,12 +9,10 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Graphics.UserInterface;
 using osu.Game.Graphics.UserInterfaceV2;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SideBar.Settings.Items.v2;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
 {
@@ -191,22 +189,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems
             protected override LocalisableString GenerateItemText(X item)
             {
                 return item.GetLocalisableDescription();
-            }
-        }
-
-        public partial class MOsuDropdown<X> : OsuDropdown<X>
-        {
-            public MOsuDropdown()
-            {
-                RelativeSizeAxes = Axes.X;
-            }
-
-            protected override LocalisableString GenerateItemText(X item)
-            {
-                if (item is LLinPluginProvider provider)
-                    return provider.GetLocalisableDescription();
-
-                return base.GenerateItemText(item);
             }
         }
 

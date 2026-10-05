@@ -1,4 +1,5 @@
 using System;
+using osu.Framework.Localisation;
 using osu.Framework.Platform;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
@@ -7,6 +8,7 @@ using osu.Game.Rulesets.Hikariii.Localisation.LLin;
 
 namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.OsuAudio;
 
+[LocalisableDescription(typeof(LLinPluginNameString), nameof(LLinPluginNameString.OsuMusicController))]
 public class OsuAudio : IHikariiiPluginProvider
 {
     public const string ID = "osu-audio";

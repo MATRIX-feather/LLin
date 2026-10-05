@@ -10,7 +10,6 @@ using osu.Game.Rulesets.Hikariii.Features.Configuration;
 using osu.Game.Rulesets.Hikariii.Features.Player.Graphics.SettingsItems;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay;
@@ -170,7 +169,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
             {
                 new FallbackFunctionBarProvider(),
 
-                new StandardBottomBarProvider(),
                 new CollectionHelperProvider(),
                 new StoryboardPluginProvider(),
 

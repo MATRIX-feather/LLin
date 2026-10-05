@@ -34,7 +34,7 @@ public partial class HikariiiPluginHub : CompositeDrawable, IHikariiiPluginManag
         return storage.GetStorageForDirectory($"hikariii-data/plugins/{provider.GetID()}");
     }
 
-    public Action<(string, IHikariiiPluginProvider)>? InternalDebug_OnNewProviderRegister;
+    public event Action<(string id, IHikariiiPluginProvider provider)>? OnPluginRegister;
 
     public bool TryRegisterPlugin(IHikariiiPluginProvider provider, string id)
     {
@@ -55,7 +55,7 @@ public partial class HikariiiPluginHub : CompositeDrawable, IHikariiiPluginManag
 
         providers[id] = provider;
 
-        InternalDebug_OnNewProviderRegister?.Invoke((id, provider));
+        OnPluginRegister?.Invoke((id, provider));
         Logging.Log($"Registered plugin '{id}' for {provider}#{provider.GetHashCode()}");
         return true;
     }

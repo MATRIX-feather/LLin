@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Platform;
@@ -10,6 +11,12 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.BuiltIn.
 public class HikariiiCore : IHikariiiPluginProvider
 {
     public const string ID = "hikariii-core";
+
+    public HikariiiCore()
+    {
+        UpdateAvailableAudioControllers += array => cachedAudioControllers = array;
+        UpdateAvailableFunctionControls += array => cachedFunctionControls = array;
+    }
 
     public string GetID() => ID;
 
@@ -32,8 +39,14 @@ public class HikariiiCore : IHikariiiPluginProvider
 
     private volatile SettingsEntry[]? settingsEntries;
 
-    public readonly IBindable<IHikariiiPluginProvider> AudioController = new Bindable<IHikariiiPluginProvider>();
-    public readonly IBindable<IHikariiiPluginProvider> FunctionBarProvider = new Bindable<IHikariiiPluginProvider>();
+    private readonly Bindable<IHikariiiPluginProvider> selectedAudioController = new();
+    private readonly Bindable<IHikariiiPluginProvider> selectedFunctionControls = new();
+
+    private IHikariiiPluginProvider[]? cachedFunctionControls;
+    private IHikariiiPluginProvider[]? cachedAudioControllers;
+
+    public Action<IHikariiiPluginProvider[]> UpdateAvailableFunctionControls { get; private set; }
+    public Action<IHikariiiPluginProvider[]> UpdateAvailableAudioControllers { get; private set; }
 
     private SettingsEntry[] createSettingsEntriesIfNotSet(HikariiiCoreConfigManager config)
     {
@@ -67,8 +80,8 @@ public class HikariiiCore : IHikariiiPluginProvider
             },
             funcBarEntry = new ListSettingsEntry<IHikariiiPluginProvider>
             {
-                Name = "底栏插件",
-                Bindable = (IBindable)FunctionBarProvider
+                Name = "功能条",
+                Bindable = selectedFunctionControls
             },
             new BooleanSettingsEntry
             {
@@ -99,7 +112,7 @@ public class HikariiiCore : IHikariiiPluginProvider
             audioControllerEntry = new ListSettingsEntry<IHikariiiPluginProvider>
             {
                 Name = "音乐控制插件",
-                Bindable = (IBindable)AudioController
+                Bindable = selectedAudioController
             },
             new NumberSettingsEntry<double>
             {
@@ -122,6 +135,35 @@ public class HikariiiCore : IHikariiiPluginProvider
                 Description = "动次打次动次打次"
             }
         ];
+
+        selectedAudioController.BindValueChanged(v =>
+            config.SetValue(HikariiiCoreSetting.AudioPluginName, v.NewValue.GetID()));
+
+        selectedFunctionControls.BindValueChanged(v =>
+            config.SetValue(HikariiiCoreSetting.FunctionBarName, v.NewValue.GetID()));
+
+        UpdateAvailableFunctionControls = array =>
+        {
+            var selected = array.FirstOrDefault(p => p.GetID() == config.Get<string>(HikariiiCoreSetting.FunctionBarName));
+            if (selected != null) selectedFunctionControls.Value = selected;
+
+            funcBarEntry.Values = array;
+        };
+
+        UpdateAvailableAudioControllers = array =>
+        {
+            var selected = array.FirstOrDefault(p => p.GetID() == config.Get<string>(HikariiiCoreSetting.AudioPluginName));
+            if (selected != null) selectedAudioController.Value = selected;
+            Logging.Log("Selected " + selected);
+
+            audioControllerEntry.Values = array;
+        };
+
+        UpdateAvailableFunctionControls(cachedFunctionControls!);
+        UpdateAvailableAudioControllers(cachedAudioControllers!);
+
+        cachedAudioControllers = null;
+        cachedFunctionControls = null;
 
         settingsEntries = entries;
         return entries;

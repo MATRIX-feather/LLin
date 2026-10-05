@@ -5,7 +5,7 @@ using osu.Framework.Graphics.Audio;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
 using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces.Plugins;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar.Buttons
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.FancyControls.Buttons
 {
     public partial class SongProgressButton : BottomBarSwitchButton
     {

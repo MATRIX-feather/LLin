@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Interfaces;
 using osu.Game.Rulesets.Hikariii.Features.Player.Misc;
 using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.FancyControls
 {
     public partial class SongProgressBar : ProgressBar
     {
@@ -95,9 +95,9 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar
 
             if (mvis.IsIdle)
             {
-                songProgressIndicator.MoveToX(
+                /*songProgressIndicator.MoveToX(
                     getFinalPosX(songProgressIndicator, (value * UsableWidth) - (songProgressIndicator.Width / 2)),
-                    300, Easing.OutQuint);
+                    300, Easing.OutQuint);*/
             }
 
             base.UpdateValue(value);

@@ -17,7 +17,7 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.BottomBar.Buttons
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.FancyControls.Buttons
 {
     public partial class BottomBarButton : CompositeDrawable, IHasTooltip
     {
