@@ -13,7 +13,6 @@ using osu.Game.Rulesets.Hikariii.Features.Player.Misc.PluginResolvers;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.CloudMusic;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Collection;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Replay;
-using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Config;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.FallbackFunctionBar;
 using osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Internal.OsuAudio;
@@ -170,7 +169,6 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins
                 new FallbackFunctionBarProvider(),
 
                 new CollectionHelperProvider(),
-                new StoryboardPluginProvider(),
 
                 new LyricPluginProvider(),
 

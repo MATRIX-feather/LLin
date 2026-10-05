@@ -165,28 +165,28 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         /// </summary>
         /// <param name="sender">请求发起方</param>
         /// <returns>请求是否被接受</returns>
-        public bool RequestBlackBackground(LLinPlugin sender);
+        public bool RequestBlackBackground(DrawableHikariiiPlugin sender);
 
         /// <summary>
         /// 请求去除背景黑屏
         /// </summary>
         /// <param name="sender">请求发起方</param>
         /// <returns>请求是否被接受</returns>
-        public bool RequestNonBlackBackground(LLinPlugin sender);
+        public bool RequestNonBlackBackground(DrawableHikariiiPlugin sender);
 
         /// <summary>
         /// 请求去除背景动画
         /// </summary>
         /// <param name="sender">请求发起方</param>
         /// <returns>请求是否被接受</returns>
-        public bool RequestCleanBackground(LLinPlugin sender);
+        public bool RequestCleanBackground(DrawableHikariiiPlugin sender);
 
         /// <summary>
         /// 请求恢复背景动画
         /// </summary>
         /// <param name="sender">请求发起方</param>
         /// <returns>请求是否被接受</returns>
-        public bool RequestNonCleanBackground(LLinPlugin sender);
+        public bool RequestNonCleanBackground(DrawableHikariiiPlugin sender);
 
         #endregion
 
@@ -251,5 +251,19 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Interfaces
         public bool UpdateProgressNotification(LLinPlugin sender, uint targetID, ProgressState state);
 
         #endregion
+
+        /// <summary>
+        /// Request the player to display a "Now Loading" indicator
+        /// </summary>
+        /// <param name="drawableHikariiiPlugin">The request source</param>\
+        /// <returns>FALSE if the player already knows that this plugin is busy, otherwise TRUE</returns>
+        bool ShowBusy(DrawableHikariiiPlugin drawableHikariiiPlugin);
+
+        /// <summary>
+        /// Tell the player that the given source is no longer busy
+        /// </summary>
+        /// <param name="drawableHikariiiPlugin">The request source</param>
+        /// <returns>FALSE if the player already knows that this plugin is **NOT** busy, otherwise TRUE</returns>
+        bool HideBusy(DrawableHikariiiPlugin drawableHikariiiPlugin);
     }
 }

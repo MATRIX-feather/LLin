@@ -391,14 +391,14 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         #region 背景控制
 
-        private readonly List<LLinPlugin> blackScreenPlugins = new List<LLinPlugin>();
-        private readonly List<LLinPlugin> cleanScreenPlugins = new List<LLinPlugin>();
+        private readonly List<DrawableHikariiiPlugin> blackScreenPlugins = new();
+        private readonly List<DrawableHikariiiPlugin> cleanScreenPlugins = new();
 
         private readonly BindableBool blackBackground = new BindableBool();
 
         private readonly BgTrianglesContainer backgroundTriangles = new BgTrianglesContainer();
 
-        public bool RequestBlackBackground(LLinPlugin sender)
+        public bool RequestBlackBackground(DrawableHikariiiPlugin sender)
         {
             if (blackScreenPlugins.Contains(sender)) return true;
 
@@ -407,7 +407,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             return true;
         }
 
-        public bool RequestNonBlackBackground(LLinPlugin sender)
+        public bool RequestNonBlackBackground(DrawableHikariiiPlugin sender)
         {
             if (!blackScreenPlugins.Contains(sender)) return false;
 
@@ -416,7 +416,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             return true;
         }
 
-        public bool RequestCleanBackground(LLinPlugin sender)
+        public bool RequestCleanBackground(DrawableHikariiiPlugin sender)
         {
             if (cleanScreenPlugins.Contains(sender)) return true;
 
@@ -425,7 +425,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             return true;
         }
 
-        public bool RequestNonCleanBackground(LLinPlugin sender)
+        public bool RequestNonCleanBackground(DrawableHikariiiPlugin sender)
         {
             if (!cleanScreenPlugins.Contains(sender)) return false;
 
@@ -479,7 +479,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
 
         private readonly List<object> loadingList = new List<object>();
 
-        private bool unmarkFromLoading(object pl)
+        public bool HideBusy(DrawableHikariiiPlugin pl)
         {
             if (!loadingList.Contains(pl)) return false;
 
@@ -489,19 +489,16 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
             if (loadingList.Count == 0)
                 Schedule(loadingIndicator.Hide);
 
-            Logging.Log($"Load list remaining {loadingList.Count}.");
-
             return true;
         }
 
-        private bool markAsLoading(object pl)
+        public bool ShowBusy(DrawableHikariiiPlugin pl)
         {
             if (loadingList.Contains(pl)) return false;
 
             loadingList.Add(pl);
             Schedule(loadingIndicator.Show);
 
-            Logging.Log($"Load list remaining {loadingList.Count}.");
             return true;
         }
 
@@ -1019,7 +1016,7 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 cancellationTokenSource!.Cancel();
             }
 
-            markAsLoading(id);
+            ShowBusy(plugin);
 
             Logging.Log($"Loading {id}");
             var tokenSource = new CancellationTokenSource();
@@ -1029,15 +1026,10 @@ namespace osu.Game.Rulesets.Hikariii.Features.Player.Screens.LLin
                 addPlugin(id, loadedDrawable);
             }, tokenSource.Token).ContinueWith(t =>
             {
-                onPluginLoadFinishAnyState(id);
+                HideBusy(plugin);
+                Logging.Log($"Finished loading {id}");
+                cancellationTokenSources.Remove(id);
             }, tokenSource.Token);
-        }
-
-        private void onPluginLoadFinishAnyState(string id)
-        {
-            Logging.Log($"Finished loading {id}");
-            unmarkFromLoading(id);
-            cancellationTokenSources.Remove(id);
         }
 
         private void addPlugin(string id, DrawableHikariiiPlugin pl)

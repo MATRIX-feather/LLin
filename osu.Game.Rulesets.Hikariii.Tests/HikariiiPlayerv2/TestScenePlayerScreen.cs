@@ -59,7 +59,7 @@ public partial class TestSceneSongPlayerScreenBase : OsuTestScene
         PluginHub.LoadFrom(new HikariiiCorePluginLoader(), out _);
         PluginHub.LoadFrom(new HikariiiExternalPluginLoader(), out _);
         PluginHub.LoadFrom(new HikariiiBundledPluginLoader(), out _);
-        PluginHub.AttachConfig();
+        PluginHub.AttachAudioAndFunctionbarConfigChanges();
 
         var dialog = new DialogOverlay();
 

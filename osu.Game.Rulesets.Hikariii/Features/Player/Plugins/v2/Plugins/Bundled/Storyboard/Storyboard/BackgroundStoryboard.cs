@@ -7,7 +7,7 @@ using osu.Game.Beatmaps;
 using osu.Game.Skinning;
 using osu.Game.Storyboards.Drawables;
 
-namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.Bundle.Storyboard.Storyboard
+namespace osu.Game.Rulesets.Hikariii.Features.Player.Plugins.v2.Plugins.Bundled.Storyboard.Storyboard
 {
     [LongRunningLoad]
     public partial class BackgroundStoryboard : BeatmapSkinProvidingContainer
