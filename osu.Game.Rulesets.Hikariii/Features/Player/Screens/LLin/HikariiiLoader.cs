@@ -212,7 +212,7 @@ public partial class HikariiiLoader : OsuScreen
     {
         TargetScreen = null;
         cancellation.Cancel();
-        pushBlockingStack.Push(this);
+        pushBlockingStack.Push(null);
 
         if (!alreadyPlayingExit && enableEnterLeaveAnimation.Value)
             enterExitAnimation.PlayHide("Leaving Hikariii", () => { });
